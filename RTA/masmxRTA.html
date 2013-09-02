@@ -73,8 +73,8 @@ masmx default byte size is 8 and data code is ASCII.
 an assembly
 
 <p>
-The second field of <b>$awidth</b> is for addresses larger
-than the address space. RTA1 executable space is larger
+The second value of <b>$awidth</b> is for load addresses
+beyond the address space. RTA1 executable space is larger
 than the address space
 
 <p>
@@ -150,9 +150,9 @@ $(0:256)
 
 
 This example also shows an automatic literal as the operand of
-the <b>fpx</b> instruction. The two-word constant described in the
-completely parenthesised operand is assembled at address 265,
-beyond the addresses of all the RTA1 registers
+the <b>fpx</b> instruction. The two-word constant described in
+parentheses is assembled at address 256,
+beyond the addresses of the RTA1 registers
 
 </div>
 </html>
