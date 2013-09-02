@@ -1,0 +1,158 @@
+<html>
+<div>
+
+<h1>masmx7r2 for RTA1</h1>
+
+<h2>Settings for RTA1</h2>
+
+masmx is a target-independent meta-assembler.
+The macro-language in <b>rta.def</b>
+specifies registers and instructions to masmx
+
+<p>
+masmx default architectural settings are already
+correct for RTA1 architecture. Constants can
+be assembled without including <b>rta.def</b>
+
+<p>
+Number constants have the default masmx syntax
+<pre>
+
+$(3:03000)
+	
+	$list	0
+	$include	freeware/RTA1/rta/def/rta.def
+	$list
+
+        +       99
+        -       101:d
+        +       3071:t
+        +       0ffffffEEEEEEffffffcccccc:q
+        -       100000*/96:p
+
+        +       1.75*+1200000
+
+	$end
+  :                            1 
+  :                            2 $(3:03000)
+  :                            3 
+  :                            430  $list
+  :                            431 
+03:003000 000063              +432         +       99
+03:003001 FFFFFFFFFF9B        +433         -       101:d
+03:003003 000000000000000BFF  +434         +       3071:t
+03:003006 FFFFFFEEEEEEFFFFFFCCCCCC
+                              +435         +       0ffffffEEEEEEffffffcccccc:q
+03:00300A FE7960000000000000000000000000
+                              +436         -       100000*/96:p
+  :                            437 
+03:00300F 7CD38BB7B396D7AA20B6E083
+                              +438         +       1.75*+1200000
+  :                            439 
+  :                            440  $end
+:$(03):003000:003013 
+
+
+</pre>
+<p>
+The RTA1 default settings already in masmx are
+<pre>
+
+	$word			24
+	$address_quantum	24
+	$awidth			24:48
+	$floating_point		96
+	$characteristic		24
+	$characteristic,48	12
+	$byte			8
+ 
+</pre>
+
+masmx default byte size is 8 and data code is ASCII.
+<b>$byte</b> and the data code can be changed during
+an assembly
+
+<p>
+The second field of <b>$awidth</b> is for addresses larger
+than the address space. RTA1 executable space is larger
+than the address space
+
+<p>
+To change the data code see the main documentation of masmx
+
+<p>
+Fixed point numbers are autosized. masmx adds an extra word of signs
+where the high order bit of the magnitude is not a sign.
+Specific size can be suffixed
+<pre>
+
+$ masmx -ln
+MASMX 7r2
+0/-INPUT>>
+	+	255*/16
+	+	255*/16:s
+	$end
+00:000000 000000FF0000        +1  + 255*/16
+00:000002 FF0000              +2  + 255*/16:s
+  :                            3  $end
+:$(00):000000:000003 
+
+
+</pre>
+The size suffixes are :s (one word) :d (two words) :t (three words)
+:q (four words) :p (five words) :h (six words) :o (eight words)
+
+<p>
+Floating point numbers do not autosize.
+They are four words.
+
+<p>
+Suffixes can can also be used to make floating point numbers
+another size, but the only usable size different from 96 bits
+for an RTA1 floating constant is 48 bits or two words
+
+<p>
+This produces a compressed floating constant which RTA1 can
+expand to four words at the internal stack top with the
+<b>floating push and expand</b> instruction. RTA1 computes
+96-bit floating-point but can store in a 48-bit floating
+format if that has enough range for the value
+<pre>
+
+$ masmx -ln
+MASMX 7r2
+0/-INPUT>>
+
+        $list   0
+        $include        freeware/RTA1/rta/def/rta.def
+        $list
+
+$(0:64)
+
+	fpx		(4.096:d*+200)
+
+$(0:256)
+	$end
+  :                            1 
+  :                            428         $list
+  :                            429 
+  :                            430 $(0:64)
+  :                            431 
+00:000040 5F0100              +432  fpx  (4.096:d*+200)
+  :                            433 
+  :                            434 $(0:256)
+  :                            435  $end
+00:000100+69BAB3C2FDDF
+:$(00):000040:000102 
+
+
+</pre>
+
+
+This example also shows an automatic literal as the operand of
+the <b>fpx</b> instruction. The two-word constant described in the
+completely parenthesised operand is assembled at address 265,
+beyond the addresses of all the RTA1 registers
+
+</div>
+</html>

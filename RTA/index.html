@@ -34,34 +34,49 @@ I'm answering your browser over HTTP 1.1
 <p>
 I can deliver you the following web documents about myself
 
-<form	style="color:FF0000">
+<div	style="color:FF0000">
+<form	action="http://timmilescox.github.io/RTA/rta">
 
 RTA1 Architecture Specification
-	<input type="submit" name="rta.html" value="rta"/><br><br>
-
+	<input type="submit" name="rta.html" value="rta"/><br>
+</form>
+<form   action="http://timmilescox.github.io/RTA/smaragd7">
 The smaragd7 Kernel and API
-	<input type="submit" name="smaragd7.html" value="smaragd7"/><br><br>
+	<input type="submit" name="smaragd7.html" value="smaragd7"/><br>
 
+</form>
+<form   action="http://timmilescox.github.io/RTA/language">
 Towards Compiler Languages for RTA1 Architecture
-	<input type="submit" name="language.html" value="language"/><br><br>
+	<input type="submit" name="language.html" value="language"/><br>
 
+</form>
+<form   action="http://timmilescox.github.io/RTA/rtadef">
 RTA1 metadata for the masmx meta-assembler
-	<input type="submit" name="rtadef.html" value="rta.def"/><br><br>
+	<input type="submit" name="rtadef.html" value="rta.def"/><br>
 
-masmx 7r2 meta-assembler manual
-	<input type="submit" name="masmx.html" value="masmx"/><br><br>
+</form>
+<form   action="http://timmilescox.github.io/RTA/masmxRTA">
+masmx 7r2 meta-assembler for RTA1
+	<input type="submit" name="masmxRTA.html" value="masmxRTA"/><br>
 
+</form>
+<form   action="http://timmilescox.github.io/RTA/connect">
 Running and Talking to the Emulated RTA1<br>
 and constructing the emulated machine for your host system
-	<input type="submit" name="connect.html" value="connect"/><br><br>
+	<input type="submit" name="connect.html" value="connect"/><br>
 
+</form>
+<form   action="http://timmilescox.github.io/RTA/footnote">
 Author's footnote and contact
-	<input type="submit" name="footnote.html" value="footnote/"><br><br>
+	<input type="submit" name="footnote.html" value="footnote"><br>
 
+</form>
+<form   action="http://timmilescox.github.io/RTA/gnu_gpl">
 The GNU General Public License
 	<input type="submit" name="gnu_gpl.html" value="GNU GPL"/><br>
 
 </form>
+</div>
 
 <p>
 If what you want isn't there you can talk to me via Telnet and SNMP instead
@@ -71,7 +86,7 @@ or you can interact with my floating point engine. Can your computer do sums lik
 <div	style="font-size:16pt;color:000000">
 <pre>
 
-	$ ./fp 172.29.7.7
+	$ fp 172.29.7.7
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
 
 	>246913578024691357802e600004 / 2000000000000000000000000e-600000
