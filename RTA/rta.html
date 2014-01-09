@@ -1227,7 +1227,7 @@ Instructions in File 7 take a one-word two-word or four-word operand according t
 
 			Byte writes to storage are from the low-order bits of the
 			source register, including byte writes to system memory
-			from the register at the internal stack top
+			from the register at the internal stack top----------------->		pop[,t1|t2|t3]	target
 
 			Only 24-bit words are read from registers addressed as storage
 			Only 24-bit words are written to registers addressed as storage
@@ -1308,10 +1308,11 @@ Instructions in File 7 take a one-word two-word or four-word operand according t
 
 				bits 23..8 are unchanged on store
 
-				PARTIAL WORDS ARE ONLY LOADED AND STORED IN			xor, t3		keyvalue
-				SYSTEM MEMORY
+				PARTIAL WORDS MAY ONLY BE READ FROM SYSTEM			xor, t3		keyvalue
+				MEMORY AND WRITTEN TO SYSTEM MEMORY
 
-				REGISTERS ONLY READ AND WRITE WORDS
+				REGISTERS ARE 24-BIT WORD SCALARS
+				OR MULTI-WORD-SCALARS
 
 
 				 23		                                                 0
@@ -1344,7 +1345,7 @@ Instructions in File 7 take a one-word two-word or four-word operand according t
 
                         Byte writes to storage are from the low-order bits of the
                         source register, including byte writes to system memory
-                        from the register at the internal stack top 
+                        from the register at the internal stack top----------------->		pop[,h2|h2]	 target
 
                         Only 24-bit words are read from registers addressed as storage
                         Only 24-bit words are written to registers addressed as storage
