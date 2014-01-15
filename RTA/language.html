@@ -26,7 +26,7 @@ This document is about
 
 <ol>
 	<li>
-	formal calling sequences used in structured assembler code
+	formal calling sequences used in structured assembly language code
 	</li>
 	<li>
 	runtime algorithmic expressions
@@ -34,7 +34,7 @@ This document is about
 
 </ol>
 
-<h3>1. Formal Calling Sequences used in Structured Assembler Code</h3>
+<h3>1. Formal Calling Sequences used in Structured Assembly Language Code</h3>
 <p>
 These call sequences have made some parts of the kernel simpler to write
 
@@ -61,7 +61,7 @@ to "near" routines <b>lcal ... lret</b> and to "far" routines
 
 <p>
 The simplest of these five services is <b>$vector</b> which constructs
-the compressed handle value which is used as a constant for calling
+the compressed routine address value which is used as a handle for calling
 a far routine. This value is the storage constant operand of
 <b>go</b> and <b>call</b> instructions
 <pre>
@@ -96,6 +96,22 @@ only 64 or 8 vector locations are externally addressable
 Three stack management services are contained in
 the macro <b>$head_near/far</b> and one internal stack
 management service is contained in the macro <b>c / lc</b>
+
+<p>
+Macro <b>$head_near/far</b> constructs up to three lists of names which
+are base+displacement definitions on internal stack pointer <b>sp</b>
+or external stack pointer <b>fp</b>
+
+<p>
+These lists are called <b>params() scalars() xframe()</b>
+
+<p>
+<b>$head_near/far</b> macro constructs data in
+two of those lists, <b>scalars</b> in the internal stack
+and <b>xframe</b> in the external stack
+
+<p>
+<b>params()</b> and <b>scalars()</b> feature here:
 
 <pre>
 
@@ -204,19 +220,6 @@ ruxample.msm: object code 174 bytes: 0 errors: 1 undefined labels
 
 
 </pre>
-<p>
-Macro <b>$head_near/far</b> constructs up to three lists of names which
-are base+displacement definitions on internal stack pointer <b>sp</b>
-or external stack pointer <b>fp</b>
-
-<p>
-These lists are called  <b>params() scalars() xframe()</b>
-
-<p>
-<b>$head_near/far</b> also constructs data in
-two of those lists, <b>scalars</b> in the internal stack
-and <b>xframe</b> in the external stack
-
 <p>
 <b>params()</b> maps names onto the parameters pushed in <b>c / lc</b>
 
