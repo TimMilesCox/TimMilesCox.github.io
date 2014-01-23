@@ -8,7 +8,7 @@ and constructing the emulated machine for your host system</h1>
 
 <i>
 Copyright Tim Cox, 2012<br>
-This document is part of the RTA1 Processor Programmable Architecture<br>
+This document is part of the RTA1 Processor Programmable Architecture Specification<br>
 The RTA1 Architecture is freeware licensed with the GNU General Public Licence Version 3<br>
 The same licence encompasses all accompanying software and documentation <br>
 The full licence text is included with these materials<br>
@@ -226,14 +226,29 @@ telnet can also be guided on the command line
 
 </div>
 </pre>
-The floating point interactor which calls the floating
-server on RTA1 is commanded with argument 2 to come from
-somewhere different from the destination
+The floating point interactor <b>client/fp</b> calls the
+floating server on RTA1. <b>fp</b> is commanded with
+argument 2 to come from somewhere different from the
+destination
 <pre>
 
 	fp 172.29.7.7 172.29.7.6
 
 </pre>
+
+script <b>client/prun</b> also writes default target and source
+addresses for <b>fp</b>
+
+<p>
+If you want different default addresses for <b>fp</b> change
+<b>prun</b>. For no default addresses, change them to
+<pre>
+
+	echo	fp-server	0.0.0.0  >config.fp
+	echo	fp-client	0.0.0.0 >>config.fp
+
+</pre>
+<p>
 There is some point in having this floating server in the
 emulated machine! The PC hasn't a thousand billionth of
 RTA1's number range. The PC is obliged to send the largest
@@ -543,7 +558,7 @@ LICENCE NOTE
 
     This document is part of the RTA1 Processor Programmable Architecture.
 
-    RTA1 is a free processor architecture design. It is licensed
+    RTA1 is a free processor architecture specification. It is licensed
     under the GNU General Public Licence Version 3
 
     The executable emulation of RTA1 is free software.
