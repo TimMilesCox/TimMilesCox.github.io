@@ -1,19 +1,5 @@
-<div	style="font-size:15pt;color:0000FF">
+<div	style="font-size:14pt;color:0000FF">
 
-<ol>
-	<li>The RTA1 Processor Programmable Architecture Specification</li>
-        <li>masmx.7r2 Target Independent Meta Assembler</li>
-</ol>
-
-<center>
-        <a href="http://TimMilesCox.github.io/RTA">
-        RTA1 documentation and materials</a><br><br>
-
-        <a href="http://TimMilesCox.github.io/masmx">
-        masmx.7r2 documentation and download</a>
-</center>
-
-<a id="RTA"/>
 <h1>1. The RTA1 Processor Programmable Architecture Specification</h1>
 
 <p>
@@ -26,36 +12,25 @@ microcontroller applications in a few dozen words of storage, and it can run
 as a major system maintaining some millions of TCP connections simultaneously
 
 <p>
-RTA1 is also designed from the start for symmetric multiprocessing,
-a second plane of scalability
+RTA1 is intended to work very fast without having operand cache.
+The large array of scratch registers is organised as an internal stack.
+No circuitry is needed for cache coherency. SMP scalability is at low cost.
+RTA1 and the smaragd7 kernel are SMP capable from the start
 
 <p>
-The emulated prototype is interfaced to Internet Protocol networks and
-communicates with other computers with the Telnet, SNMP, HTTP and ICMP-Echo
-(Ping) protocols. A floating-point server application also runs over UDP
-to demonstrate the power and range of the RTA1 96-bit floating architecture
+The emulated prototype runs an IP stack connected to networks and
+communicates with other computers via Telnet, SNMP, and HTTP.
+A floating-point server application runs over UDP
+to demonstrate the range of the RTA1 96-bit floating architecture
 
 <p>
 RTA1 is a 24-bit word-addressing architecture with 24- 48- and 96-bit arithmetic
 
 <p>
 Excellent code density is claimed for RTA1. The emulated prototype runs
-IP, UDP and TCP in 3000 instructions which each take one storage location.
-
-<p>
-Another 4000 instructions run Telnet, MIB-II + snmpv1, a simple HTTP server,
-and an online floating point server program
-
-<p>
-RTA1 is intended to work very fast without having operand cache
-
-<p>
-The large array of scratch registers is organised as an internal stack
-
-<p>
-RTA1 SMP scalability has a vast lateral dimension, without expensive
-electronic co-ordination. The internal stack minimises storage reads
-and writes without any operand cache
+IP, UDP and TCP in 3250 instructions which each take one storage location.
+Another 4000 instructions run Telnet, MIB-II + snmpv1, HTTP server,
+and the online floating point server program
 <center>
 
 	<a href="http://TimMilesCox.github.io/RTA">
@@ -76,20 +51,17 @@ See also the licensing notice at the head or at the foot of every document
 <h1>2. masmx.7r2 Target Independent Meta Assembler</h1>
 
 <p>
-masmx.7r2 is a target-indendent meta-assembler for any target
+masmx.7r2 is a meta-assembler for any target
 
 <p>
-It is used by writing a file of macro code for defining the
-target architecture and including that in your source or in
-a wrapper which also includes your source
+Macro code, included in the source or in a wrapper file, defines the target architecture 
 
 <p>
 masmx.7r2 runs from shell commmand lines
 
 <p>
-masmx.7r2 macro language can understand source code syntaxes meant
-for other assemblers. This means masmx.7r2 can assemble any code
-unchanged
+masmx.7r2 macro language interprets source syntaxes coded
+for other assemblers. masmx.7r2 can assemble any source unmodified
 <center>
 
 	<a href="http://TimMilesCox.github.io/masmx">
