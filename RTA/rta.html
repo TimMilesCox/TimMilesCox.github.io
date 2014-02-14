@@ -44,10 +44,12 @@ The addressable storage location is the 24-bit computer word. Instructions are o
 The limit of executable space (or system memory) is 16 gigawords.
 
 <p>
-Additional arrays up to one teraword total which are not part of executable space may be added.
- These additional arrays are known in RTA1 documentation as "devices", and they may each contain
-up to 16 gigawords of 8- 16- or 24-bit memory, which may be video RAMs, dual-ported 16-bit network buffers,
-memory-addressable 24-bit filestores, removable 8-bit memory sticks, and so on.
+Additional arrays up to one teraword total which are not part of executable space
+may be added.
+RTA1 documentation calls these additional arrays devices, and they may each contain
+up to 16 gigawords of 8- 16- or 24-bit memory. The devices may include among others
+video RAMs, dual-ported 16-bit network buffers, memory-addressable 24-bit filestores,
+and removable 8-bit memory sticks
 
 <p>
 System memory or executable space is Device 0, and there may be 63 more devices
@@ -139,10 +141,18 @@ Most applications do not need that, and the emulated prototype does not include 
 	|										|
 	|	RTA1 needs program memory to be						|
 	|										|
-	|		addressable in 4K words banks some of the time			|
+	|		relocation-register-selectable in 4K-word banks			|
 	|										|
-	|		able to do atomic read-modify-write, at least when SMP		|
+	|		24-bit-word writable / readable					|
 	|										|
+	|			optimally readable in bursts of 1 / 2 / 4 / 8 words	|
+	|			at any 24-bit word address				|
+	|										|
+	|			optimally writable in bursts of 1 / 2 / 4 words		|
+	|			at any 24-bit word address				|
+	|										|
+	|		able to do atomic read-modify-write on a single word		|
+	|		at least when in SMP configuration				|
 	|										|
 	|										|
 	|	Arrays outside executable space cannot be based at 4K words and		|
@@ -339,7 +349,7 @@ effective operand address to the physical address of the target computer word
 	63 blocks of 4096 words or 262144 storage words
 	are at any moment visible in 63 address windows
 
-	Data Bank Base Registers 1..63 are I/O ports 1..63
+	Relocation Registers 1..63 are I/O ports 1..63
 
 	Applications can freely alter which storage banks
 	are based in any of their 63 data address windows
@@ -363,10 +373,10 @@ effective operand address to the physical address of the target computer word
 	|		Bank 0				|				their relocation base registers are
 	|						|				I/O Ports 65..71
 	|			 4095___________________|________________________
-	|			|4096			|4096 alternative	|	TCB Bank 65 is architecturally
-	|			|			|			|	bound to the task address
-	|			|	Bank 1		|       Bank 65		|	environment. B65 is visible instead 
-	|			|			|	TCB		|	of Bank 1 if PSR Flag see$1 = 1
+	|			|4096			|4096 alternative	|	TCB Bank 65 holds an automatic copy
+	|			|			|			|	of the current relocation register
+	|			|	Bank 1		|       Bank 65		|	values. B65 is visible instead of B1
+	|			|			|	TCB		|	if PSR Flag see$1 = 1
 	|			|8191___________________|_______________________|
 	|			|8192			|8192 alternative	|	kernel banks 66..71 are populated
 	|			|			|			|	to the extent of kernel requirement
@@ -374,7 +384,7 @@ effective operand address to the physical address of the target computer word
 	|			|	Vector List	|	Kernel Vectors	|
 	|			|12287__________________|_______________________|	kernel banks are visible instead
 	|			|12288 or 786432	|12K / 768K alternative	|	of application data banks B2..B7
-	|			|			|			|	as PSR Flag see$2..see$7 = 1
+	|			|			|			|	as PSR Flags see$2..see$7 = 1
 	|			|	Bank 3		|	Bank 67
 	|			|			|
 	|			|16383_or_1048575_______|_______________________
@@ -459,18 +469,18 @@ effective operand address to the physical address of the target computer word
 
 
 
-	It is intended that storage operand absolute addresses are generated only once
-	each, and operands of two or four words are read or written in a single burst
 
-	Adjacent physical blocks are based in adjacent windows. Arrays are
-	linear storage. The prototype RTOS smaragd7 grants memory at any
-	size up to 16 gigawords
+	Arrays are one linear storage range of any size up to 16 gigawords. The prototype
+	RTOS smaragd7 responds to memory requests with a single pointer
 
 	When an array is many times the address space in size, address windows
 	are used as cursors in the array
 
-	If structures in the array straddle banks, the cursor is two or more
+	If structures in the array straddle banks, the cursor should be two or more
 	adjacent physical banks based in adjacent windows
+
+	This allows the physical address of two or four word operands to be generated
+	only once and data read or written in a single burst if memory supports that
 
 
 	For example
