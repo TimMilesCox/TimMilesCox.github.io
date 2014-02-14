@@ -374,8 +374,8 @@ effective operand address to the physical address of the target computer word
 	|						|				I/O Ports 65..71
 	|			 4095___________________|________________________
 	|			|4096			|4096 alternative	|	TCB Bank 65 holds an automatic copy
-	|			|			|			|	of the current relocation register
-	|			|	Bank 1		|       Bank 65		|	values. B65 is visible instead of B1
+	|			|			|			|	of current relocation registers
+	|			|	Bank 1		|       Bank 65		|	B2..B63. B65 is visible instead of B1
 	|			|			|	TCB		|	if PSR Flag see$1 = 1
 	|			|8191___________________|_______________________|
 	|			|8192			|8192 alternative	|	kernel banks 66..71 are populated
@@ -544,20 +544,30 @@ The layout of the Processor State Register is
 The PSR flags shown as 0 are not currently used
 <p>
 PSR flags 15..0 are directly application programmable with instructions <b>on</b> and <b>off</b>
-<p>
-Flag 23 <b>I</b> is on during an interrupt. The registers implicitly used by instructions in interrupt mode are in the range 128..255, where the application registers are 0..127
-<p>
-Any registers named as storage operands in the address field of an instruction are absolute locations unaffected by ISR / application mode. However applications cannot write the interrupt registers
 
 <p>
-Flags 18..16 <b>iii</b> are the interrupt mask. Both applications and ISRs can swap and restore the interrupt mask with the <b>Switch Interrupt Mask</b> instruction <b>sim</b>
+Flag 23 <b>I</b> is on during an interrupt. CPU-side registers, that is those which receive computation results
+or are stack pointers, index registers, the target of load instructions or the source of store instructions, automatic
+counter or automatic mask, are in interrupt mode within the range 128..255. The application registers are 0..127
 
 <p>
-Flags 14..8 <b>see$1..see$7</b> individually make the TCB and kernel banks visible in address windows 1..7, instead of application data banks B1..B7
+Registers at the storage operand effective address of instructions are absolute locations in a 256-word array
+regardless of ISR / application mode. However applications cannot write the interrupt registers
 
 <p>
-Flag 7 <b>half$w</b> concerns instructions which can take a byte operand as an alternative to a word operand. RTA1 is not a byte addressing machine, and any byte other than a 24-bit byte is a field of a
-storage location. The 32 instructions in Instruction File 1 may take a storage word or part of a storage word as operand. These bytes are either halfwords (12 bits) with sign extension on read
+Flags 18..16 <b>iii</b> are the interrupt mask. Both applications and ISRs can swap and restore the
+interrupt mask with the <b>Switch Interrupt Mask</b> instruction <b>sim</b>
+
+<p>
+Flags 14..8 <b>see$1..see$7</b> individually make the TCB and kernel banks visible in address windows 1..7,
+instead of application data banks B1..B7
+
+<p>
+Flag 7 <b>half$w</b> concerns instructions which can take a byte operand as an alternative to a word operand.
+RTA1 is not a byte addressing machine, and any byte other than a 24-bit byte is a field of a storage location.
+
+The 32 instructions in Instruction File 1 may take a storage word or part of a storage word as operand.
+These bytes are either halfwords (12 bits) with sign extension on read
 <pre>
 
 		 23				   11			          0
