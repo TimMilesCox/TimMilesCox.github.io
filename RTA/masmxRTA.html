@@ -161,36 +161,50 @@ for an RTA1 floating constant is 48 bits or two words
 This produces a compressed floating constant which RTA1 can
 expand to four words at the internal stack top with the
 <b>floating push and expand</b> instruction. RTA1 computes
-96-bit floating-point but can store in a 48-bit floating
-format if that has enough range for the value
+96-bit floating-point but the <b>floating pop and pack</b>
+instruction <b>fpp</b> can store the number in a 48-bit
+floating format if that has enough range for its value
 <pre>
 
-:$(00):000040:000102 
-mx -ln
-MASMX 7r2
+	$ masmx -ln
+MASMX 7r3
 0/-INPUT>>
 
-        $list   0
-        $include        freeware/RTA1/rta/def/rta.def
-        $list
+	$list		0
+	$include	freeware/RTA1/rta/def/rta.def
+	$list
 
 $(0:64)
 
-        fpx             (4.096:d*+200)
+	fpx		(4.096:d*+200)
+	fa		0, sp			. use the expanded number
 
-	$do	        $<256,$(0:256)
+	qs		0, sp
+	fpp		compressed_storage	. compress the 4-word result
+	
+	$do		$<256,$(0:256)
+
+$(3:03000)
+compressed_storage $res	2
 	$end
   :                            1 
-  :                            428         $list
-  :                            429 
-  :                            430 $(0:64)
-  :                            431 
-00:000040 5F0100              +432         fpx             (4.096:d*+200)
-  :                            433 
-  :                            434  $do  $<256,$(0:256)
-  :                            435  $end
+  :                            429  $list
+  :                            430 
+  :                            431 $(0:64)
+  :                            432 
+00:000040 5F0100              +433  fpx  (4.096:d*+200)
+00:000041 67F000              +434  fa  0, sp   . use the expanded number
+  :                            435 
+00:000042 47F000              +436  qs  0, sp
+00:000043 573000              +437  fpp  compressed_storage . compress the 4-word result
+  :                            438  
+  :                            439  $do  $<256,$(0:256)
+  :                            440 
+  :                            441 $(3:03000)
+  :                            442 compressed_storage $res 2
+  :                            443  $end
 00:000100+69BAB3C2FDDF
-:$(00):000040:000102 
+:$(00):000040:000102 :$(03):003000:003002 
 
 
 </pre>
