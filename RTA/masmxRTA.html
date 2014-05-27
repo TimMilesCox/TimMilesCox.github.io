@@ -172,8 +172,25 @@ floating-point
 
 <p>
 Floating point numbers do not autosize.
-They are four words.
+They are four words
+<pre>
 
+
+		$ masmx -ln
+MASMX 7r3
+0/-INPUT>>
+	+	1.75*+1250000
+	+	1.75*-1250000
+	$end
+00:000000 7F5C5BF331AD4B6FFBBCAAB2
+                              +1  + 1.75*+1250000
+00:000004 00A3A7CE52225BC80EDFF592
+                              +2  + 1.75*-1250000
+  :                            3  $end
+:$(00):000000:000008 
+
+
+</pre>
 <p>
 The two-word suffix may be used to assemble a 48-bit
 compressed floating constant which RTA1 can
