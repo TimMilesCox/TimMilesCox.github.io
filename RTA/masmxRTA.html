@@ -79,7 +79,7 @@ The masmx already has these default settings. They are correct for RTA1
 </pre>
 
 
-Address width comes in two steps because the effective address is
+<b>$awidth</b> has two steps because the effective address is
 24 bits but the executable space is much larger. masmx can construct
 code and data in all the executable space using the giant address
 
@@ -90,11 +90,6 @@ an assembly
 
 <p>
 To change the data code see the main documentation of masmx
-
-<p>
-The second value of <b>$awidth</b> is for load addresses
-beyond the address space. RTA1 executable space is larger
-than the address space
 
 <p>
 masmx syntax element defaults are also
