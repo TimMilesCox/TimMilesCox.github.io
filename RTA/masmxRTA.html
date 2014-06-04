@@ -103,9 +103,12 @@ correct for RTA1
 </pre>
 
 
+<h2>Instructions and Operands</h2>
 
 
-<h2>Numbers</h2>
+
+<h2>Data Constants</h2>
+<h3>Numbers</h3>
 
 <p>
 Number constants have the default masmx syntax. Leading 0 means hex
@@ -320,7 +323,7 @@ ASCII edit string
 
 
 
-<h2>Literals</h2>
+<h3>Literals</h3>
 
 The last floating-point assembly example also shows an automatic literal.
 The two-word floating operand of the <b>fpx</b> instruction is assembled
@@ -388,7 +391,7 @@ $(0:64)
 
 </pre>
 
-<h2>More about Strings</h2>
+<h3>More about Strings</h3>
 
 The last literal example was a string. Bytes are any size you
 say they are, default 8-bits, padded with either zero or space to integral words
@@ -443,11 +446,51 @@ MASMX 7r3
 
 </pre>
 
-<h2>$form Structures</h2>
+<h3>$form Bit-Field Structures</h3>
 
-Directive <b>$form</b> types structures up to 192 bits in size
+Directive <b>$form</b> types bit-field structures up to eight words long.
+The structures are an integral number of words in size
+<pre>
 
+long_virtual_address	$form			1, 1, 16, 6, 6, 18
 
+			long_virtual_address	0, 1, BANK_32768, DEVICE_2, BASE_WINDOW_44, 03000A
+
+</pre>
+
+<h3>Equal-Size Bit Fields</h3>
+
+A number constant divided by commas means the containing word or words is of equal sized fields. The total size is one word regardless of value truncation, unless an override suffix is typed
+<pre>
+
+		$ masmx -ln
+MASMX 7r3
+0/-INPUT>>
+
+RED48		$equ		48
+GREEN72		$equ		72
+BLUE240		$equ		240
+
+	+	RED48, GREEN72, BLUE240
+	+	0FFFC, 08003, 07001:d    
+
+	+	15, 14, 12, 0, 5, 10
+	+	7, 4, 3, 6,  6, 3, 2, 5
+	$end
+  :                            1 
+  :                            2 RED48		$equ		48
+  :                            3 GREEN72	$equ		72
+  :                            4 BLUE240	$equ		240
+  :                            5 
+00:000000 3048F0              +6 	+	RED48, GREEN72, BLUE240
+00:000001 FFFC80037001        +7 	+	0FFFC, 08003, 07001:d    
+  :                            8 
+00:000003 FEC05A              +9 	+	15, 14, 12, 0, 5, 10
+00:000004 F1ECD5              +10 	+	7, 4, 3, 6,  6, 3, 2, 5
+  :                            11 	$end
+:$(00):000000:000005 
+
+</pre>
 <h2>Location Counters, Load Images, Banks and Address Windows</h2>
 
 <h3>Location Counters</h3>
