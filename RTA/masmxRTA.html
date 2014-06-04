@@ -178,6 +178,34 @@ but it is never wrong to type the colon. The size suffix can equally be
 upper or lower case, whether the assembly is case-sensitive or not
 
 <p>
+Symbols in single quotes produce the number values assigned in the
+current data code juxtaposed according to current byte size. It's a
+right justified string up to maximum number size, and may be operated
+in expressions
+<pre>
+
+$ masmx -ln
+MASMX 7r3
+0/-INPUT>>
+	+	'abcd'
+	$data_code	97:65
+	+	'abcd'++128
+	$ascii
+	$byte	12
+	+	'abcd'
+	$end
+00:000000 000061626364        +1  + 'abcd'
+  :                            2  $data_code 97:65
+00:000002 0000416263E4        +3  + 'abcd'++128
+  :                            4  $ascii
+  :                            5  $byte 12
+00:000004 061062063064        +6  + 'abcd'
+  :                            7  $end
+:$(00):000000:000006 
+
+
+</pre>
+<p>
 A decimal point or the exponent operators <b>*+ *-</b> make a number
 floating-point
 
