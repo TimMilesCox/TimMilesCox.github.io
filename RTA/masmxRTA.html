@@ -646,12 +646,12 @@ jjj = zero = operand is the storage word at ea
 
 
 <p>
-PSR designator <b>h$word</b> is zero if the program accesses third-words
+PSR designator <b>half$w</b> is zero if the program accesses third-words
 and one if the program accesses halfwords. Bytes are sign-extended to 24
 bits on read and unused fields are unchanged on byte write 
 <pre>
 
-		h$word = 0							h$word = 1
+		half$w = 0							half$w = 1
 		__________							__________
 
 		  23                                          0
@@ -712,6 +712,54 @@ The $equf directive can represent all the subfields of an operand with one name
 				anu		HARD_LINK
 </pre>
 
+The store and the test integer instructions do not take immediate operands
+the ,,i and ,,xi options of instructions sr sk sx sy sa sb z pop tz tp
+are assigned to a I/O and control instructions which take only an immediate
+operand
+
+<p>
+Integer instructions are listed here. All instructions are explained in the
+RTA1 programmable architecture specification
+<pre>
+
+	_________________________________________________________________________________________________________
+	|	mnemonic|   fffff.jjj	|			|		jjj				|	
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	sr	|   00000.0xx	|  store repeat counter	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	sk	|   00001.0xx	|  store mask register	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	sx	|   00010.0xx	|  store x		| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	sy	|   00011.0xx	|  store y		| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	sa	|   00100.0xx	|  store a		| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	sb	|   00101.0xx	|  store b		| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	z	|   00110.0xx	|  zero			| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	pop	|   00111.0xx	|  pop internal stack	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	lr	|   01000.xxx	|  load repeat counter	| [w0] ++ [t1 t2 t3] -- [h1 h2]	++ [i xi]	|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	lk	|   01001.xxx	|  load mask register	| [w0] ++ [t1 t2 t3] -- [h1 h2]	++ [i xi]	|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	lx	|   01010.xxx	|  load x		| [w0] ++ [t1 t2 t3] -- [h1 h2]	++ [i xi]	|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	ly	|   01011.xxx	|  load y		| [w0] ++ [t1 t2 t3] -- [h1 h2]	++ [i xi]	|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	la	|   01100.xxx	|  load a		| [w0] ++ [t1 t2 t3] -- [h1 h2]	++ [i xi]	|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	lb	|   01101.xxx	|  load b		| [w0] ++ [t1 t2 t3] -- [h1 h2]	++ [i xi]	|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	tz	|   01110.0xx	|  test zero= skip	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	tp	|   01111.0xx	|  test positive skip	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+
+
+
+</pre>
 <h2>Location Counters, Load Images, Banks and Address Windows</h2>
 
 <h3>Location Counters</h3>
