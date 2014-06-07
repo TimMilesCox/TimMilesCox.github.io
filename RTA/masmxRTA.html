@@ -88,7 +88,7 @@ The masmx already has these default settings. They are correct for RTA1
 code and data in all the executable space using the giant address
 
 <p>
-masmx default byte size is 8 and data code is ASCII.
+masmx default byte size is 8 bits and data code is ASCII.
 <b>$byte</b> and the data code can be changed during
 an assembly
 
@@ -189,10 +189,10 @@ $ masmx -ln
 MASMX 7r3
 0/-INPUT>>
 	+	'abcd'
-	$data_code	97:65
-	+	'abcd'++128
-	$ascii
-	$byte	12
+	$data_code	97:65	. generate 'A' when the source has 'a'
+	+	'abcd'++128	. logical OR bit 7 on
+	$ascii			. switch back to plain ASCII
+	$byte	12		. make the byte size a halfword
 	+	'abcd'
 	$end
 00:000000 000061626364        +1  + 'abcd'
@@ -598,8 +598,8 @@ in the address space. These are
 				
 		$(0)
 				lr	*redirection
-				ql	*(ADDRESS_7_MEGAWORD)
-				
+				ql	*(ADDRESS_7_MEGAWORD)	. big indirect address
+								. in 24-bit literal constant
 				tp	*11
 
 </pre>
