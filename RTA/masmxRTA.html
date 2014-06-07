@@ -648,7 +648,9 @@ jjj = zero = operand is the storage word at ea
 <p>
 PSR designator <b>half$w</b> is zero if the program accesses third-words
 and one if the program accesses halfwords. Bytes are sign-extended to 24
-bits on read and unused fields are unchanged on byte write 
+bits on read and unused fields are unchanged on byte write. Bytes are not
+read from registers or written to registers. A register is a 24-bit integer,
+including the internal stack register array 
 <pre>
 
 		half$w = 0							half$w = 1
