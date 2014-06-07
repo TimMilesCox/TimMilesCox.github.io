@@ -942,14 +942,45 @@ the guard interrupt intervenes
 </pre>
 
 
-
+<h2>Application Memory, Location Counters and Dynamic Data Segment Load</h2>
 
 <h3>Location Counters</h3>
 
-Location counters correspond to program sections. There are 72 location counters.
-Their usage convention is
+Location counters correspond to program sections. masmx has 72 location counters.
+Their RTA1 usage convention with smaragd7 kernel is
+<pre>
 
-<p>
+
+	_________________________________________________________________________________________________________________
+        |       location counter|       address window			|		purpose / address range		|
+        |_______________________|_______________________________________|_______________________________________________|
+        |       $(0)            |       instruction bank B0             |[ispace]000000..007FFF/[dspace]000100..000FFF	|
+        |_______________________|_______________________________________|_______________________________________________|
+        |       $(1:01000)	|       private stack bank B1		|	     data memory space 001000..001FFF	|
+        |_______________________|_______________________________________|_______________________________________________|
+        |       $(2)            |       vector bank B2			|	     data memory space 002000..002FFF	|	    
+        |_______________________|_______________________________________|_______________________________________________|
+        |       $(3:03000)	|       data windows  B3..B31		|	application data space 003000..01FFFF	|
+        |_______________________|_______________________________________|___________________________or 0C0000..7FFFFF___|
+        |			|       data windows B32..B47		|	application context kernel interface	|
+        |_______________________|_______________________________________|_______________________________________________|
+        |			|       data windows B48..B63           |		kernel				|
+        |_______________________|_______________________________________|_______________________________________________|
+        |       $(66::,x)	|       pointer in index register x	|
+        |_______________________|_______________________________________|
+        |       $(67::,y)	|       pointer in index register y	|
+        |_______________________|_______________________________________|
+        |       $(68::,a)	|       pointer in arithmetic register a|
+        |_______________________|_______________________________________|
+        |       $(69::,b)	|       pointer in arithmetic register b|
+        |_______________________|_______________________________________|
+        |       $(70::,fp)	|       frame at external stack pointer |
+        |_______________________|_______________________________________|
+        |       $(71::,sp)      |       frame at internal stack pointer |
+        |_______________________|_______________________________________|
+
+
+</pre>
 $(0) contains instruction code in bank B0 and a few constants which are locally visible only
 
 <p>
