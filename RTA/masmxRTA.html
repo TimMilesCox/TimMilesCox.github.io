@@ -658,7 +658,7 @@ including the internal stack register array
 
 		  23                                          0
 		_________________________________________________
-   xxx = 001	|	t1	|////unused/////|////unused/////|
+   jjj = 001	|	t1	|////unused/////|////unused/////|
 		|_______________|____unchanged__|____unchanged__|
 
 
@@ -668,7 +668,7 @@ including the internal stack register array
 
 		  23                                          0			  23                                          0
 		_________________________________________________		_________________________________________________
-   xxx = 010	|////unused/////|	t2	|////unused/////|		|	    h1		|///unused//unchanged///|
+   jjj = 010	|////unused/////|	t2	|////unused/////|		|	    h1		|///unused//unchanged///|
 		|____unchanged__|_______________|____unchanged__|		|_______________________|_______________________|
 
 
@@ -679,7 +679,7 @@ including the internal stack register array
 
 		  23                                          0			  23                                          0
 		_________________________________________________		_________________________________________________
-   xxx = 011	|////unused/////|////unused/////|	t3	|		|///unused//unchanged///|	    h2		|
+   jjj = 011	|////unused/////|////unused/////|	t3	|		|///unused//unchanged///|	    h2		|
 		|____unchanged__|____unchanged__|_______________|		|_______________________|_______________________|
 
 				
@@ -688,14 +688,14 @@ including the internal stack register array
 
 
 </pre>
-xxx = 100 = the operand is the effective address used as an immediate
+jjj = 100 = the operand is the effective address used as an immediate
 <pre>
 
 				lb, i		4, a
 				lr		2,b,i			
 
 </pre>
-xxx = 101 = the immediate operand is the 16 bits of the address fields
+jjj = 101 = the immediate operand is the 16 bits of the address fields
 sign extended to 24 bits
 </pre>
 
@@ -721,7 +721,7 @@ The ,,i and ,,xi options of instructions sr sk sx sy sa sb z pop tz tp
 are assigned to I/O and control instructions which take only an immediate
 operand
 
-The integer store instructions do not update <b>carry$>/b>
+The integer store instructions do not update <b>carry$</b>
 
 <pre>
 
@@ -750,13 +750,15 @@ The integer store instructions do not update <b>carry$>/b>
 
 <h3>Integer Load Instructions</h3>
 
-The integer store instructions do not update <b>carry$>/b>
+The integer store instructions do not update <b>carry$</b>
 
 <pre>
 
 
 
-	_________________________________________________________________________________________________________
+        _________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               jjj                             |
+	|_______________|_______________|_______________________|_______________________________________________|
 	|	lr	|   01000.jjj	|  load repeat counter	| [w0] ++ [t1 t2 t3] -- [h1 h2]	++ [i xi]	|
 	|_______________|_______________|_______________________|_______________________________________________|
 	|	lk	|   01001.jjj	|  load mask register	| [w0] ++ [t1 t2 t3] -- [h1 h2]	++ [i xi]	|
@@ -775,13 +777,15 @@ The integer store instructions do not update <b>carry$>/b>
 
 <h3>Integer Test Instructions</h3>
 
-The integer test instructions do not update <b>carry$>/b>
+The integer test instructions do not update <b>carry$</b>
 
 The operand is tested for zero or for bit 23=0. If so, the next instruction is skipped
 
 <pre>
 
-	_________________________________________________________________________________________________________
+        _________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               jjj                             |
+        |_______________|_______________|_______________________|_______________________________________________|
 	|	tz	|   01110.0jj	|  test zero skip	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
 	|_______________|_______________|_______________________|_______________________________________________|
 	|	tp	|   01111.0jj	|  test positive skip	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
@@ -799,6 +803,8 @@ The index register add instructions do not update <b>carry$</b>
 
 
         _________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               jjj                             |
+        |_______________|_______________|_______________________|_______________________________________________|
         |       ax      |   10000.jjj   |  x += operand		| [w0] ++ [t1 t2 t3] -- [h1 h2] ++ [i xi]       |
         |_______________|_______________|_______________________|_______________________________________________|
         |       ay      |   10001.jjj   |  y += operand		| [w0] ++ [t1 t2 t3] -- [h1 h2] ++ [i xi]       |
@@ -815,6 +821,8 @@ The boolean algebra instructions do not update <b>carry$</b>
 
 
         _________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               jjj                             |
+        |_______________|_______________|_______________________|_______________________________________________|
         |       or      |   10010.jjj   |  a OR operand ->a	| [w0] ++ [t1 t2 t3] -- [h1 h2] ++ [i xi]       |
         |_______________|_______________|_______________________|_______________________________________________|
         |       orB     |   10011.jjj   |  b OR operand ->b     | [w0] ++ [t1 t2 t3] -- [h1 h2] ++ [i xi]       |
@@ -845,6 +853,8 @@ of the 2s complement would write carry
 <pre>
 
         _________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               jjj                             |
+        |_______________|_______________|_______________________|_______________________________________________|
         |       aa      |   11000.jjj   |  a += operand		| [w0] ++ [t1 t2 t3] -- [h1 h2] ++ [i xi]       |
         |_______________|_______________|_______________________|_______________________________________________|
         |       ab      |   11001.jjj   |  b += operand		| [w0] ++ [t1 t2 t3] -- [h1 h2] ++ [i xi]       |
