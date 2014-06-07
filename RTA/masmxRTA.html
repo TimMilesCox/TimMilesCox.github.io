@@ -639,12 +639,15 @@ sign-extended immediate value in the range -32768..+32767
 <p>
 Integer instructions access a word and either third-words or halfwords.
 jjj = zero = operand is the storage word at ea
+<pre>
 
 
 				z	buffer+4
-				pop	buffer+5[,,w0]
+				pop	buffer+5[,,w0]	. w0 is the default
+							. and need not be typed
 
 
+</pre>
 <p>
 PSR designator <b>half$w</b> is zero if the program accesses third-words
 and one if the program accesses halfwords. Bytes are sign-extended to 24
@@ -779,6 +782,7 @@ The integer store instructions do not update <b>carry$</b>
 
 The integer test instructions do not update <b>carry$</b>
 
+<p>
 The operand is tested for zero or for bit 23=0. If so, the next instruction is skipped
 
 <pre>
