@@ -109,8 +109,77 @@ correct for RTA1
 
 
 <h2>Data Constants</h2>
-<h3>Numbers</h3>
+<h3>Expressions and Numbers</h3>
 
+Operators by rank are
+
+	<blockquote>
+	()
+	=
+	^=
+	>
+	<
+	--
+	++
+	/*
+	*/
+	*/-
+	**
+	*+ *-
+	* / // ///
+	+ -
+	</blockquote>
+
+
+Operators in the same rank have left-to-right precedence as they are
+encountered in the expression
+
+Operators of higher rank are evaluated first and operated last. An expression
+generates an integer until a decimal exponent operator *+ *- is actioned
+
+<p>
+The operators are 
+<pre>
+
+	_________________________________________
+	|	=	|	equal		|	= 1 ^= 0
+	|_______________|_______________________|
+	|	^=	|	unequal		|	^= 1 = 0
+	|_______________|_______________________|
+	|	>	|	greater		|	> 1 = 0 < 0
+	|_______________|_______________________|
+	|	<	|	less		|	< 1 = 0 > 0
+	|_______________|_______________________|
+	|	--	|	XOR		|
+	|_______________|_______________________|
+	|	++	|	OR		|
+	|_______________|_______________________|
+	|	/*	|	shift right	|
+	|_______________|_______________________|
+	|	*/	|	shift left	|
+	|_______________|_______________________|
+	|	*/-	| right	shift algebraic	|
+	|_______________|_______________________|
+	|	**	|	AND		|
+	|_______________|_______________________|
+	|	*+	|      +decimal exponent|
+	|_______________|_______________________|
+	|	*-	|      -decimal exponent|
+	|_______________|_______________________|
+	|	+	|	PLUS		|
+	|_______________|_______________________|
+	|	-	|	MINUS		|
+	|_______________|_______________________|
+	|	*	|	MULTIPLY	|
+	|_______________|_______________________|
+	|	/	|	DIVIDE		|
+	|_______________|_______________________|
+	|	//	|	covered quotient|
+	|_______________|_______________________|
+	|	///	|	remainder	|
+	|_______________|_______________________|
+
+</pre>
 <p>
 Number constants have the default masmx syntax. Leading 0 means hex
 <pre>
@@ -523,9 +592,10 @@ BLUE240		$equ		240
 </pre>
 <h2>Instructions and Operands</h2>
 
-Instructions are explained in collating order of their encoding in the RTA1 programmable architecture
+Instructions are listed in code order in the RTA1 programmable architecture
 specification
 
+<p>
 All RTA1 instructions have an operand address. The operand may be in storage or a register. Some
 instructions take an immediate operand
 
@@ -956,10 +1026,10 @@ stored in register 6 mantissa2
 
 
 
-		  23                                         0    23                                          0   47                                         24
-		_________________________________________________________________________________________________________________________________________________	
-		|	arithmetic register a = quotient 23..0	|	arithmetic register b = dividend 23..0	|	arithmetic register 6 = quotient 47..24	|
-	after	|_______________________________________________|_______________________________________________|_______________________________________________|
+		  23                                   0   23                                   0   47                                   24
+		____________________________________________________________________________________________________________________________	
+		| arithmetic register a = quotient 23..0 | arithmetic register b = remainder 23..0| arithmetic register 6 = quotient 47..24|
+	after	|________________________________________|________________________________________|________________________________________|
 	____
 
 
