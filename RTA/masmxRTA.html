@@ -601,8 +601,100 @@ BLUE240		$equ		240
 Instructions are listed in code order in the RTA1 programmable architecture
 specification
 
+<h3>Programmable Register Model</h3>
+Application and interrupt space each have scalar registers and a register array called the internal stack
+
 <p>
-All RTA1 instructions have an operand address. The operand may be in storage or a register. Some
+The size of each internal stack is 104 words intended for stringently realtime programming methods. For
+programming techniques which require extensive stacks, macro libraries are supplied to reuse internal
+stack space in a renewable way
+<pre>
+
+			The Application Registers						  The Interrupt Registers
+			_________________________						  _______________________
+
+
+		 23			       0					 23			       0
+		_________________________________					_________________________________
+	0	|		r		|	repeat counter	 	128	|		r_x		|
+		|_______________________________|					|_______________________________|
+	1	|		k		|	mask register		129	|		k_x		|
+		|_______________________________|					|_______________________________|
+	2	|		x		|	index register		130	|		x_x		|
+		|_______________________________|					|_______________________________|
+	3	|		y		|	index register		131	|		y_x		|
+		|_______________________________|					|_______________________________|
+	4	|		a		|  arithmetic + index register	132	|		a_x		|
+		|_______________________________|					|_______________________________|
+	5	|		b		|  arithmetic + index register	133	|		b_x		|
+		|_______________________________|					|_______________________________|
+	6	|	mantissa2		|	arithmetic register	134	|	mantissa2_x		|
+		|_______________________________|					|_______________________________|
+	7	|	mantissa3		|	arithmetic register	135	|	mantissa3_x		|
+		|_______________________________|					|_______________________________|
+	8	|		aA		|	arithmetic register	136	|		aA_x		|
+		|_______________________________|					|_______________________________|
+	9	|		bA		|	arithmetic register	137	|		bA_x		|
+		|_______________________________|					|_______________________________|
+	10	|	mantissa2A		|	arithmetic register	138	|	mantissa2A_x		|
+		|_______________________________|					|_______________________________|
+	11	|	mantissa3A		|	arithmetic register	139	|	mantissa3A_x		|
+		|_______________________________|					|_______________________________|
+	12	|	    	 p		|	bitstream pointer write	140	|		p_x		|
+		|_______________________________|					|_______________________________|
+	13	|	   	 q		|	bitstream pointer read	141	|		q_x		|
+		|_______________________________|					|_______________________________|
+	14	|	  	 fp		|	index register		142	|		fp_x		|
+		|_______________________________|					|_______________________________|
+	15	|	  	 sp		|	index register		143	|		sp_x		|
+		|_______________________________|					|_______________________________|
+	16	|				|	scratch			144	|	REALTIME$_CLOCK		|
+		|_______________________________|					|_______________________________|
+	17	|				|	scratch			145	|	PRIORITY$		|
+		|_______________________________|					|_______________________________|
+	18	|				|	scratch			146	|	DAYCLOCK$U		|
+		|_______________________________|					|_______________________________|
+	19	|				|	scratch			147	|	DAYCLOCK$		|
+		|_______________________________|					|_______________________________|
+	20	|	   RDATAC		|	bitstream counter read	148	|	X_RDATAC		|
+		|_______________________________|					|_______________________________|
+	21	|	    RDATA		|	bitstream data read	149	|	 X_RDATA		|
+		|_______________________________|					|_______________________________|
+	22	|	   WDATAC		|	bitstream counter write	150	|	X_WDATAC		|
+		|_______________________________|					|_______________________________|
+	23	|	    WDATA		|	bitstream data write	151	|	 X_WDATA		|
+		|_______________________________|					|_______________________________|
+	24	| maximum internal stack top	|				152	|				|
+		|_______________________________|					|_______________________________|
+	25	|				|				153	|				|
+		|_______________________________|					|_______________________________|
+	26	|				|				154	|				|
+		|_______________________________|					|_______________________________|
+	27	|				|				155	|				|
+
+
+
+
+		|_______________________________|					|_______________________________|
+	124	|				|				252	|				|
+		|_______________________________|					|_______________________________|
+	125	|				|				253	|				|
+		|_______________________________|					|_______________________________|
+	126	|				|				254	|				|
+		|_______________________________|					|_______________________________|
+	127	|				|	first pushed word	255	|				|
+		|_______________________________|					|_______________________________|
+
+
+</pre>
+<p>
+Instructions may imply scalar registers or the internal stack as left-side operand, and
+have an address for a second imput
+
+
+<h3>Register / Memory Operand Continuum</h3>
+<p>
+The right-side operand may be in storage or a register. Some
 instructions take an immediate operand
 
 <p>
@@ -712,7 +804,7 @@ If xxx is 2..7 then index register [x y a b fp sp] is added to to the unsigned
 
 <h3>Single Integer Instructions</h3>
 32 instructions carry out load / store / arithmetic / boolean operations on a single
-integer. These 32 instructions have as their operand another register, a storage word,
+integer. These 32 instructions have as their right-side operand another register, a storage word,
 part of a storage word (half or third), the effective address as an immediate value, or a
 sign-extended immediate value in the range -32768..+32767
 
