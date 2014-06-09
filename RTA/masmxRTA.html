@@ -114,20 +114,21 @@ correct for RTA1
 Operators by rank are
 
 	<blockquote>
-	()
-	=
-	^=
-	>
-	<
-	--
-	++
-	/*
-	*/
-	*/-
-	**
-	*+ *-
-	* / // ///
-	+ -
+	()<br>
+	=<br>
+	^=<br>
+	><br>
+	<<br>
+	--<br>
+	++<br>
+	/*<br>
+	*/<br>
+	*/-<br>
+	**<br>
+	*+ *-<br>
+	+ -<br>
+	* / // ///<br>
+	&plusmn; ^unary<br>
 	</blockquote>
 
 
@@ -182,6 +183,11 @@ The operators are
 </pre>
 <p>
 Number constants have the default masmx syntax. Leading 0 means hex
+
+<p>
++ or - in the command field operates as a unary on the whole
+constant expression. &plusmn; catenated to an expression only
+operates as a unary on one token. Unary ^ is complement
 <pre>
 
 $(3:03000)
