@@ -689,7 +689,7 @@ stack space in a renewable way
 </pre>
 <p>
 Instructions may imply scalar registers or the internal stack as left-side operand, and
-have an address for a second imput
+have an address for a second input
 
 
 <h3>Register / Memory Operand Continuum</h3>
@@ -1561,7 +1561,7 @@ $(31::*00000A000000)
 A normalised long pointer is used here to access data via a 48-bit address
 <pre>
 
-$ masmx alaska -lnk
+$ masmx alaska -kln
 MASMX 7r2
 3/alaska.msm
 *EOF*
@@ -1636,8 +1636,74 @@ See <b>Appendix B: masmx Linking for RTA1</b>
 
 <h2>Appendix B: masmx Linking for RTA1</h2>
 
+<h3>5.4 Core Resident File Systems used in Software RAM Segment Load</h3>
+
+The input binary_image_filename is a load strings output from the
+following utility steps. First all the RAM-destined part of an
+assembly is separated in a linking assembly. Then the utility
+lstring is executed with option -b to output binary load strings
+
+<pre>
+
+        $ masmx -kln
+
+
+                $include        freeware/RTA1/rta/def/map1.def
+                $include,$binary        my_application  $(1,3)
+
+                                        . that includes writable parts
+
+
+                $store  my_ram_part
+                $end
+
+
+        $ lstring -b my_ram_part.txo binary_input_filename
+
+</pre>
+
+The core file system image can be constructed after all segments
+for inclusion have been built
+<pre>
+
+        $ 4kformat -x fsystem5.txo
+        volume  fsystem5
+        tree    seg$load
+        file    my_ram_values binary_input_filename
+	.
+	.
+
+</pre>
+The two periods are required. They are not a hint at further text. The first period
+returns from directory seg$load to volume root directory fsystem8. The second
+period exits 4kformat utility
 
 <p>
+The inclusion of fsystem5.txo in the final image has the pattern
+<pre>
+
+        $ masmx         -kln
+
+                $include        freeware/RTA1/rta/def/map1.def
+                $include,$binary        everything_else
+
+FS5_START_BANK_INDEX $equ       NEXT_ADDRESS//4096      . a 4K bank index
+
+                $include,$binary        fsystem5
+                $store                  totalimage
+
+</pre>
+
+Finally when a process instance of my_application is launched, after
+the storage banks for process data are based, the function seg$load can
+be called with the indentify of the core file system start bank and the
+label of the file containing the RAM segment
+<pre>
+
+	c	(seg$load)	FS5_START_BANK_INDEX,,xi
+				(my_ram_values:d),,long
+
+</pre>
 There are two more variants of <b>seg$load</b>
 
 <p>
@@ -1650,7 +1716,7 @@ address before <b>recursive$seg$load</b>
 <pre>
 
 	c	(recursive$seg$load)	BANK_INDEX_OF_CORE_FS_START,,xi	;
-					my_dynamic_segment_filename,,xi
+					(my_dynamic_segment_filename:d),,long
 
 </pre>
 block structured programs use the xframe() part of <b>$head_near/far</b>
@@ -1670,8 +1736,8 @@ with system calls <b>ii BANK$</b> or <b>ii ARRAY$</b>
 	ii	ARRAY$
 	jza	sorry
 
-	c	(array$seg$load)	BANK_INDEX_OF_CORE_FS_START,,xi		;
-					my_assembled_array_segment_filename,,xi	;
+	c	(array$seg$load)	BANK_INDEX_OF_CORE_FS_START,,xi			;
+					(my_assembled_array_segment_filename:d),,long	;
 					a		
  
 </pre>
