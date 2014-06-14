@@ -2078,7 +2078,7 @@ Two low-level calls used to read files in Core Resident File Systems are
 
 	c	(fsrom_da)	file_access_block,,i		;
 				FS5_START_BANK_INDEX,,XI	;
-				my_filename,,xi
+				(my_filename:d),,long
 
 
 	c	(fsrom_read)	file_access_block,,i		;
@@ -2129,8 +2129,9 @@ FS5_START_BANK_INDEX $equ	NEXT_ADDRESS//4096	. a 4K bank index
 </pre>
 
 
-Core Resident File Systems applied software RAM segment load are described in the section
-on linking and load image formating in the accompanying manual <b>masmx for RTA1</b>
+Core Resident File Systems applied to software RAM segment load
+are described in the section on linking and load image formatting
+in the accompanying manual <b>masmx for RTA1</b>
 
 <h3>5.4 Access Block for File Systems in RTA1 smaragd7</h3>
 

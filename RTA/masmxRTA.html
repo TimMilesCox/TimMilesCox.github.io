@@ -1275,7 +1275,7 @@ get_going
 						. to the high end of that
 
 	c	(seg$load)	CORE_FS,,xi	;	. this call copies initialised
-				my_data_segments,,xi 	. variables to process RAM space
+				(my_data_segments:d),,long  . variables to process RAM space
 
 	.
 	.
@@ -1309,8 +1309,10 @@ dynamic load segment. An application instance references this
 label to request initialization of its writeable data part
 <pre>
 
+	$base_d MY_APPLICATION_DATA_SIZE	. base the memory space
+
 	c	(seg$load)	BANK_INDEX_OF_CORE_FS_START,,xi	;
-				my_ram_loadup_filename,,xi	
+				(my_ram_loadup_filename:d),,long	
 
 </pre>
 There is no directory search in the core file system. The link
@@ -1345,7 +1347,10 @@ file systems are described in the linking and utilities section of this manual.
 
 <h3>Simple Alternatives to seg$load for Limited-Size RAM Segment Loads</h3>
 <p>
-A simple alternative technique for copying ROM to RAM initial data involves the breakpointed
+The simplest programs can initialise a few scalar items without calling on
+an organised segment load
+<p>
+An alternative to segload is a copy from ROM to RAM. This involves the breakpointed
 load addressing described earlier
 
 In this example, part of B0 is a constant pool for initializing B1
@@ -1699,6 +1704,8 @@ the storage banks for process data are based, the function seg$load can
 be called with the indentify of the core file system start bank and the
 label of the file containing the RAM segment
 <pre>
+
+        $base_d MY_APPLICATION_DATA_SIZE        . base the memory space
 
 	c	(seg$load)	FS5_START_BANK_INDEX,,xi
 				(my_ram_values:d),,long
