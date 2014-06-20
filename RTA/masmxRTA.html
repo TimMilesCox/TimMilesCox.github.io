@@ -1750,7 +1750,7 @@ with system calls <b>ii BANK$</b> or <b>ii ARRAY$</b>
 </pre>
 
 
-See <b>Appendix Y: masmx Directive and Function Names</b>
+<h2>Appendix Y: masmx Directive and Function Names</h2>
 
 masmx prints its internal names if options + and x are both typed. -y sorts
 the label table. -k is case-sensitive, otherwise all names are uppercase
@@ -1775,11 +1775,12 @@ $ascii=:D:000015		directive		$ascii				. generate direct ASCII:ASCII data code a
 $awidth=:D:00002B		directive		$awidth	ea_bits[:executable_space]	. set target address size, default 24:48
 $b=:F:000010			function		+	$b			. start address of section $b or $b(number)
 $bank_index=:F:000012		function		+	$bank_index		. current breakpoint address of program section
+
 $binary=0000FA						$include,$binary filename	. add *.txo text encoded binary file to linking assembly
 						label	$set,$binary	text_encoded_superword_paraform . capture binary code in a label, linking assembly
  
 $blank=:D:00004E		directive	label[*] $blank				. assign export level to label not yet declared
-$branch=:D:00003F		directive	label	$branch				. address structure overlaid in memory
+$branch=:D:00003F		directive	label	$branch				. address structure overlaid in memory. See $tree and $root
 $byte=:D:00001A			directive		$byte	bits			. width of data character in "" and +'', default 8
 				and function		+	$byte
 $characteristic=:D:000035	directive		$characteristic[,number_size_bits] characteristic_bits
@@ -1809,7 +1810,7 @@ $if=:D:000006			directive		$if	condition		. conditional assembly
 $include=:D:00000C		directive		$include			. include source code, see also $binary and $void
 $info=:D:000044			directive		$info			. instruct the linking assembly, see also $range_check $range_check1 $offset
 $linewidth=:D:00002A		directive		$linewidth	columns		. set maximum line width in output text encoded binary file
-$list=:D:00001C			directive		$list	[nondefault]		. set file inclusion nest level to which source is listed
+$list=:D:00001C			directive		$list	[nondefault]		. set file inclusion nest level for -l list. Just $list returns to default 
 $lit=:D:00007B			directive	[tag]	$lit	location_counter	 . set which program section contains automatic literals
 $load=:D:00004C			directive		$load,$bits	label		. output link adjusted binary acquired at $set,$binary
 $long_absolute=0000DC				name	$pushrel,$long_absolute label_value . acquire a large label value to add to a relocatable code field
@@ -1822,44 +1823,55 @@ $note=:D:00003A			directive		$note	print this non-error remark
 $notef=:D:00000B		directive		$notef	print this non-error remark on the first assembly pass
 $o=:F:000009			directive		+	$o(value_of_option_letter)	. 1 if opted, otherwise zero
 $octal=:D:000041		directive		$octal				. leading 0 means octal input print octal output, otherwise default hex
-$offset=000001
-$path=:D:00001D
-$plist=:D:00001E
-$proc=:D:000001
-$pushrel=:D:00004D
-$quantum=:D:000029
-$quote=:D:000036
-$r=:F:000006
-$range_check=000002
-$range_check1=000003
-$rel=:F:00000A
-$res=:D:000022
-$return=:D:00001B
-$root=:D:000047
-$set=:D:000011
-$set_option=:D:000045
-$snap=:D:000028
-$sterm=:D:00002D
-$store=:D:00004F
-$suffix=:D:00003D
-$sym=:D:00004B
-$t=:F:000008
-$text=:D:000053
-$trace=:D:000039
-$tree=:D:000046
-$twos_complement=:D:00002F
-$void=0000F8
-$word=:D:000019
-$xqt_fp=:D:000050
-$xqt_i=:D:000051
-$zenith=:F:000FC8
+$offset=000001						$info,$offset	new_value	. update a tuple containing a relocatable address value in a link assembly
+$path=:D:00001D			directive		$path	[../../][/token..]	. path prepend for $include. Cancels with just $path
+$plist=:D:00001E		directive		$plist	value			. set macro expansion depth for -pqr listing. Just $plist returns to default
+
+$proc=:D:000001			directive	label[*] $proc	[*] [$(number)]		. head of a command macro
+											. label must be exported if macro text exports no labelled* $name label
+											. argument * is 2-pass macro on second assembly pass
+											. $(number) assembles in program section $(number)
+
+$pushrel=:D:00004D		directive	label	$pushrel text_encoded_binary_superword_subfield		. in a linking assembly
+											. capture one relocation tuple from *.txo data superword into a $equf label
+$quantum=:D:000029		directive		$quantum	bitsize		. the addressable memory unit of the target architecture. Default = $word
+$quote=:D:000036		directive		$quote		value		. set the string delimiter, default "
+$r=:F:000006			function		+		$r		. program section (location counter]: $r of here, $r(name) of something 
+$range_check=000002		directive		$info,$range_check	value	. on final relocation check value is in range of target field
+$range_check1=000003		directive		$info,$range_check1	value	. check value in range of target field each time this relocation tuple is scanned
+$rel=:F:00000A			function		+		$rel		. relocation alignment, zero = absolute : $rel current section or $rel(number)
+$res=:D:000022			directive	[label]	$res		quanta		. declare a buffer. option -Z initial zero
+$return=:D:00001B		directive		$return		expression	. leave a $func macro and return the expressed value to the assembly above
+$root=:D:000047			directive		$root				. end of structured name space started with $tree or $branch
+$set=:D:000011			directive	label	$set		expression	. temporary equate, actioned on all assembly passes, may be $set again to a new value
+$set_option=:D:000045		directive		$set_option	"flaGS"		. set assembly options. See Appendix Z: Command Line
+$snap=:D:000028a		directive		$snap[,1]	[2]		. list label table fixed or [2] dynamic part. Subfunction 1 = 1st pass	
+$sterm=:D:00002D		directive		$sterm		value		. change the substring character, default ':'
+$store=:D:00004F		directive		$store		path		. default assembly output file name. Suffix .txo if no '.' in path last token
+$suffix=:D:00003D		directive		$suffix		[1|2]		. integer notation suffixes h o|q b d (default). 1|2 : default for leading 0 = h|d
+$t=:F:000008			function		+	$t(name_or_paraform)	. category of label
+ 
+$text=:D:000053			directive		$text	,this,that,
+							$text	\these,those\any\	. translate source text on read
+
+$trace=:D:000039		directive		$trace[,1]	expression	. display a value
+$tree=:D:000046			directive	name	$tree				. structured name space, see also $branch, $root
+$twos_complement=:D:00002F	directive		$twos_complement	1|0	. default 1 = 2s complement, 0 = negative integers are 1s complement
+$void=0000F8						$include,$void file		. add names but not code from *.txo text encoded binary file to link assembly
+											. see $binary
+$word=:D:000019			directive		$word	size			. size denominator of generated code and default integer size
+$xqt_fp=:D:000050		directive		$xqt_fp	floating_tokens+operators . inline runtime expression algorithm via target-specific instruction macros
+$xqt_i=:D:000051		directive		$xqt_i	integer_tokens+operators . inline runtime expression algorithm via target-specific instruction macros
+
+$zenith=:F:000FC8		function		$if	$zenith>LIMIT
+							$if	$zenith(section)>LIMIT	. unrelocated high address of section including literal pool
 -INPUT>>=0<000000
 
 -INPUT>>: object code 0 bytes: 0 errors: 0 undefined labels
 
 </pre>
 
-See <b>Appendix Z: masmx Command Line Options</b>
+<h2>Appendix Z: masmx Command Line Options</h2>
 
 <pre>
 
