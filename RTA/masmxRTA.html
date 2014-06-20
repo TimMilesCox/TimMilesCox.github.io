@@ -1750,6 +1750,120 @@ with system calls <b>ii BANK$</b> or <b>ii ARRAY$</b>
 </pre>
 
 
+See <b>Appendix Y: masmx Directive and Function Names</b>
+
+masmx prints its internal names if options + and x are both typed. -y sorts
+the label table. -k is case-sensitive, otherwise all names are uppercase
+
+
+<pre>
+
+		$ masmx -x+yk
+MASMX 7r3
+0/-INPUT>>
+	$end
+
+assembly list			explanation
+_____________			___________
+
+				label category	syntax column 1
+				______________	_______________
+
+$=:F:000000			function		+	$			. location counter $ or $(number)
+$a=:F:000011			function		+	$a			. absolute $a current address or $a(value)
+$ascii=:D:000015		directive		$ascii				. generate direct ASCII:ASCII data code as input
+$awidth=:D:00002B		directive		$awidth	ea_bits[:executable_space]	. set target address size, default 24:48
+$b=:F:000010			function		+	$b			. start address of section $b or $b(number)
+$bank_index=:F:000012		function		+	$bank_index		. current breakpoint address of program section
+$binary=0000FA						$include,$binary filename	. add *.txo text encoded binary file to linking assembly
+						label	$set,$binary	text_encoded_superword_paraform . capture binary code in a label, linking assembly
+ 
+$blank=:D:00004E		directive	label[*] $blank				. assign export level to label not yet declared
+$branch=:D:00003F		directive	label	$branch				. address structure overlaid in memory
+$byte=:D:00001A			directive		$byte	bits			. width of data character in "" and +'', default 8
+				and function		+	$byte
+$characteristic=:D:000035	directive		$characteristic[,number_size_bits] characteristic_bits
+											. size of sign+exponent field in floating number, defaults:
+							$characteristic		24	. default floating number size 96 bits, 24-bit characteristic
+							$characteristic,48	12	. compressed floating number size 48 bits, 12-bit characteristic
+
+$cont_char=:D:000030		directive		$cont_char	value			. line continuation character default ';'
+$data_code=:D:000014		directive	 	$data_code [input:generated, input:..]	. switch to alternate data code [assign parts of it]
+$directive=00007E				name	$equ,$directive	$blank_for_example	. additional name for a masmx directive
+$do=:D:000004			directive	[tag]	$do	count,[label(tag)] command arguments . iterate a line of code
+$else=:D:000007			directive		$else				. conditional assembly
+$elseif=:D:000008		directive		$elseif	condition		. conditional assembly
+$end=:D:000003			directive		$end				. end of subassembly (macro) or end of assembly 
+$endif=:D:000009		directive		$endif				. conditional assembly
+$equ=:D:000010			directive	label	$equ	value
+$equf=:D:000043			directive	label	$equf	value,value,..		. equate a name to a tuple of values
+$exit=:D:00000E			directive		$exit	stop the assembly with this message
+$flag=:D:000033			directive		$flag	mark the assembly in error with this message
+$flagf=:D:00000A		directive		$flag	mark the first pass assembly in error with this message
+$floating_point=:D:000034	directive		$floating_point	floating_number_default_bit_size	. default 96
+$form=:D:00003B			directive	name	$form	bits,bits,..		. bitfields structure template 
+$func=:D:00000D			directive	name	$func	[*]			. function macro head [* second pass only]
+$function=00007D				name	$equ,$function	$_for_example	. additional name for a masmx function
+$hex=:D:000042			directive		$hex				. leading 0 means hex input print hex output, default
+$if=:D:000006			directive		$if	condition		. conditional assembly
+$include=:D:00000C		directive		$include			. include source code, see also $binary and $void
+$info=:D:000044			directive		$info			. instruct the linking assembly, see also $range_check $range_check1 $offset
+$linewidth=:D:00002A		directive		$linewidth	columns		. set maximum line width in output text encoded binary file
+$list=:D:00001C			directive		$list	[nondefault]		. set file inclusion nest level to which source is listed
+$lit=:D:00007B			directive	[tag]	$lit	location_counter	 . set which program section contains automatic literals
+$load=:D:00004C			directive		$load,$bits	label		. output link adjusted binary acquired at $set,$binary
+$long_absolute=0000DC				name	$pushrel,$long_absolute label_value . acquire a large label value to add to a relocatable code field
+$lterm=:D:00002C		directive		$lterm	comment_character 	. default is period space, other values do not need following space
+$n=:F:000001			function		+	$n			. the name value in macro call, equal to perform value macroname(0, 0)
+$name=:D:000002			directive	name[*]	$name	value			. binds a macro call name to a value. Otherwise similar to $set
+$net=:F:00000B			function		+	$net(value)		. local part of relocatable value = unrelocatable value. Allows all algebra
+$nop=:D:00003C			directive		$nop	do nothing except optionally serve as a comment line without knowing what $lterm is
+$note=:D:00003A			directive		$note	print this non-error remark
+$notef=:D:00000B		directive		$notef	print this non-error remark on the first assembly pass
+$o=:F:000009			directive		+	$o(value_of_option_letter)	. 1 if opted, otherwise zero
+$octal=:D:000041		directive		$octal				. leading 0 means octal input print octal output, otherwise default hex
+$offset=000001
+$path=:D:00001D
+$plist=:D:00001E
+$proc=:D:000001
+$pushrel=:D:00004D
+$quantum=:D:000029
+$quote=:D:000036
+$r=:F:000006
+$range_check=000002
+$range_check1=000003
+$rel=:F:00000A
+$res=:D:000022
+$return=:D:00001B
+$root=:D:000047
+$set=:D:000011
+$set_option=:D:000045
+$snap=:D:000028
+$sterm=:D:00002D
+$store=:D:00004F
+$suffix=:D:00003D
+$sym=:D:00004B
+$t=:F:000008
+$text=:D:000053
+$trace=:D:000039
+$tree=:D:000046
+$twos_complement=:D:00002F
+$void=0000F8
+$word=:D:000019
+$xqt_fp=:D:000050
+$xqt_i=:D:000051
+$zenith=:F:000FC8
+-INPUT>>=0<000000
+
+-INPUT>>: object code 0 bytes: 0 errors: 0 undefined labels
+
+</pre>
+
+See <b>Appendix Z: masmx Command Line Options</b>
+
+<pre>
+
+</pre>
 
 _____________________________________________________________________
 <pre>
