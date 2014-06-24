@@ -1466,6 +1466,60 @@ Shift instructions do not update carry
 
 <h3>Jump Instructions</h3>
 
+Jump instructions transfer execution to the location designated by the effective address in current address window B0
+
+<p>
+The effective address may be indexed or indirect
+
+<p>
+Absolute program counter is updated with B0 + effective address
+
+<pre>
+
+        _________________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               action                                  |
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       j	|   10110.110   |  jump			|  continue execution @ ea in B0			|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jdr     |   00011.110   |  jump decrement r	|  add -1 to r, jump if r &ne; -1, carry is not updated	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jnc	|   01011.110   |  jump no carry	|  jump if carry$ of PSR = zero				|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jc	|   01111.110   |  jump carry		|  jump if carry$ of PSR = one				|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jza	|   11000.110   |  jump zero a		|  jump if arithmetic register a = zero			|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jzb     |   11001.110   |  jump zero b		|  jump if arithmetic register b = zero			|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jnza	|   11010.110   |  jump nonzero a	|  jump if arithmetic register a = nonzero		|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jnzb	|   11011.110   |  jump nonzero b	|  jump if arithmetic register b = nonzero		|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jpa	|   10100.110   |  jump positive a	|  jump if arithmetic register a high-order bit = zero	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jpb	|   10101.110   |  jump positive b	|  jump if arithmetic register b high-order bit = zero	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jna	|   11100.110   |  jump negative a	|  jump if arithmetic register a high-order bit = one	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jnb	|   11101.110   |  jump negative b	|  jump if arithmetic register b high-order bit = zero	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jao	|   10011.110   |  jump a odd		|  jump if arithmetic register a low-order bit = one	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jpo	|   10111.110   |  jump parity odd	|  jump if a AND mask register k has odd parity		|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jxge	|   11110.110   |jump x greater or equal|  jump if index register x &ge; repeat counter r	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       jyge	|   11111.110   |jump y greater or equal|  jump if index register y &ge; repeat counter r	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       lcal    |   00111.110   |  local call		|  push absolute PC - B0 on internal stack, jump to ea	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+
+
+</pre>
+
+
+<h3>Call Returns, Bank Jumps and Interrupts</h3>
+
 <h3>Control and I/O Instructions</h3>
 
 
