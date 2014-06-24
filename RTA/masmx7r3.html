@@ -1285,7 +1285,7 @@ Floating numbers used in the four arithmetic function instructions have the 96-b
 
 
 </pre>
-Sign = 1 indicates that the whole number is inverted in 1s complement. It is not an indication of negative polarity
+Sign = 1 indicates that all 96 bits of the number are  inverted in 1s complement. It is not an indication of negative polarity
 zoned on a positively expressed magnitude 
 
 <p>
@@ -1300,13 +1300,13 @@ exceeds its midpoint value of <b>0400000</b>
 Exponent <b>0400000</b> indicates that the normalised magnitude is &ge;0.5 and &lt;1.0
 
 <p>
-The lowest or most microscopic exponent is <b>000000</b> The highest or most atronomic exponent is <b>07FFFFF</b>
+The lowest or most microscopic exponent is <b>000000</b> The highest or most astronomic exponent is <b>07FFFFF</b>
 
 <p>
 A number is normalised if the normalising bit in position 71 is of opposite polarity to the sign
 
 <p>
-Positive and negative zero are the cases of the number range with normalising bit the same value as the sign.
+Positive and negative zero are the two numbers with normalising bit the same value as the sign.
 All unnormalised numbers are computed as zero
 
 <pre>
