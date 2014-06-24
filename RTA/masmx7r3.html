@@ -1267,7 +1267,7 @@ stored in register 6 mantissa2
 
 <h3>Floating Arithmetic Instructions</h3>
 
-The floating arithmetic instructions do not update <b>carry$</b>
+Floating arithmetic instructions do not update <b>carry$</b>
 
 <p>
 Floating numbers used in the four arithmetic function instructions have the 96-bit format
@@ -1331,9 +1331,11 @@ All unnormalised numbers are computed as zero
 </pre>
 
 <p>
-Numbers not requiring mantissa precision larger than 36 bits or exponentiation outside the equivalent of around
-&plusmn;305 decimal places can be compressed from 96 bits at the internal stack top to this 48-bit storage format
-with Floating Pop and Pack instruction <b>fpp</b>
+Floating Pop and Pack instruction <b>fpp</b> can compress numbers not requiring
+mantissa precision larger than 36 bits or exponentiation outside the equivalent
+of around &plusmn;305 decimal places from 96 bits at the internal stack top to
+this 48-bit storage format
+
 <pre>
 
         47 46        36 35                                      0
