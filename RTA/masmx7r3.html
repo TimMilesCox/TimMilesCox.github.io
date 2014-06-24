@@ -1221,7 +1221,7 @@ stored in register 6 mantissa2
         |_______________|_______________|_______________________|_______________________________________________|
         |       ds      |   11000.111   |  double store		| a:b -> 2 words @ ea				|
         |_______________|_______________|_______________________|_______________________________________________|
-        |       qs      |   11001.111   |  double load		| 2 words @ ea -> a:b				|
+        |       dl      |   11001.111   |  double load		| 2 words @ ea -> a:b				|
         |_______________|_______________|_______________________|_______________________________________________|
         |       dpush   |   01011.111   |  double push		| sp -= 2, 2 words @ ea added to internal stack	|
         |_______________|_______________|_______________________|_______________________________________________|
@@ -1267,6 +1267,48 @@ stored in register 6 mantissa2
 
 <h3>Floating Arithmetic Instructions</h3>
 
+The floating arithmetic instructions do not update <b>carry$</b>
+
+<p>
+Floating numbers used in the four arithmetic function instructions have the 96-bit format
+<pre>
+
+
+
+	|sign
+	| |mid-pointed exponent       
+        |s|m|			      fractional mantissa
+        __________________________________________________________________________________________________________________
+        |s|xxxxx xxxxxx xxxxxx xxxxxx|mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm|
+        |_|__________________________|___________________________________________________________________________________|
+        95 94                      72 71                                                                                0
+
+
+</pre>
+Sign = 1 indicates that the whole number is inverted in 1s complement. It is not an indication of negative polarity
+zoned on a positively expressed magnitude 
+
+<p>
+Floating Add Negative instruction <b>fan</b> is the addition of the 1s complement
+
+<p>
+The mantissa is a simple fraction without any integral field either represented or unrepresented. The integral value
+is derived by hauling the mantissa leftward through the binary point the number of positions by which the exponent
+exceeds its midpoint value of <b>0400000</b>
+
+<p>
+Exponent <b>0400000</b> indicates that the normalised magnitude is &ge;0.5 and &lt;1.0
+
+<p>
+The lowest or most microscopic exponent is <b>000000</b> The highest or most atronomic exponent is <b>07FFFFF</b>
+
+<p>
+A number is normalised if the normalising bit in position 71 is of opposite polarity to the sign
+
+<p>
+Positive and negative zero are the cases of the number range with normalising bit the same value as the sign.
+All unnormalised numbers are computed as zero
+
 <pre>
 
         _________________________________________________________________________________________________________
@@ -1288,6 +1330,21 @@ stored in register 6 mantissa2
 
 </pre>
 
+<p>
+Numbers not requiring mantissa precision larger than 36 bits or exponentiation outside the equivalent of around
+&plusmn;305 decimal places can be compressed from 96 bits at the internal stack top to this 48-bit storage format
+with Floating Pop and Pack instruction <b>fpp</b>
+<pre>
+
+        47 46        36 35                                      0
+        __________________________________________________________
+        |s|xxxxx xxxxxx|mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm mmmmmm|
+        |_|____________|_________________________________________|
+
+</pre>
+Floating Push and Expand instruction <b>fpx</b> expands compressed floating numbers to 96-bit compute format
+at the internal stack top
+
 
 <h3>Storage Modify Instructions</h3>
 
@@ -1306,14 +1363,14 @@ causes a memory read followed by memory write. Execution on a register is at reg
         |_______________|_______________|_______________________|_______________________________________________|
         |       n	|   00001.111   |  negate		| word @ ea XOR= all 1s				|
         |_______________|_______________|_______________________|_______________________________________________|
-        |       inc	|   00010.111   |  increment		| word @ ea += 1s				|
-        |_______________|_______________|_______________________|_______________________________________________|
-        |       dec	|   00011.111   |  decrement		| word @ ea -= 1s				|
-        |_______________|_______________|_______________________|_______________________________________________|
+        |       inc	|   00010.111   |  increment		| word @ ea += 0000 0000 0000 0000 0000 0001	|
+        |_______________|_______________|_______________________|______________________carry$_is_not_updated____|
+        |       dec	|   00011.111   |  decrement		| word @ ea += 1111 1111 1111 1111 1111 1111	|
+        |_______________|_______________|_______________________|______________________carry$_is_not_updated____|
         |       sim	|   00100.111   |  switch interrupt mask| switch interrupt mask with word @ea, b23:3 = 0|
         |_______________|_______________|_______________________|_______________________________________________|
-        |       popA    |   00101.111   |  pop and add to store	|word @ ea += word at internal sp, carry, sp+=4 |
-        |_______________|_______________|_______________________|_______________________________________________|
+        |       popA    |   00101.111   |  pop and add to store	| word @ ea += word at internal stack top, sp++	|
+        |_______________|_______________|_______________________|_____________________________carry$_is_updated_|
         |       src	|   00110.111   |shift right thru carry	| R.rotate word @ ea in 25-bit ring with carry	|
         |_______________|_______________|_______________________|_______________________________________________|
         |       slc	|   00111.111	| shift left thru carry	| L.rotate word @ ea in 25-bit ring with carry	|
