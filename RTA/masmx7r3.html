@@ -38,7 +38,11 @@ For RTA1 assembly examples,
 Complete source code and assembly listing of the smaragd7 kernel and of some application protocols are in the repository RTA1
 
 <p>
-To see RTA architecture and instruction set specification,
+RTA1 instructions are listed by functional group in this manual,
+and the storage geometry of application programs is described
+
+<p>
+To see in full RTA architecture and instruction set specification,
 refer to <a href="http://timmilescox.github.io/RTA/rta">
 RTA Processor Programmable Architecture Specification</a>
 
@@ -188,11 +192,11 @@ Number constants have the default masmx syntax. Leading 0 means hex
 <p>
 masmx.7r3 has two changes from masmx7r2 in number handling
 
-<p	style="color:FF0000">
+<p><b>
 It is no longer necessary to precede a number constant with a unary
 sign. An unsigned number in the command field is now recognised as a
 positive number constant
-</p>
+</b>
 
 <pre>
 
@@ -217,10 +221,10 @@ MASMX 7r3
 A unary symbol in the command field continues to mean a number
 constant, but with a new difference
 
-<p	style="color:FF0000">
+<p><b>
 In masmx.7r3 a unary symbol appended to the front of the
 constant expression only exerts polarity on the first token
-</p>
+</b>
 
 <pre>
 
@@ -243,10 +247,12 @@ MASMX 7r3
 <p>
 Unary ^ is 1s complement
 
-<p	style="color:FF0000">
-A unary symbol separated by whitespace from the number
-expression exerts polarity on the whole expression
-</p>
+<p><b>
+As with earlier masmx distribitions,a unary symbol
+separated by whitespace from the number expression
+exerts polarity on the resolved total expression
+that follows
+</b>
 
 <pre>
 
