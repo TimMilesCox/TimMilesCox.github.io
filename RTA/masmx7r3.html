@@ -1267,8 +1267,6 @@ stored in register 6 mantissa2
 
 <h3>Floating Arithmetic Instructions</h3>
 
-Floating arithmetic instructions do not update <b>carry$</b>
-
 <p>
 Floating numbers used in the four arithmetic function instructions have the 96-bit format
 <pre>
@@ -1309,6 +1307,8 @@ A number is normalised if the normalising bit in position 71 is of opposite pola
 Positive and negative zero are the two numbers with normalising bit the same value as the sign.
 All unnormalised numbers are computed as zero
 
+<p>
+Floating arithmetic instructions do not update <b>carry$</b>
 <pre>
 
         _________________________________________________________________________________________________________
