@@ -194,8 +194,8 @@ masmx.7r3 has two changes from masmx7r2 in number handling
 
 <p><b>
 It is no longer necessary to precede a number constant with a unary
-sign. An unsigned number in the command field is now recognised as a
-positive number constant
+sign. An unsigned number starting with a digit in the command field
+is now recognised as a positive number constant
 </b>
 
 <pre>
@@ -248,7 +248,7 @@ MASMX 7r3
 Unary ^ is 1s complement
 
 <p><b>
-As with earlier masmx distribitions,a unary symbol
+As with earlier masmx distribitions, a unary symbol
 separated by whitespace from the number expression
 exerts polarity on the resolved total expression
 that follows
@@ -335,6 +335,28 @@ MASMX 7r3
   :                            7  $end
 :$(00):000000:000006 
 
+
+</pre>
+
+<p>
+Tokens may be names either of fixed value with <b>$equ</b> or revisable number with <b>$set</b>
+<pre>
+
+$ masmx -ln
+MASMX 7r3
+0/-INPUT>>
+mantissa	$equ	175
+exponent	$do	3,	+mantissa*+exponent-3
+		$end
+  :                            1 mantissa $equ 175
+00:000000 400001E00000000000000000
+                              +2 exponent $do 3, +mantissa*+exponent-3
+00:000004 4000058C0000000000000000
+                              +2 
+00:000008 400008AF0000000000000000
+                              +2 
+  :                            3   $end
+:$(00):000000:00000C 
 
 </pre>
 <p>
