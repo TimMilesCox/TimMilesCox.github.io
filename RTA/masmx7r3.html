@@ -676,8 +676,24 @@ BLUE240		$equ		240
 </pre>
 <h2>Instructions and Operands</h2>
 
-Instructions are listed in code order in the RTA1 programmable architecture
+Instructions are listed here in functional groups
+
+<p>
+Instructions are explained in code order in the RTA1 programmable architecture
 specification
+
+<p>
+Instructions may imply scalar registers or the internal stack as left-side operand, and
+have an address for a second input
+
+
+<h3>Register / Memory Operand Continuum</h3>
+<p>
+The right-side operand may be in storage or a register. Some
+instructions take an immediate operand
+
+<p>
+Registers are in the memory address space
 
 <h3>Programmable Register Model</h3>
 Application and interrupt space each have scalar registers and a register array called the internal stack
@@ -761,22 +777,12 @@ stack space in a renewable way
 	126	|				|				254	|				|
 		|_______________________________|					|_______________________________|
 	127	|				|	first pushed word	255	|				|
-		|_______________________________|					|_______________________________|
+		|_______________________________|	on internal stack		|_______________________________|
 
 
 </pre>
-<p>
-Instructions may imply scalar registers or the internal stack as left-side operand, and
-have an address for a second input
 
-
-<h3>Register / Memory Operand Continuum</h3>
-<p>
-The right-side operand may be in storage or a register. Some
-instructions take an immediate operand
-
-<p>
-The registers are in the memory address space
+<h3>Instruction Layout</h3>
  
 <p>
 Instructions have an operand type indicator jjj, an instruction code ffff and a 16-bit address field.
@@ -1343,7 +1349,7 @@ Floating arithmetic instructions do not update <b>carry$</b>
 Floating Pop and Pack instruction <b>fpp</b> can compress numbers not requiring
 mantissa precision larger than 36 bits or exponentiation outside the equivalent
 of around &plusmn;305 decimal places from 96 bits at the internal stack top to
-this 48-bit storage format
+this 48-bit stored format
 
 <pre>
 
@@ -1353,7 +1359,7 @@ this 48-bit storage format
         |_|____________|_________________________________________|
 
 </pre>
-Floating Push and Expand instruction <b>fpx</b> expands compressed floating numbers to 96-bit compute format
+Floating Push and Expand instruction <b>fpx</b> loads and expands compressed floating numbers to 96-bit compute format
 at the internal stack top
 
 
@@ -1408,6 +1414,53 @@ causes a memory read followed by memory write. Execution on a register is at reg
 
 
 <h3>Shift Instructions</h3>
+
+Shift instructions use the effective address as the shift count.
+An effective address may be indexed or indirect
+
+<p>
+Double shifts shift the value in arithmetic registers a and b as a single 48-bit register
+
+<p>
+Shift instructions do not update carry
+<pre>
+
+        _________________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               action                          	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       sar	|   00000.110   |  shift a right	|  shift a [ea] bits right, zero fill vacated positions	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       sbr	|   00001.110   |  shift b right	|  shift b [ea] bits right, zero fill vacated positions	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       dsr	|   00010.110   |  double shift right	|shift a:b [ea] bits right, zero fill vacated positions	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       sal	|   00100.110   |  shift a left		|  shift a [ea] bits left, zero fill vacated positions	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       sbl	|   00101.110   |  shift b left		|  shift b [ea] bits left, zero fill vacated positions	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       dsl	|   00110.110   |  double shift left	|shift a:b [ea] bits left, zero fill vacated positions	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       rar	|   01000.110   |  rotate a right	|rotate a [ea] bits right, LS bit values to MS positions|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       rbr	|   01001.110   |  rotate b right	|rotate b [ea] bits right, LS bit values to MS positions|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       drr	|   01010.110   |  double rotate right	|rotate a:b [ea] bits right,LS bitvalues to MS positions|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       ral	|   01100.110   |  rotate a left	| rotate a [ea] bits left, MS bit values to LS positions|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       rbl	|   01101.110   |  rotate b left	| rotate b [ea] bits left, MS bit values to LS positions|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       drl	|   01110.110   |  double rotate left	|rotate a:b [ea] bits left, MS bitvalues to LS positions|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       saa	|   10000.110   |  shift a algebraic	|  shift a [ea] bits right, sign fill vacated positions	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       sba	|   10001.110   |  shift b algebraic	|  shift b [ea] bits right, sign fill vacated positions	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       dsa	|   10010.110   | double shift algebraic|shift a:b [ea] bits right, sign fill vacated positions |
+        |_______________|_______________|_______________________|_______________________________________________________|
+
+
+</pre>
 
 <h3>Bit Stream Instructions</h3>
 
