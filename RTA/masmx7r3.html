@@ -1622,6 +1622,9 @@ Their RTA1 usage convention with smaragd7 kernel is
 </pre>
 $(0) contains instruction code in bank B0 and a few constants which are locally visible only
 
+
+<h3>Loadable vs ROM Systems and Absolute Code vs Relocatable Code</h3>
+
 <p>
 Simplest assemblies have one B0 bank starting at program-visible address zero
 <pre>
@@ -1636,8 +1639,16 @@ entry1
 	.
 
 </pre>
+
 <p>
-In a ROM system image, absolute address zero is not available for an application. B0 load address is preassigned at image construction
+This is simple in a system where applications are loaded dynamically. The
+kernel assigns load space and determines hardware physical locations
+
+<p>
+Load address absolute zero is not available for applications in a ROM image.
+B0 load address can preassigned at image construction with a breapoint clause
+in the location value.
+The program visible addresses still start at zero
 <pre>
 
 $(0::B0_LOAD_ADDRESS)
@@ -1658,16 +1669,96 @@ $(0::24576)
 
 
 </pre>
-This is called breakpointing. Each new load address makes a new B0.
-Each new bank has its own literal table. In a ROM application, the
+Each new load address makes a new B0.
+Each new B0 has its own literal table. In a ROM application, the
 breakpoint addresses are the absolute load addresses. In a loadable
 application, the breakpoint addresses are relative to the RAM region
 where the code is loaded
 
 <p>
-All locators can be breakpointed for multiple instances, but some
-have special uses where breakpointing would not be useful 
+When multiple instruction banks are assembled together in this way,
+they may be different source files with conceptually different
+data sections.
 
+<p>
+Indeed a single instruction bank may be conceptually
+several programs. When one bank contains data or instructions
+for a number of sources collected in one absolute assembly,
+one file must be a wrapper for the others, because the program
+sections which do not breakpoint are only started once
+<pre>
+
+$(3:03000)	. done once in the wrapper
+
+$(3)		. at the start of program1 data
+
+$(3)		. at the start of program2 data
+
+</pre>
+
+
+The principle extends to instruction banks containing multiple
+programs
+<pre>
+
+$(0::WHEREVER_IT_LOADS)		. in wrapper.msm
+entry1*	$vector	program1
+entry2*	$vector	program2
+	$do	8-$,	fret	0
+$(3:03000)
+
+	$include program1
+<div	style="color:0000FF">
+$(3)				. in program1.msm
+data1		0.0
+$(0)
+program1
+	fa	data1
+	qs	data1
+	fret	0
+</div>
+
+	$include program2
+<div	style="color:0000FF">
+$(3)				. in program2.msm
+data2		5*-4040
+$(0)
+program2
+	fm	data2
+	qs	data2
+	fret	0
+</div>
+
+
+</pre>
+<p>
+An alternative build method is to construct relocatable banks each
+in a separate assembly
+<pre>
+
+$(0:*4096)
+external_name*	$vector		start_point1
+external_callname* $vector	routine2
+
+</pre>
+Relocation alignment 4096 means the new bank is linked at a page edge.
+That is necessary if an instruction bank with entry points is intended
+
+<p>
+All locators can be breakpointed for multiple instances, but some
+have special uses where breakpointing would not be useful
+
+<p>
+Program sections containing data may also be assembled either relocatable
+or absolute. They may be made relocatable to combine data segments from many
+assemblies into one bank at a later linking assembly. In this case one
+data word is a big enough alignment factor
+<pre>
+
+$(3:*1)
+my_first_variable	1.624
+
+</pre>
 <p>
 $(1) contains private data in bank B1 starting at program-visible address 4096
 <pre>
@@ -2236,7 +2327,7 @@ $characteristic=:D:000035	directive		$characteristic[,number_size_bits] characte
 							$characteristic,48	12	. compressed floating number size 48 bits, 12-bit characteristic
 
 $cont_char=:D:000030		directive		$cont_char	value			. line continuation character default ';'
-$data_code=:D:000014		directive	 	$data_code [input:generated, input:..]	. switch to alternate data code [assign parts of it]
+$data_code=:D:000014		directive	 	$data_code [input:generated,generated... input:..] . switch to alternate data code [assign parts of it]
 $directive=00007E				name	$equ,$directive	$blank_for_example	. additional name for a masmx directive
 $do=:D:000004			directive	[tag]	$do	count,[label(tag)] command arguments . iterate a line of code
 $else=:D:000007			directive		$else				. conditional assembly
