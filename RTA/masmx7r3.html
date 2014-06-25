@@ -1626,7 +1626,17 @@ $(0) contains instruction code in bank B0 and a few constants which are locally 
 <h3>Loadable vs ROM Systems and Absolute Code vs Relocatable Code</h3>
 
 <p>
-Simplest assemblies have a B0 bank starting at program-visible address zero
+Assembly of absolute code is initially examined here. Assembly
+of relocatable code is presently examined in comparison
+
+<p>
+Absolute code has no oustanding linkage requests and above all has fixed
+locations internally. Relocatable code is code awaiting resolution of
+references and above all awaiting final location of program internal
+sections. Linking is examined at Appendix B: masmx Linking for RTA1
+
+<p>
+Simplest absolute assemblies have a B0 bank starting at program-visible address zero
 <pre>
 
 $(0)
@@ -1646,8 +1656,11 @@ kernel assigns load space and determines hardware physical locations
 
 <p>
 Load address absolute zero is not available for applications in a ROM image.
-B0 load address can preassigned at image construction with a breakpoint clause
-in the location counter line.
+
+To remain assembling absolutely, B0 load address can preassigned at image
+construction with a breakpoint address in the location counter line
+
+<p>
 The program visible addresses still start at zero
 <pre>
 
@@ -1772,9 +1785,10 @@ $(1) contains private data in bank B1 starting at program-visible address 4096
 $(1:01000)
 
 </pre>
-smaragd7 kernel assigns at least one 4096 B1 bank at thread start, but does not place
-any values in it. The application may assemble B1 at a read-only load-address in the
-ROM system image, and copy the initial values on startup.
+
+smaragd7 kernel assigns at least one 4096-word B1 bank at thread start, but does not 
+place any values in it. The application may assemble B1 at a read-only load-address
+in the ROM system image, and copy the initial values on startup.
 
 <p>
 $(2) contains the vector bank. smaragd7 constructs the 4096-word vector-bank on
