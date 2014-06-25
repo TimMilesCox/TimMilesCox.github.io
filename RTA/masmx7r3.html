@@ -1864,18 +1864,18 @@ assembly time. <b>seg$load</b> starts unpacking load strings in
 realtime. All the target windows must be based
 
 <p>
-The external filename label is a pointer value two words long
-because it represents a position in core file system may be more
+The external label identifying the file is submitted as a 48-bit
+value because it is a position in core file system possibly more
 than 16 megawords from the file system start
 
 <p>
-There are core-resident file  system images may be in core in case filestore
+There are core-resident file system images in case no filestore
 peripherals are present
 
 <p>
-Simple applications may initialise a few scalars without any organised
-segment load, or copy a block from ROM to RAM using a breakpointed load
-address, for example
+Simple applications may instead initialise a few scalars without
+any organised segment load, or copy a block from ROM to RAM using
+a breakpointed load address, for example
 <pre>
 
 B0_LOAD_ADDRESS $equ    30*4096
@@ -1917,8 +1917,6 @@ But in most cases the <b>seg$load</b> service has these distinct advantages
 
 The steps for placing RAM assembly-time variable values in ROM or core resident
 file systems are described in the linking and utilities section of this manual. 
-
-
 
 
 
