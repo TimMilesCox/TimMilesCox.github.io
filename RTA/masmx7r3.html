@@ -1681,7 +1681,7 @@ they may be different source files with conceptually different
 data sections.
 
 <p>
-Indeed a single instruction bank may be conceptually
+Further a single instruction bank may be functionally
 several programs. When one bank contains data or instructions
 for a number of sources collected in one absolute assembly,
 one file must be a wrapper for the others, because the program
@@ -1729,11 +1729,14 @@ program2
 	fret	0
 </div>
 
+$(0)				. in wrapper.msm
+	$do	$<256,$(0:256)	. make sure the literal table is visible
+	$do	$zenith>4095,	$flag	placement of B0 constants must be rearranged
 
 </pre>
 <p>
-An alternative build method is to construct relocatable banks each
-in a separate assembly
+An alternative build method is to construct relocatable banks with each
+program separate assembled
 <pre>
 
 $(0:*4096)
@@ -1742,7 +1745,11 @@ external_callname* $vector	routine2
 
 </pre>
 Relocation alignment 4096 means the new bank is linked at a page edge.
-That is necessary if an instruction bank with entry points is intended
+That is necessary if an instruction bank with entry points is intended.
+
+<p>
+It is possible to collect multiple relocatable instruction segments in one
+B0 bank, but more intricate than assembling them all together as absolute code
 
 <p>
 Program sections containing data may also be assembled either relocatable
@@ -1826,9 +1833,8 @@ get_going
 
 <p>
 Process RAM bank addresses are not known until the kernel stores their pointer
-in the vector bank. Programs which are loaded during system run instead of
-ROM-image-fixed also know their own B0 addresses from the
-vector bank, which is necessary for multi-banked programs
+in the vector bank. Dynamically loaded programs also find their B0 physical
+position[s] in the vector bank
 
 <h3>seg$load Realtime RAM Initialisation</h3>
 <p>
@@ -1858,9 +1864,36 @@ assembly time. <b>seg$load</b> starts unpacking load strings in
 realtime. All the target windows must be based
 
 <p>
-File system images may be in core in case no other file systems are present.
-A discussion of simpler techniques for copying assembly-time variable values to
-program RAM follows, but the <b>seg$load</b> service has distinct advantages
+The external filename label is a pointer value two words long
+because it represents a position in core file system may be more
+than 16 megawords from the file system start
+
+<p>
+There are core-resident file  system images may be in core in case filestore
+peripherals are present
+
+<p>
+Simple applications may initialise a few scalars without any organised
+segment load, or copy a block from ROM to RAM using a breakpointed load
+address, for example
+<pre>
+
+B0_LOAD_ADDRESS $equ    30*4096
+
+$(0::B0_LOAD_ADDRESS)
+
+$(3:03000:B0_LOAD_ADDRESS+3072)
+one     +       99
+two     +       100
+three   "abc"
+
+.	the application initialises by copying initial data from 0C00 to 03000
+
+</pre>
+
+
+
+But in most cases the <b>seg$load</b> service has these distinct advantages
 
 <blockquote>
 
@@ -1876,218 +1909,21 @@ program RAM follows, but the <b>seg$load</b> service has distinct advantages
 
 	There may be many core-resident file systems<br><br>
 
+	It is simpler to call <b>seg$load</b> than to code an initialisation in every program<br><br>
+
+	<b>seg$load</b> avoids appointing a copy-from ROM region in the space of each program
+
 </blockquote>
 
 The steps for placing RAM assembly-time variable values in ROM or core resident
 file systems are described in the linking and utilities section of this manual. 
 
 
-<h3>Simple Alternatives to seg$load for Limited-Size RAM Segment Loads</h3>
-<p>
-The simplest programs can initialise a few scalar items without calling on
-an organised segment load
-<p>
-An alternative to segload is a copy from ROM to RAM. This involves the breakpointed
-load addressing described earlier
-
-In this example, part of B0 is a constant pool for initializing B1
-<pre>
-
-	$ masmx -ln
-MASMX 7r3
-0/-INPUT>>
-	$list	0
-	$include	freeware/RTA1/rta/def/rta.def
-	$include	freeware/RTa1/rta/language/stack.def
-	$list
-
-B0_LOAD_ADDRESS $equ    30*4096
-
-$(0::B0_LOAD_ADDRESS)
-
-$(1:01000:B0_LOAD_ADDRESS+3072)
-one     +       99
-two     +       100
-three   "abc"
-
-$(0)
-entry1* $vector fireup
-        $list   0
-        $do     64-$,   fret    0
-        $list
-
-fireup  lx, xi  one
-        ly, xi  3072
-        lr, xi  768/4-1
-
-fireup_quad
-        qpush   0, y
-        qpop    0, x
-        ax, xi  4
-        ay, xi  4
-        jdr     fireup_quad
-
-        .
-        .
-
-	$end
-  :                            821  $list
-  :                            822 
-  :                            823 B0_LOAD_ADDRESS $equ    30*4096
-  :                            824 
-  :                            825 $(0::B0_LOAD_ADDRESS)
-  :                            826 
-  :                            827 $(1:01000:B0_LOAD_ADDRESS+3072)
-01:001000 000063              +828 one     +       99
-01:001001 000064              +829 two     +       100
-01:001002 616263              +830 three   "abc"
-  :                            831 
-  :                            832 $(0)
-00:000000 B60040              +833 entry1* $vector fireup
-  :                            836         $list
-  :                            837 
-00:000040 551000              +838 fireup  lx, xi  one
-00:000041 5D0C00              +839         ly, xi  3072
-00:000042 4500BF              +840         lr, xi  768/4-1
-  :                            841 
-  :                            842 fireup_quad
-00:000043 8FB000              +843         qpush   0, y
-00:000044 87A000              +844         qpop    0, x
-00:000045 850004              +845         ax, xi  4
-00:000046 8D0004              +846         ay, xi  4
-00:000047 1E0043              +847         jdr     fireup_quad
-  :                            848 
-  :                            849         .
-  :                            850         .
-  :                            851 
-  :                            852  $end
-:$(00):000000:000048 :$(01):001000:001003 
-
-</pre>
-
-Assembling again with -d option lists the load addresses, which are not the
-program-visible addresses
-<pre>
-
-	$ masmx -lnd
-MASMX 7r3
-0/-INPUT>>
-	$list	0
-	$include	freeware/RTA1/rta/def/rta.def
-	$include	freeware/RTa1/rta/language/stack.def
-	$list
-
-B0_LOAD_ADDRESS $equ    30*4096
-
-$(0::B0_LOAD_ADDRESS)
-
-$(1:01000:B0_LOAD_ADDRESS+3072)
-one     +       99
-two     +       100
-three   "abc"
-
-$(0)
-entry1* $vector fireup
-        $list   0
-        $do     64-$,   fret    0
-        $list
-
-fireup  lx, xi  one
-        ly, xi  3072
-        lr, xi  768/4-1
-
-fireup_quad
-        qpush   0, y
-        qpop    0, x
-        ax, xi  4
-        ay, xi  4
-        jdr     fireup_quad
-
-        .
-        .
-
-	$end
-  :                            821  $list
-  :                            822 
-  :                            823 B0_LOAD_ADDRESS $equ    30*4096
-  :                            824 
-  :                            825 $(0::B0_LOAD_ADDRESS)
-  :                            826 
-  :                            827 $(1:01000:B0_LOAD_ADDRESS+3072)
-01:01EC00 000063              +828 one     +       99
-01:01EC01 000064              +829 two     +       100
-01:01EC02 616263              +830 three   "abc"
-  :                            831 
-  :                            832 $(0)
-00:01E000 B60040              +833 entry1* $vector fireup
-  :                            836         $list
-  :                            837 
-00:01E040 551000              +838 fireup  lx, xi  one
-00:01E041 5D0C00              +839         ly, xi  3072
-00:01E042 4500BF              +840         lr, xi  768/4-1
-  :                            841 
-  :                            842 fireup_quad
-00:01E043 8FB000              +843         qpush   0, y
-00:01E044 87A000              +844         qpop    0, x
-00:01E045 850004              +845         ax, xi  4
-00:01E046 8D0004              +846         ay, xi  4
-00:01E047 1E0043              +847         jdr     fireup_quad
-  :                            848 
-  :                            849         .
-  :                            850         .
-  :                            851 
-  :                            852  $end
-:$(00):000000:000048 :$(01):001000:001003 
-
-
-</pre>
-The ROM copy source doesn't have to be in B0. A separate bank or page can be assigned,
-but needs to be based in an address window before it can be copied. This technique
-may be good for programs which, like C-Language programs, have no don't-care-value
-locations in their data section
-<pre>
-
-$(3:03000:0C000)
-
-?	$do	1000,	+	7.5*+?
-buffer	$res	96
-	
-
-$(0)
-	la	(0C000)
-	sabr	34
-	ly	(34*/12)
-	lx, xi	03000
-	lr, xi	4096/4-1
-
-load	qpush	0, y
-	qpop	0, x
-	ax, xi 	4
-	ay, xi	4
-	jdr	load
-
-	.
-	.
-
-</pre>
 
 
 
-<h3>ROM System Image vs Independent Applications Load</h3>
 
-The kernel and applications may be a single ROM image
-
-<p>
-Applications otherwise load anywhere. Their addresses are internally
-absolute because of hardware relocation
-
-<p>
-The loader places the program's bank identifiers and call vectors in the
-program's vector bank at address window 02000..02FFF
-
-
-
-<h3>Giant Breakpoint Address</h3>
+<h3>Assembling Structures Larger than the Address Space</h3>
 <p>
 
 Breakpoint addresses may be larger than the address space. This is
