@@ -340,6 +340,7 @@ MASMX 7r3
 <p>
 Tokens in an expression may be labels
 
+<p>
 <b>$equ</b> labels are fixed in value. <b>$set</b> labels can be
 set again to a new value
 <pre>
@@ -625,13 +626,16 @@ Note: strings.msm Line 12: trailing zero bits in last data word of string
 :$(00):000000:000015 
 
 </pre>
-String padding is zero with option <b>-c</b> or <b>-z</b> and space
+Padding to word fill is zero with option <b>-c</b> or <b>-z</b> and space
 with neither or both <b>-cz</b>
 
 <p>
 In <b>masmx.7r3</b> the masmx-internal label <b>$bits</b> contains
 the number of bits containing the characters in the string after the
-string is assembled. This does not include word-fill padding<pre>
+string is assembled. The number of characters in the string can be
+calculated instead of counted by hand
+
+<pre>
 
 $ masmx -lnz
 MASMX 7r3
@@ -645,6 +649,40 @@ MASMX 7r3
 00:000003 000004              +3  + $bits/$byte
   :                            4  $end
 :$(00):000000:000004 
+
+</pre>
+
+
+<p>
+Changed data code and byte size are effective for "strings" just as for
+number +'strings'
+<pre>
+
+$ masmx -ln
+MASMX 7r3
+0/-INPUT>>
+	"789abc"
+	$data_code	97:65,66,67
+	"789abc"
+	$byte	12
+	"789abc"
+	$ascii
+	"789abc"
+	$byte	8
+	"789abc"
+	$end
+00:000000 373839616263        +1  "789abc"
+  :                            2  $data_code 97:65,66,67
+00:000002 373839414243        +3  "789abc"
+  :                            4  $byte 12
+00:000004 037038039041042043  +5  "789abc"
+  :                            6  $ascii
+00:000007 037038039061062063  +7  "789abc"
+  :                            8  $byte 8
+00:00000A 373839616263        +9  "789abc"
+  :                            10  $end
+:$(00):000000:00000C 
+
 
 </pre>
 
