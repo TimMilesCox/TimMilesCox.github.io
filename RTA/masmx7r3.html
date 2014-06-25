@@ -327,19 +327,39 @@ MASMX 7r3
 	+	'abcd'
 	$end
 00:000000 000061626364        +1  + 'abcd'
-  :                            2  $data_code 97:65
-00:000002 0000416263E4        +3  + 'abcd'++128
-  :                            4  $ascii
-  :                            5  $byte 12
+  :                            2  $data_code 97:65	. generate 'A' when the source has 'a'
+00:000002 0000416263E4        +3  + 'abcd'++128		. logical OR bit 7 on
+  :                            4  $ascii		. switch back to plain ASCII
+  :                            5  $byte 12		. make the byte size a halfword
 00:000004 061062063064        +6  + 'abcd'
   :                            7  $end
 :$(00):000000:000006 
 
-
 </pre>
 
 <p>
-Tokens may be names either of fixed value with <b>$equ</b> or revisable number with <b>$set</b>
+Tokens in an expression may be labels
+
+<b>$equ</b> labels are fixed in value. <b>$set</b> labels can be
+set again to a new value
+<pre>
+
+fast	$equ	1.75	. can't be changed within this subassembly
+loose	$set	99	. can be changed as much as you like
+
+</pre>
+Not all operations are allowed on labels which are relocatable
+storage addresses
+<pre>
+
+$(3:*1)			. relocatable program section
+
+buffer	$res	20	. buffer can be in &plusmn; expressions
+			. and shift right expressions
+
+</pre>
+The optional tag of <b>$do</b> directive is a value incrementing
+from 1
 <pre>
 
 $ masmx -ln
