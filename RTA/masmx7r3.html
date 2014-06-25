@@ -1626,7 +1626,7 @@ $(0) contains instruction code in bank B0 and a few constants which are locally 
 <h3>Loadable vs ROM Systems and Absolute Code vs Relocatable Code</h3>
 
 <p>
-Simplest assemblies have one B0 bank starting at program-visible address zero
+Simplest assemblies have a B0 bank starting at program-visible address zero
 <pre>
 
 $(0)
@@ -1646,8 +1646,8 @@ kernel assigns load space and determines hardware physical locations
 
 <p>
 Load address absolute zero is not available for applications in a ROM image.
-B0 load address can preassigned at image construction with a breapoint clause
-in the location value.
+B0 load address can preassigned at image construction with a breakpoint clause
+in the location counter line.
 The program visible addresses still start at zero
 <pre>
 
@@ -1745,10 +1745,6 @@ Relocation alignment 4096 means the new bank is linked at a page edge.
 That is necessary if an instruction bank with entry points is intended
 
 <p>
-All locators can be breakpointed for multiple instances, but some
-have special uses where breakpointing would not be useful
-
-<p>
 Program sections containing data may also be assembled either relocatable
 or absolute. They may be made relocatable to combine data segments from many
 assemblies into one bank at a later linking assembly. In this case one
@@ -1759,6 +1755,9 @@ $(3:*1)
 my_first_variable	1.624
 
 </pre>
+
+<h3>Data Sections $(1) and $(3)</h3>
+
 <p>
 $(1) contains private data in bank B1 starting at program-visible address 4096
 <pre>
