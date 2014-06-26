@@ -1477,10 +1477,11 @@ Shift instructions use the effective address as the shift count.
 An effective address may be indexed or indirect
 
 <p>
-Double shifts shift the value in arithmetic registers a and b as a single 48-bit register
+Double shifts shift the value in arithmetic registers a and b as
+a single 48-bit register
 
 <p>
-Shift instructions do not update carry
+Shift instructions do not update <bcarry$</b>
 <pre>
 
         _________________________________________________________________________________________________________________
@@ -1521,6 +1522,33 @@ Shift instructions do not update carry
 </pre>
 
 <h3>Bit Stream Instructions</h3>
+
+Read Staging Register instruction <b>rsr</b> shifts immediate bit count <b>xi</b> bits left from staging register RDATA
+to arithmetic register a. Register RDATAC is decremented by shift count <b>xi</b>. If RDATAC reaches zero during the
+transfer RDATA is reloaded from memory pointed by register *q++ and RDATAC is restarted at 24 bits. If PSR flag
+<b>b$stream16r</b> = 1 the restart count in RDATAC is 16 and RDATA is shifted left 8 bit positions on reload. If PSR
+flag <b>b$streamZR</b> = 1 arithmetic register a is cleared before the transfer
+
+<p>
+
+Write Staging Register instruction <b>wsr> shifts immediate bit count <b>xi</b> bits left from arithmetic register a
+to staging register WDATA. Register WDATAC is incremented by shift count <b>xi</b>. If WDATAC reaches 24 during the
+transfer WDATA is stored at memory pointed by register *p++ and WDATAC is restarted at zero. if PSR flag <b>b$stream16w</b>
+= 1 data is stored and WDATAC restarted when WDATAC reaches 16
+
+<pre>
+
+        _________________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               action                                  |
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       rsr	|   10010.101   | read staging register	| shift [xi &le; 24] bits a<-RDATA [reload RDATA]	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       wsr	|   00011.101   |write staging register	| shift [xi &le; 24] bits WDATA<-a [store WDATA]	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+
+
+
+</pre>
 
 <h3>Jump Instructions</h3>
 
@@ -1569,7 +1597,9 @@ Absolute program counter is updated with B0 + effective address
         |_______________|_______________|_______________________|_______________________________________________________|
         |       jyge	|   11111.110   |jump y greater or equal|  jump if index register y &ge; repeat counter r		|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       lcal    |   00111.110   |  local call		|  push absolute PC - B0 on internal stack, jump to ea	|
+        |       jdz	|   01111.100   |  jump double zero	|  jump if 48-bit integer in registers a and b = zero	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       lcal    |   00111.110   |  local call           |  push absolute PC - B0 on internal stack, jump to ea  |
         |_______________|_______________|_______________________|_______________________________________________________|
 
 
@@ -1578,8 +1608,59 @@ Absolute program counter is updated with B0 + effective address
 
 <h3>Call Returns, Bank Jumps and Interrupts</h3>
 
+<pre>
+
+        _________________________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |  action				symbol B0* = B0 * 4096	|
+        |_______________|_______________|_______________________|_______________________________________________________________|
+        |       lret	|   00110.101   |  local return		|  word @ internal stack top + xi + B0* -> PC, sp++		|
+        |_______________|_______________|_______________________|_______________________________________________________________|
+        |       go	|   11110.111   |  go to another bank	|  word @ ea bank pointer part->B0*->PC += vector part		|
+        |_______________|_______________|_______________________|_______________________________________________________________|
+        |       call	|   11111.111   |  call another bank	|  push PC-B0*, push B0, word @ ea bank part-> B0* -> PC+=vector|
+        |_______________|_______________|_______________________|_______________________________________________________________|
+        |       fret	|   00111.101   |  far bank return	|  pop B0* -> PC += pop offset from internal stack += xi	|
+        |_______________|_______________|_______________________|_______________________________________________________________|
+
+								________________________________________________________________
+								| ii and ir operate the interrupt stack. sp_x = register 143	|
+	________________________________________________________|_______________________________________________________________|
+        |       ii	|   11110.101   |  internal interrupt	| push 0.PSR.B0.PC-B0*, xi 23:6 ->B0* -> PC += xi 5:0, PSR b23=1|
+        |_______________|_______________|_______________________|_______________________________________________________________|
+        |       ir	|   11111.101   |  interrupt return	| sp_x++, pop PSR.B0* -> PC += pop offset += xi			|
+        |_______________|_______________|_______________________|_______________________________________________________________|
+
+
+</pre>
 <h3>Control and I/O Instructions</h3>
 
+
+<pre>
+
+        _________________________________________________________________________________________________________________
+        |       mnemonic|   fffff.jjj   |                       |               action                                  |
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       on	|   00000.101   |   on PSR flags	|  PSR flags 15..0 OR= mask value xi			|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       off	|   00001.101   |  off PSR flags	|  PSR flags 15..0 AND= NOT mask value xi		|
+	|_______________|_______________|_______________________|_______________________________________________________|
+	|       inA	|   00000.100   |  I/O port ea in to a 	|							|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       inB	|   00001.100   |  I/O port ea in to b 	|  							|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       outA	|   00010.100   |  out a to I/O port ea	|  							|
+        |_______________|_______________|_______________________|_______________________________________________________|
+	|	outB	|   00011.100	|  out a to I/O port ea |  							|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |       reload	|   00100.100   |  reload base registers|  2 * bank index @ *a *(a+1) -> io ports [ea, ea + 1]	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        | emulator_cool	|   00101.100   |			|  usleep the emulator thread ea microseconds		|
+        |_______________|_______________|_______________________|_______________________________________________________|
+        |	sabr	|   00110.100   |  store a base register|bank pointer[a]->io port[ea=2..63],index[a]->TCB+64+ea	|
+        |_______________|_______________|_______________________|_______________________________________________________|
+
+
+</pre>
 
 <h2>Application Memory, Location Counters and Dynamic Data Segment Load</h2>
 
