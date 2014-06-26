@@ -1130,23 +1130,23 @@ third-words are sign-extended
 	__________________________
 
   :                            430 $(3:03000)
-  :                            431 left    $res 1
-  :                            432 right $res 1
+  :                            431 left		$res	1
+  :                            432 right	$res	1
   :                            433 
   :                            434 $(0:64)
   :                            435 examine<div	style="color:red">
-00:000040 783000              +436  tp left 
-00:000041 B60046              +437  j left_is_negative
-00:000042 703001              +438  tz right
-00:000043 B60046              +439  j right_is_nonzero</div>
+00:000040 783000              +436 	tp	left 
+00:000041 B60046              +437 	j	left_is_negative
+00:000042 703001              +438 	tz	right
+00:000043 B60046              +439 	j	right_is_nonzero</div>
   :                            440 
-00:000044 650000              +441  la, xi 0 
-00:000045 350000              +442  lret 0
+00:000044 650000              +441	la, xi	0 
+00:000045 350000              +442 	lret 0
   :                            443 
   :                            444 left_is_negative
   :                            445 right_is_nonzero
-00:000046 65FFFF              +446  la, xi -1
-00:000047 350000              +447  lret 0
+00:000046 65FFFF              +446 	la, xi	-1
+00:000047 350000              +447 	lret	0
 
 
 </pre>
