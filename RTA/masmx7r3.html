@@ -192,11 +192,10 @@ Number constants have the default masmx syntax. Leading 0 means hex
 <p>
 masmx.7r3 has two changes from masmx7r2 in number handling
 
-<p><b>
-It is no longer necessary to precede a number constant with a unary
-sign. An unsigned number starting with a digit in the command field
-is now recognised as a positive number constant
-</b>
+<p>
+It is no longer invariably necessary to precede a number constant
+with a unary sign. An unsigned number starting with a digit in the
+command field is now recognised as a positive number constant
 
 <pre>
 
@@ -221,10 +220,9 @@ MASMX 7r3
 A unary symbol in the command field continues to mean a number
 constant, but with a new difference
 
-<p><b>
+<p>
 In masmx.7r3 a unary symbol appended to the front of the
 constant expression only exerts polarity on the first token
-</b>
 
 <pre>
 
@@ -247,12 +245,11 @@ MASMX 7r3
 <p>
 Unary ^ is 1s complement
 
-<p><b>
+<p>
 As with earlier masmx distribitions, a unary symbol
 separated by whitespace from the number expression
 exerts polarity on the resolved total expression
 that follows
-</b>
 
 <pre>
 
@@ -843,9 +840,12 @@ stack space in a renewable way
 <h3>Instruction Layout</h3>
  
 <p>
-Instructions have an operand type indicator jjj, an instruction code ffff and a 16-bit address field.
-Six jjj values are different operand types for 32 single-integer instructions and two jjj values select
-two other sets of instructions
+Instructions have an operand type indicator <b<jjj</b>, an instruction code 
+<b>ffff</b> and a 16-bit address field
+
+<b>
+Six jjj values are different operand types for 32 single-integer instructions
+and two jjj values select two mores lists of instructions
 
 <p>
 If the jjj field is 5, the operand is 16-bit sign extended immediate
@@ -884,7 +884,7 @@ Otherwise, if bit 15 is zero, the operand address is a direct address 15 bits in
 
 
 </pre>
-If instruction bit 15 is one, the instruction has a 3 bit indirection-bank/index-register selector
+If instruction bit 15 is one, the instruction has a 3 bit indirection-bank/index-register selector <b>xxx</b>
 and a 12-bit displacement field
 <pre>
 
@@ -1031,7 +1031,7 @@ The $equf directive can represent all the subfield attributes of an operand with
 				aa, xi		-HARD_LINK	. compare
 </pre>
 
-<h3>Single Integer Store Instructions</h3>
+<h4>Single Integer Store Instructions</h4>
 
 The store and the test integer instructions do not take immediate operands.
 The ,,i and ,,xi options of instructions sr sk sx sy sa sb z pop tz tp
