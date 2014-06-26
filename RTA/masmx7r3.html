@@ -1531,7 +1531,7 @@ flag <b>b$streamZR</b> = 1 arithmetic register a is cleared before the transfer
 
 <p>
 
-Write Staging Register instruction <b>wsr> shifts immediate bit count <b>xi</b> bits left from arithmetic register a
+Write Staging Register instruction <b>wsr</b> shifts immediate bit count <b>xi</b> bits left from arithmetic register a
 to staging register WDATA. Register WDATAC is incremented by shift count <b>xi</b>. If WDATAC reaches 24 during the
 transfer WDATA is stored at memory pointed by register *p++ and WDATAC is restarted at zero. if PSR flag <b>b$stream16w</b>
 = 1 data is stored and WDATAC restarted when WDATAC reaches 16
