@@ -1821,7 +1821,7 @@ of relocatable code is presently examined in comparison
 Absolute code has no oustanding linkage requests and above all has fixed
 locations internally. Relocatable code is code awaiting resolution of
 references and above all awaiting final location of program internal
-sections. Linking is examined at Appendix B: masmx Linking for RTA1
+sections. Linking is examined at Appendix A: masmx Linking for RTA1
 
 <p>
 Simplest absolute assemblies have a B0 bank starting at program-visible address zero
@@ -2138,7 +2138,8 @@ the shaping of data, but rather that the data drive the behaviour of the applica
 An array which extends beyond the address space into a larger executable space is called
 in masmx terms giant addressing
 
-Giant data location  is achieved with locator breakpoint addresses larger than the address
+<p>
+Giant data location is obtained with locator breakpoint addresses larger than the address
 space. masmx giant addresses are signalled with leading *asterisk
 
 <pre>
@@ -2156,7 +2157,7 @@ Appendix A: masmx Linking for RTA1
 <p>
 The structure may be assembled with the application or independently. In any
 case it uses separate location counters from the rest of the assembly, for
-separate load-formatting. This follows the need to of ROM based systems to
+separate load-formatting. This follows the need of ROM based systems to
 submit data segments to a run-time segment loader
 
 <pre>
@@ -2190,7 +2191,16 @@ index		$do	19000000,	array3_element
 
 
 </pre>
+
+There may be enough spare address space to have all the array based at once
+
 <p>
+That might be the case for up to six or seven Megawords of array, depending
+on the number of address windows taken for program data. Otherwise a pair
+of address windows can provide a moving window or cursor in the array
+
+<p>
+
 Pointers in a structure of many large system memory banks take two words
 and have a format
 <pre>
@@ -2217,7 +2227,7 @@ long_pointer*	$name
 </pre>
 In the giant structure example above, this pointer is not quite complete
 at assembly time, because the start location of the array is not known. So
-that start bank identity is added to bits 45:30 of the pointer before the
+the start bank identity is added to bits 45:30 of the pointer before the
 containing bank is based
 <pre>
 
@@ -2246,7 +2256,12 @@ so many labels are unlikely to be referenced
 
 </pre>
 
-<h3>5.4 Core Resident File Systems used in Software RAM Segment Load</h3>
+<h3>Void Sections and Structure by Pointer</h3>
+
+
+<h2>Appendix A: masmx Linking for RTA1</h2>
+
+<h3>A.4 Core Resident File Systems used in Software RAM Segment Load</h3>
 
 The input binary_image_filename is a load strings output from the
 following utility steps. First all the RAM-destined part of an
