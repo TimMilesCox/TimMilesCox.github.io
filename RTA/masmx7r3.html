@@ -2126,93 +2126,125 @@ file systems are described in the linking and utilities section of this manual.
 <h3>Assembling Structures Larger than the Address Space</h3>
 <p>
 
-Breakpoint addresses may be larger than the address space. This is
-signaled with an *asterisk on the breakpoint address
+You can assemble an array too large for the static data model and  many times larger
+than the address space, up the the limit of available memory
+
+<p>
+Any array may be assembled instead of constructed at run time. There are cases where
+this is desirable and where it is preferred that the application need not understand
+the shaping of data, but rather that the data drive the behaviour of the application
+
+<p>
+An array which extends beyond the address space into a larger executable space is called
+in masmx terms giant addressing
+
+Giant data location  is achieved with locator breakpoint addresses larger than the address
+space. masmx giant addresses are signalled with leading *asterisk
 
 <pre>
 
-$(31::*00000A000000)
+$(54::*00000A000000)
 
 </pre>
 
+The address breakpoint is incremented as repeat structures assemble. In the
+example case following, the array root location of zero does not look giant
+by most standards. The application will obtain storage from the kernel and
+pass the load address to the segment load routine <b>array$seg$load</b>. See
+Appendix A: masmx Linking for RTA1 
+
 <p>
-A normalised long pointer is used here to access data via a 48-bit address
+The structure may be assembled with the application or independently. In any
+case it uses separate location counters from the rest of the assembly, for
+separate load-formatting. This follows the need to of ROM based systems to
+submit data segments to a run-time segment loader
+
 <pre>
 
-$ masmx alaska -kln
-MASMX 7r2
-3/alaska.msm
-*EOF*
-  :                            1: 	$include	freeware/RTA1/rta/def/rta.def
-  :                            2 
-  :                            3 f	$func
-  :                            4 pointer* $name
-  :                            5 	$return	1*/46++f(1, 1)**0003FFFC0000*/12++$r(f(1, 1))*/18++f(1, 1)**03FFFF
-  :                            6 	$end
-  :                            7 
-  :                            8 BASE	$set	42
-  :                            9 
-  :                            10 $(BASE::*03C000000)
-2A:00003C000000:000063        +11 neck	+	99
-2A:00003C000001:000065        +12 mutton	+	101
-  :                            13 
-  :                            14 $(0:64)
-  :                            15 
-00:000040 CF0100              +16 	dl	(pointer(mutton))
-00:000041 34002A              +17 	sabr	BASE
-00:000042 60D000              +18 	la	0, b
-  :                            19 
-  :                            20 	$do	$<256,$(0:256)
-  :                            21 
-*EOF*
-00:000100+43C000A80001
-:$(00):000040:000102 :$(2A):000000:000002 
+ARRAY_INDEX	$set	0
+
+$(54::*ARRAY_INDEX)
+array		$do	array_part(),	+	array_part(array)
+
+p		$proc
+array1_element*	$name
+		$do	repeat=4,	$list	0
+$(54::*ARRAY_INDEX)
+FORWARD		$set	ARRAY_INDEX+SIZE
+		my_structure		long_pointer(FORWARD)	;
+					derivation_function(repeat)
+ARRAY_INDEX*	$set	$a
+		$end
+
+array_part(1)
+repeat		$do	6000000000,	array1_element
+		$list
+
+array_part(2)
+?		$do	4500,		array2_element
+		$list
+
+array_part(3)
+index		$do	19000000,	array3_element
+		$list
 
 
 </pre>
 <p>
-A very large RTA address is 48 bits in size. This accommodates the
-16-gigaword executable space and any future executable space up to
-256 terawords
-
-<p>
-If a large array is part of a ROM, its giant addresses are physically absolute.
-Otherwise its giant addresses are relative to a load address. See the
-section on linking and utilities
-
-<p>
-A data array might be loaded to an area much larger than the address
-space. See <b>Appendix A: Giant Structures in Memory</b>
-
-<h3>Relocatable Sections</h3>
-
-Relocatable code must be made absolute before passing to the load
-string formatter <b>lstring</b>
-
-<p>
-Linking is a further assembly which includes
-binary in the Text-Encoded-Object format *.txo
-
-<p>
-Relocatable sections can accumulate the alike segments of many assemblies
-
-<p>
-The relocatable location counter declaration contains no addresses
-but an alignment factor marked with an asterisk
+Pointers in a structure of many large system memory banks take two words
+and have a format
 <pre>
 
-$(3:*4[/literal_pool_name])
+	  46  bank identifier 30      24     18       word offset      0
+	_________________________________________________________________
+	|0 1|bbbb bbbb bbbb bbbb|000 000|window| www www www www www www|
+	|___|___________________|_______|______|________________________|
+	 47  45			 29	 23	 17
+
+</pre>
+Pointers like this may be assembled in the data structure as cross-reference
+and chain links. The field <b>window</b> must agree with with the address
+space window where sabr instruction will base the leading edge of the target
+element. Assembly function macro <b>long_pointer()</b> seen above  might have
+these steps
+<pre>
+
+f		$func
+long_pointer*	$name
+		$return		1*/46++f(1, 1)**-262144*/30**BASE*/18**f(1, 1)**262143
+		$end
+
+</pre>
+In the giant structure example above, this pointer is not quite complete
+at assembly time, because the start location of the array is not known. So
+that start bank identity is added to bits 45:30 of the pointer before the
+containing bank is based
+<pre>
+
+$(68::,b)
+structure	my_structure
+
+$(0)
+		dl		structure:next_pointer
+		aa		array_start_bank_index
+		sabr		BASE
+
+		la, i		64, a		. base two adjacent banks
+		sabr		BASE+1		. if the structure is not power 2 size
+ 
 
 </pre>
 <p>
-See <b>Appendix B: masmx Linking for RTA1</b>
+It is also possible to put labels on each element of an assembled array,
+although this is not advised if there are millions of elements, because
+so many labels are unlikely to be referenced
+<pre>
 
-<h3>Void Sections and Structure Pointers</h3>
+
+?	$do	12000,float(?)	structure	float(?+1)	. next pointer, last instance = zero
 
 
-<h2>Appendix A: Giant Structures in Memory</h2>
-
-<h2>Appendix B: masmx Linking for RTA1</h2>
+</pre>
 
 <h3>5.4 Core Resident File Systems used in Software RAM Segment Load</h3>
 
