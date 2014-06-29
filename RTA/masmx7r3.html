@@ -1814,8 +1814,8 @@ $(0) contains instruction code in bank B0 and a few constants which are locally 
 <h3>Loadable vs ROM Systems and Absolute Code vs Relocatable Code</h3>
 
 <p>
-Assembly of absolute code is initially examined here. Assembly
-of relocatable code is presently examined in comparison
+Absolute code assembly is examined here. Relocatable code is described in
+Appendix A: masmx Linking for RTA1
 
 <p>
 Absolute code has no oustanding linkage requests and above all has fixed
@@ -1882,7 +1882,7 @@ they may be different source files with conceptually different
 data sections.
 
 <p>
-Further a single instruction bank may be functionally
+A single instruction bank may be functionally
 several programs. When one bank contains data or instructions
 for a number of sources collected in one absolute assembly,
 one file must be a wrapper for the others, because the program
@@ -1935,34 +1935,7 @@ $(0)				. in wrapper.msm
 	$do	$zenith>4095,	$flag	placement of B0 constants must be rearranged
 
 </pre>
-<p>
-An alternative build method is to construct relocatable banks with each
-program separate assembled
-<pre>
 
-$(0:*4096)
-external_name*	$vector		start_point1
-external_callname* $vector	routine2
-
-</pre>
-Relocation alignment 4096 means the new bank is linked at a page edge.
-That is necessary if an instruction bank with entry points is intended.
-
-<p>
-It is possible to collect multiple relocatable instruction segments in one
-B0 bank, but more intricate than assembling them all together as absolute code
-
-<p>
-Program sections containing data may also be assembled either relocatable
-or absolute. They may be made relocatable to combine data segments from many
-assemblies into one bank at a later linking assembly. In this case one
-data word is a big enough alignment factor
-<pre>
-
-$(3:*1)
-my_first_variable	1.624
-
-</pre>
 
 <h3>Data Sections $(1) and $(3)</h3>
 
@@ -2470,7 +2443,7 @@ necessary
 
 <h3>A.2 masmx Linking</h3>
 
-masmx linking is an assembly which includes masmx output files.
+masmx linking is an assembly which reads masmx output files
 in text encoded binary format. It is necessary to have a procedure
 macro <b>map1</b> in the assembly to manipulate the input binary
 code
