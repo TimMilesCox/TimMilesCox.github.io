@@ -117,7 +117,7 @@ The line of assembly language code has an arbitrary number of fields
 <pre>
 
 label	command		argument1[,argument1_subfield1,...]	[argumentN[,argumentN_subfield,...]]	[;
-                                                    		continuation] [. comment ]
+                        continuation]		[. comment ]
 
 </pre>
 
@@ -147,11 +147,11 @@ A label starting with $ is declared in quotes but usually referenced without quo
 The command field is the first field to follow any whitespace. It may contain 
 
 	<blockquote>
-	nothing. Then there are no arguments either
-	a number constant or a character string constant
-	a space-isolated unary sign governing a number argument
-	an assembler directive
-	a bitfield structure name of the $form type
+	nothing. Then there are no arguments either<br>
+	a number constant or a character string constant<br>
+	a space-isolated unary sign governing a number argument<br>
+	an assembler directive<br>
+	a bitfield structure name of the $form type<br>
 	the name of a macro of the $proc type producing data or instruction code
 	</blockquote>
 
