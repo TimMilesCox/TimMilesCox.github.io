@@ -2580,14 +2580,13 @@ Information is forwarded to the link in the text encoded binaries
 
 	<blockquote>
 	the third line in application_part1.txo encodes the relocation alignment
-	factor = 1. The information is also in last summary line at the end<br><br>
+	factor = 1. The information is also in the last summary line at the end<br><br>
 
 	A relocation clause requests the link-updated relocation base of the
-	section to be added to the 15-bit address field of the 2nd-last
+	data segment $(3) to be added to the 15-bit address field of the 2nd-last
 	instruction. The relocation request is also visible on line 18 of
 	the assembly listing, in response to assembly option -n 
 	</blockquote>
-
 
 <p>
 Option -b in a linking assembly collates the program sections. The sections
@@ -2627,9 +2626,6 @@ MASMX 7r3
 :$(00):000000:000100 :$(01):001000:001004 :$(03):000000:000004 
 application_part1.msm: object code 713 bytes: 0 errors: 0 undefined labels
 $
-$ masmx -wkZ application_part2 application_part2
-$ masmx -wkZ application_part3 application_part3
-$
 $ cat application_part1.txo
 
 $01:001000
@@ -2648,6 +2644,9 @@ B60040 B60042 3D0000 3D0000 3D0000 3D0000 3D0000 3D0000
 :$00*000000:000000:000100
 :$01*000000:001000:001004
 :$03*000001:000000:000004
+$
+$ masmx -wkZ application_part2 application_part2
+$ masmx -wkZ application_part3 application_part3
 $
 $ masmx -lnkb
 MASMX 7r3
