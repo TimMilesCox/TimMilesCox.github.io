@@ -73,7 +73,7 @@ or like this
 </pre>
 
 <p>
-The masmx already has these default settings. They are correct for RTA1
+masmx already has these default settings. They are correct for RTA1
 <pre>
 
         $word                   24
@@ -88,16 +88,13 @@ The masmx already has these default settings. They are correct for RTA1
 
 
 <b>$awidth</b> has two steps because the effective address is
-24 bits but the executable space is much larger. masmx can construct
+24 bits but the executable space is larger. masmx can construct
 code and data in all the executable space using the giant address
 
 <p>
 masmx default byte size is 8 bits and data code is ASCII.
 <b>$byte</b> and the data code can be changed during
 an assembly
-
-<p>
-To change the data code see the main documentation of masmx
 
 <p>
 masmx syntax element defaults are also
@@ -116,12 +113,17 @@ The line of assembly language code has an arbitrary number of fields
 
 <pre>
 
-label	command		argument1[,argument1_subfield1,...]	[argumentN[,argumentN_subfield,...]]	[;
-                        continuation]		[. comment ]
+label	command		argument1[,argument1_subfield2,...]]	[argumentN[,argumentN_subfiel2,...]]	[. comment ]
 
 </pre>
+Lines may be continued
+<pre>
 
+label	command		 argument1[,argument1_subfield2,...]	;
+			[argument2[,argument1_subfield2,...]]	;
+			[argumentN[,argumentN_subfield2,...]] 
 
+</pre>
 <h3>Labels</h3>
 A label starts in column 1 and ends in whitespace. A label may contain letters, digits, $_?!@: and
 starts with a letter or _?!@
@@ -141,6 +143,29 @@ $ in column one is a program section control called a location counter with synt
 
 <p>
 A label starting with $ is declared in quotes but usually referenced without quotes
+
+<p>
+A label may have an arbitrary number of subscripts
+<pre>
+
+<i>label(5,7,600)</i>
+
+</pre>
+Each subscripted instance is a different label
+
+<p>
+A label <i>label_stem(4,1,20)</i> is the count of
+	<blockquote><i>
+	label_stem(4,1,20,5)<br>
+	label_stem(4,1,20,20)<br>
+	...</i>
+	</blockquote>
+
+Each subscript may be expressed algorithmically <i>label_name(name*function+counter)</i>
+
+<p>
+A subscripted label reference which does not exist has the value of zero because it
+counts an empty set
 
 <h3>Command Field</h3>
 
@@ -2772,7 +2797,7 @@ file		next_file
 .
 
 </pre>
-The periods exit the tree (directory) and finally the file system construxtion.
+The periods exit the tree (directory) and finally the file system construction.
 Option -x on utility 4kformat produces the file system image as a text-encoded
 binary which is included in a final link of the ROM image. This includes the kernel and all the
 applications
