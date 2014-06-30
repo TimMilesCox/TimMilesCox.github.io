@@ -110,6 +110,50 @@ correct for RTA1
 
 </pre>
 
+<h2>Assembly Language</h2>
+
+The line of assembly language code has an arbitrary number of fields
+
+<pre>
+
+label	command		argument1[,argument1_subfield1,...]	[argumentN[,argumentN_subfield,...]]	[;
+                                                    		continuation] [. comment ]
+
+</pre>
+
+
+<h3>Labels</h3>
+A label starts in column 1 and ends in whitespace. A label may contain letters, digits, $_?!@: and
+starts with a letter or _?!@
+
+<p>
+A reference containing substring character : may reference a simple label or a structured locatio
+
+<p>
+A label may be in "" and then it starts with anything and contains anything
+
+<p>
+Without case-sensitive option -k all labels and references are translated to uppercase
+
+<p>
+$ in column one is a program section control called a location counter with syntax
+<b>$(number[:attributes])</b> See section <b>Application Memory, Location Counters</b>
+
+<p>
+A label starting with $ is declared in quotes but usually referenced without quotes
+
+<h3>Command Field</h3>
+
+The command field is the first field to follow any whitespace. It may contain 
+
+	<blockquote>
+	nothing. Then there are no arguments either
+	a number constant or a character string constant
+	a space-isolated unary sign governing a number argument
+	an assembler directive
+	a bitfield structure name of the $form type
+	the name of a macro of the $proc type producing data or instruction code
+	</blockquote>
 
 
 <h2>Data Constants</h2>
@@ -354,6 +398,24 @@ $(3:*1)			. relocatable program section
 
 buffer	$res	20	. buffer can be in &plusmn; expressions
 			. and shift right expressions
+
+</pre>
+Labels in expressions may also be masmx internal function names
+or the names of macros of the $func type. These examples show
+function expressions in as instruction operands rather than constants
+<pre>
+
+	jc	$+2	. current location counter + 2
+
+f	$func
+upto10*	$name
+	$do	f(1, 1)>10,	$return	10
+	$return	f(1, 1)
+	$end
+
+
+	lr	upto10(ACTUAL_PARAMETER)		
+	
 
 </pre>
 The optional tag of <b>$do</b> directive is a value incrementing
@@ -2094,6 +2156,8 @@ The steps for placing RAM assembly-time variable values in ROM or core resident
 file systems are described in the linking and utilities section of this manual. 
 
 
+<h3>Void Sections and Structure by Pointer</h3>
+
 
 
 <h3>Assembling Structures Larger than the Address Space</h3>
@@ -2232,9 +2296,6 @@ software handling tables and arrays references very few labels
 <h2>9: $do Iteration</h2>
 
 <h2>10: $proc and $func Macros</h2>
-
-<h3>Void Sections and Structure by Pointer</h3>
-
 
 <h2>Appendix A: masmx Linking for RTA1</h2>
 
