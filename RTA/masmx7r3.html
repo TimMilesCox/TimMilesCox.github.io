@@ -2695,17 +2695,17 @@ The exported vector labels show entry points at the first two words of each bank
 The bank start addresses are at 4K-word boundaries and the bank identity is the
 bank start address / 4096. The vector value is the bank identity * 64 plus offset
 [0..63]
+<pre>
 
-	<blockquote>
-	008000/*6++0	=	000200<br>
-	008000/*6++1	=	000201<br>
-	009000/*6++0	=	000240<br>
-	009000/*6++1	=	000241<br>
-	00A000/*6++0	=	000280<br>
+	008000/*6++0	=	000200
+	008000/*6++1	=	000201
+	009000/*6++0	=	000240
+	009000/*6++1	=	000241
+	00A000/*6++0	=	000280
 	00A000/*6++1	=	000281
-	</blockquote>
 
-A ROM system cannot write the data sections in ROM. They are separated with
+</pre>
+A ROM system cannot write data sections in ROM. They are separated with
 another link for inclusion in a read-only file system in ROM. Segments in
 this file system are unpacked to RAM at runtime
 
