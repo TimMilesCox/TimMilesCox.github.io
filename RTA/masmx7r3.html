@@ -155,9 +155,9 @@ The command field is the first field to follow any whitespace. It may contain
 	the name of a macro of the <b>$proc</b> type producing data or instruction code
 	</blockquote>
 
-Assembler coding is essentially writing instructions. The essential line has in 
+Assembler coding is predominantly writing instructions. The essential line has in 
 the command field the <b>$proc</b> macro name of an instruction. The <b>$proc</b>
-mostly contains a <b>$form</b> instruction layout. Here is a simplified view of an
+mostly invokess a <b>$form</b> instruction layout. Here is a simplified view of an
 instruction defininition in <b>rta.def</b>
 <pre>
 
@@ -175,6 +175,9 @@ Here is a corresponding line of application code
 	lret	1	. return and skip 1 instruction
 
 </pre>
+
+see also sections <b>$form</b> and <b>$proc</b>
+
 <h2>Data Constants</h2>
 <h3>Expressions and Numbers</h3>
 
