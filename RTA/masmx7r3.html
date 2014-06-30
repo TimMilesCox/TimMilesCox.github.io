@@ -147,18 +147,18 @@ A label starting with $ is declared in quotes but usually referenced without quo
 The command field is the first field to follow any whitespace. It may contain 
 
 	<blockquote>
-	nothing. Then there are no arguments either<br>
-	a number constant or a character string constant<br>
-	a space-isolated unary sign governing a number argument<br>
-	an assembler directive<br>
-	a bitfield structure name of the $form type<br>
-	the name of a macro of the $proc type producing data or instruction code
+	nothing. Then there are no arguments either<br><br>
+	a number constant or a character string constant<br><br>
+	a space-isolated unary sign governing a number constant<br><br>
+	an assembler directive<br><br>
+	a bitfield structure name of the <b>$form</b> type<br><br>
+	the name of a macro of the <b>$proc</b> type producing data or instruction code
 	</blockquote>
 
 Assembler coding is essentially writing instructions. The essential line has in 
-the command field the $proc macro name of an instruction. The $proc mostly contains
-a $form instruction layout. Here is a simplified view of an instruction
-defininition in <b>rta.def</b>
+the command field the <b>$proc</b> macro name of an instruction. The <b>$proc</b>
+mostly contains a <b>$form</b> instruction layout. Here is a simplified view of an
+instruction defininition in <b>rta.def</b>
 <pre>
 
 isimple $form	5,3,16
