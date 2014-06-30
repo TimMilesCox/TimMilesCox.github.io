@@ -155,7 +155,26 @@ The command field is the first field to follow any whitespace. It may contain
 	the name of a macro of the $proc type producing data or instruction code
 	</blockquote>
 
+Assembler coding is essentially writing instructions. The essential line has in 
+the command field the $proc macro name of an instruction. The $proc mostly contains
+a $form instruction layout. Here is a simplified view of an instruction
+defininition in <b>rta.def</b>
+<pre>
 
+isimple $form	5,3,16
+
+p	$proc
+lret*	$name	6
+	isimple	p(0, 0), 5, p(1, 1)
+	$end
+
+</pre>
+Here is a corresponding line of application code
+<pre>
+
+	lret	1	. return and skip 1 instruction
+
+</pre>
 <h2>Data Constants</h2>
 <h3>Expressions and Numbers</h3>
 
