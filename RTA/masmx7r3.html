@@ -3448,7 +3448,7 @@ $net=:F:00000B			function		+	$net(value)		. local part of relocatable value = un
 $nop=:D:00003C			directive		$nop	do nothing except optionally serve as a comment line without knowing what $lterm is
 $note=:D:00003A			directive		$note	print this non-error remark
 $notef=:D:00000B		directive		$notef	print this non-error remark on the first assembly pass
-$o=:F:000009			directive		+	$o(value_of_option_letter)	. 1 if opted, otherwise zero
+$o=:F:000009			function		+	$o(value_of_option_letter)	. 1 if opted, otherwise zero
 $octal=:D:000041		directive		$octal				. leading 0 means octal input print octal output, otherwise default hex
 $offset=000001						$info,$offset	new_value	. update a tuple containing a relocatable address value in a link assembly
 $path=:D:00001D			directive		$path	[../../][/token..]	. path prepend for $include. Cancels with just $path
