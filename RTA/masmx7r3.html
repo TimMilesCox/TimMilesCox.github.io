@@ -2330,14 +2330,94 @@ $(0)
 
 
 Name structures may be nested to a depth eight levels
+<pre>
 
+$ freeware/masmx/masmx.7r3/masmx spiko -lnx
+MASMX 7r3
+3/spiko.msm
+*EOF*
+  :                            1 start*	$tree
+  :                            2 onedown	$tree
+  :                            3 twodown	$tree
+  :                            4 spoon	$res	4
+  :                            5 	$root
+  :                            6 	$root
+  :                            7 again	$tree
+  :                            8 and_again $tree
+  :                            9 fiddle	$res	4
+  :                            10 	$root
+  :                            11 	$root
+  :                            12 	$root
+  :                            13 
+*EOF*
+START+=$00:000000
+START:ONEDOWN+=$00:000000
+START:ONEDOWN:TWODOWN+=$00:000000
+START:ONEDOWN:TWODOWN:SPOON+=$00:000000
+START:AGAIN+=$00:000004
+START:AGAIN:AND_AGAIN+=$00:000004
+START:AGAIN:AND_AGAIN:FIDDLE+=$00:000004
+spiko.msm=0<000003
+:$(00):000000:000008 
+spiko.msm: object code 44 bytes: 0 errors: 0 undefined labels
+Tim-Coxs-MacBook:~ timcox$ cat temp.txo
 
-<h3>Generated Tables with Base_Displacement View</h3>
++START:$00:000000
+:$00*000000:000000:000008
+
+</pre>
+
+<b>$branch</b> directive is used in place of <b>$tree</b> to overlay
+name structures at the same storage address
+
+<pre>
+
+</pre>
+
+$ masmx spiko -lnx
+MASMX 7r3
+3/spiko.msm
+*EOF*
+  :                            1 spiko*	$branch
+00:000000 FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF9C
+                              +2 hexaword -100:h
+  :                            3 	$root
+  :                            4 start*	$branch
+  :                            5 onedown	$tree
+  :                            6 twodown	$tree
+  :                            7 spoon	$res	4
+  :                            8 	$root
+  :                            9 	$root
+  :                            10 again	$tree
+  :                            11 and_again $tree
+  :                            12 fiddle	$res	4
+  :                            13 	$root
+  :                            14 	$root
+  :                            15 	$root
+  :                            16 
+*EOF*
+SPIKO+=$00:000000
+SPIKO:HEXAWORD+=$00:000000
+START+=$00:000000
+START:ONEDOWN+=$00:000000
+START:ONEDOWN:TWODOWN+=$00:000000
+START:ONEDOWN:TWODOWN:SPOON+=$00:000000
+START:AGAIN+=$00:000004
+START:AGAIN:AND_AGAIN+=$00:000004
+START:AGAIN:AND_AGAIN:FIDDLE+=$00:000004
+spiko.msm=0<000003
+:$(00):000000:000008 
+
+<h3>Data-generating Sections with Base_Displacement View</h3>
 
 Data-generating sections may also be constructed for
 base + displacement addressing if their location is
-beyond the direct address range 32768 words
+beyond the operand direct address range 32768 words and within
+available ranges of the effective address space 16777216 words
 
+<p>
+To assemble structures 16 Megawords and beyond see the next section
+<b>Assembling Structures Larger than the Address Space</b>
 
 <pre>
 
@@ -2389,11 +2469,12 @@ $00:000045
 </pre>
 
 
+
 <h3>Assembling Structures Larger than the Address Space</h3>
 <p>
 
-You can assemble an array too large for the static data model and  many times larger
-than the address space, up the the limit of available memory
+Arrays too large for the static data space and  many times larger than the 16-Megaword
+address space may be assembled, up the the limit of available memory
 
 <p>
 Any array may be assembled instead of constructed at run time. There are cases where
@@ -2405,8 +2486,13 @@ An array which extends beyond the address space into a larger executable space i
 in masmx terms giant addressing
 
 <p>
-Giant data location is obtained with locator breakpoint addresses larger than the address
-space. masmx giant addresses are signalled with leading *asterisk
+Giant address space has a width greater than effective address space, notionally
+256 terawords expressed in 48 bits, but physically constrained to the executable
+space of RTA1 architecture, 16 gigawords expressed in 34 bits.
+
+<p>
+A giant address offset is introduced to the location counter as a breakpoint address
+with leading *asterisk
 
 <pre>
 
@@ -2428,34 +2514,44 @@ submit data segments to a run-time segment loader
 
 <pre>
 
-$ cat array.msm
-ARRAY_INDEX	$set	0
-SIZE		$equ	6
-
-p		$proc
-my_structure*	$name
-		+	p(1, 1):d
-		$res	4
-		$end
-
-f		$func
-long_pointer*	$name
-		$return	1*/46++f(1, 1)**-262144*/12++33*/18++f(1, 1)**262143
-		$end
-
-p		$proc
-array1_element*	$name
-		$do	repeat=4,	$list	0
-$(54::*ARRAY_INDEX)
-FORWARD		$set	ARRAY_INDEX+SIZE
-		my_structure		long_pointer(FORWARD)	;
-					derivation_function(repeat)
-ARRAY_INDEX*	$set	$a
-		$end
-
-array_part(1)
-repeat		$do	6000000000,	array1_element
-		$list
+$ masmx array2 -ln
+MASMX 7r3
+3/array2.msm
+*EOF*
+  :                            1: 	$include	freeware/RTA1/rta/def/rta.def
+  :                            2 
+  :                            3 ARRAY_INDEX     $set    0
+  :                            4 SIZE            $equ    6
+  :                            5 BASE		$equ	48
+  :                            6 
+  :                            7 p               $proc
+  :                            8 my_structure*   $name
+  :                            9 *               $tree
+  :                            10 next_pointer    +       p(1, 1):d
+  :                            11                 $res    4
+  :                            12                 $root
+  :                            13                 $end
+  :                            14 
+  :                            15 f               $func
+  :                            16 long_pointer*   $name
+  :                            17                 $return 1*/46++f(1, 1)**-262144*/12++BASE*/18++f(1, 1)**262143
+  :                            18                 $end
+  :                            19 
+  :                            20 p               $proc
+  :                            21 array1_element* $name
+  :                            22                 $do     repeat=4,       $list   0
+  :                            23 $(54::*ARRAY_INDEX)
+  :                            24 FORWARD         $set    ARRAY_INDEX+SIZE
+  :                            25 tempsymbol	my_structure	long_pointer(FORWARD)
+  :                            26 ARRAY_INDEX*    $set    $a
+  :                            27                 $end
+  :                            28 
+  :                            29 array_part(1)
+36:000000000000:400000C00006  +30 repeat          $do     6000000000,	array1_element
+36:000000000006:400000C0000C  +30 
+36:00000000000C:400000C00012  +30 
+  :                            31                 $list
+  :                            32 
 
 
 
@@ -2491,16 +2587,23 @@ the start bank identity is added to bits 45:30 of the pointer before the
 containing bank is based
 <pre>
 
-$(68::,b)
-structure	my_structure
 
-$(0)
-		dl		structure:next_pointer
-		aa		array_start_bank_index
-		sabr		BASE
 
-		la, i		64, a		. base two adjacent banks
-		sabr		BASE+1		. if the structure is not power 2 size
+  :                            33 $(68::,b)
+  :                            34 structure       my_structure
+  :                            35 
+  :                            36 $(0)
+00:000000 CFD000              +37                 dl              structure:next_pointer
+[+0000]0f
+00:000001 C00000              +38                 aa              array_start_bank_index
+00:000002 340030              +39                 sabr            BASE
+  :                            40 
+00:000003 64C040              +41                 la, i           64, a           . base two adjacent banks
+00:000004 340031              +42                 sabr            BASE+1          . if the structure is not power 2 size
+  :                            43 
+  :                            44 
+*EOF*
+:$(00):000000:000005 :$(36):000000:000006 :$(44):000000:000006 
  
 
 </pre>
