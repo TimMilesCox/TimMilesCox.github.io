@@ -2359,11 +2359,6 @@ START:AGAIN:AND_AGAIN+=$00:000004
 START:AGAIN:AND_AGAIN:FIDDLE+=$00:000004
 spiko.msm=0<000003
 :$(00):000000:000008 
-spiko.msm: object code 44 bytes: 0 errors: 0 undefined labels
-Tim-Coxs-MacBook:~ timcox$ cat temp.txo
-
-+START:$00:000000
-:$00*000000:000000:000008
 
 </pre>
 
@@ -2371,8 +2366,6 @@ Tim-Coxs-MacBook:~ timcox$ cat temp.txo
 name structures at the same storage address
 
 <pre>
-
-</pre>
 
 $ masmx spiko -lnx
 MASMX 7r3
@@ -2407,6 +2400,8 @@ START:AGAIN:AND_AGAIN+=$00:000004
 START:AGAIN:AND_AGAIN:FIDDLE+=$00:000004
 spiko.msm=0<000003
 :$(00):000000:000008 
+
+</pre>
 
 <h3>Data-generating Sections with Base_Displacement View</h3>
 
