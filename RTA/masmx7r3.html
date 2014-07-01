@@ -2328,12 +2328,65 @@ $(0)
 
 </pre>
 
+
+Name structures may be nested to a depth eight levels
+
+
 <h3>Generated Tables with Base_Displacement View</h3>
 
+Data-generating sections may also be constructed for
+base + displacement addressing if their location is
+beyond the direct address range 32768 words
 
 
+<pre>
 
-Name structures may be nested to a depth eight levels 
+$ masmx -kln oreilly oreilly
+MASMX 7r3
+3/oreilly.msm
+*EOF*
+  :                            1: 	$include	freeware/RTA1/rta/def/rta.def
+  :                            2 
+  :                            3 TABLE1	$equ	79*1024
+  :                            4 
+  :                            5 $(20:TABLE1,x)
+14:000000 400001C00000000000000000
+                              +6 one	+	1.5
+14:000004 400001D00000000000000000
+                              +7 two	+	1.625
+14:000008 400001E00000000000000000
+                              +8 three	+	1.75
+14:00000C 400001F00000000000000000
+                              +9 "O'Reilly" +	1.875
+  :                            10 
+  :                            11 $(0:64)
+00:000040 500045              +12 	lx	(TABLE1)
+00:000041 4FA000              +13 	ql	one
+00:000042 67A004              +14 	fa	two
+00:000043 6FA008              +15 	fan	three
+00:000044 47A00C              +16 	qs	"O'Reilly"
+  :                            17 
+  :                            18 
+*EOF*
+00:000045+013C00
+:$(00):000040:000046 :$(14):013C00:013C10 
+oreilly.msm: object code 228 bytes: 0 errors: 0 undefined labels
+$
+$ cat oreilly.txo
+
+$14:013C00
+400001C00000000000000000 400001D00000000000000000
+400001E00000000000000000 400001F00000000000000000
+$00:000040
+500045 4FA000 67A004 6FA008 47A00C
+$00:000045
+013C00
+
+:$00*000000:000040:000046
+:$14*000000:013C00:013C10
+
+
+</pre>
 
 
 <h3>Assembling Structures Larger than the Address Space</h3>
@@ -2375,10 +2428,20 @@ submit data segments to a run-time segment loader
 
 <pre>
 
+$ cat array.msm
 ARRAY_INDEX	$set	0
+SIZE		$equ	6
 
-$(54::*ARRAY_INDEX)
-array		$do	array_part(),	+	array_part(array)
+p		$proc
+my_structure*	$name
+		+	p(1, 1):d
+		$res	4
+		$end
+
+f		$func
+long_pointer*	$name
+		$return	1*/46++f(1, 1)**-262144*/12++33*/18++f(1, 1)**262143
+		$end
 
 p		$proc
 array1_element*	$name
@@ -2394,23 +2457,14 @@ array_part(1)
 repeat		$do	6000000000,	array1_element
 		$list
 
-array_part(2)
-?		$do	4500,		array2_element
-		$list
-
-array_part(3)
-index		$do	19000000,	array3_element
-		$list
 
 
 </pre>
 
-There may be enough spare address space to have all the array based at once
+An array up to six or seven megawords may all be in the address space at once
 
 <p>
-That might be the case for up to six or seven Megawords of array, depending
-on the number of address windows taken for program data. Otherwise a pair
-of address windows can provide a moving window or cursor in the array
+Otherwise a pair of address windows provide a moving cursor in the array
 
 <p>
 
@@ -2428,16 +2482,9 @@ and have a format
 Pointers like this may be assembled in the data structure as cross-reference
 and chain links. The field <b>window</b> must agree with with the address
 space window where sabr instruction will base the leading edge of the target
-element. Assembly function macro <b>long_pointer()</b> seen above  might have
-these steps
-<pre>
+element. See function macro <b>long_pointer()</b> above
 
-f		$func
-long_pointer*	$name
-		$return		1*/46++f(1, 1)**-262144*/30**BASE*/18**f(1, 1)**262143
-		$end
-
-</pre>
+<p>
 In the giant structure example above, this pointer is not quite complete
 at assembly time, because the start location of the array is not known. So
 the start bank identity is added to bits 45:30 of the pointer before the
