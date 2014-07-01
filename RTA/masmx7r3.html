@@ -2210,8 +2210,130 @@ The steps for placing RAM assembly-time variable values in ROM or core resident
 file systems are described in the linking and utilities section of this manual. 
 
 
+<h3>Base + Displacement Sections, Void Sections and Structure by Pointer</h3>
+
+A section may have base + displacement addressing, and it may either a reference
+where data cannot be generated or an actual data structure or list of structures
+
+<p>
+Base + displacement sections are widely used in conjunction with structured data
+
 <h3>Void Sections and Structure by Pointer</h3>
 
+A program section may have no initial addresses but instead a base register. They are
+a template of the sort which is variously called a dsect and a pointer. The syntax is
+for example
+<pre>
+
+$(66::,x)
+label	$res	4
+label2	structure
+
+$(70::,fp)
+descriptor acw
+
+</pre>
+Zero address followed by zero breakpoint allows the location counter number to be used
+for many different void sections. Without the second colon you could only use counter 66 or
+counter 70 once in an assembly. These locator/base register assignements are convention only
+<pre>
+
+$(66::,x)
+$(67::,y)
+$(68::,a)
+$(69::,b)
+$(70::,fp)
+$(71::,sp)
+
+</pre>
+
+The indentifiers inside these sections are base + displacement tuples of the sort which
+masmx calls $equf labels. In the example called descriptor
+<pre>
+
+	la	descriptor
+
+</pre>
+is the same as
+<pre>
+
+	la	descriptor, fp
+
+</pre>
+The base register assigned at the section head can be overriden on reference
+<pre>
+
+	la	descriptor, b
+
+</pre>
+
+Void sections are frequently used in conjuction with structured data
+<pre>
+
+$(70::,fp)
+descriptor      acw
+
+$(67::,y)
+dgram           datagram
+
+$(0)
+
+        ly      descriptor:dgram
+        dl      dgram:ipsource
+
+
+
+	lx	descriptor:next
+	lr	descriptor:bytes, x
+
+</pre>
+
+
+No data is generated inside void sections, even if data is declared. That allows
+macros which otherwise generate data to be coded
+
+<h3>Structured Data</h3>
+
+Structured data combines <b>$tree</b> and <b>$root</b> directives with <b>$proc</b>
+macros to construct hierarchical names for structured data, for example
+<pre>
+
+p       $proc
+ber_template* $name
+*       $tree
+ojet    $res    1       . pointer to the managed object. or type tag
+bytes   $res    1       . # bytes in the data edited for BER
+data    $res    1       . 2-word integer or # words of string storage
+                        . or byte offset in input buffer (30.encapsulation)
+storage $res    1       . pointer to aligned storage scanned on string input
+                        . or pointer to string in MIB object on string output
+                        . or pointer to input buffer location (30.encapsulation)
+oidl    $res    1       . oid bytes in storage
+oid     $res    1       . external oid string in storage
+        $root
+        $end
+
+$(3:03000)
+fixed	ber_template
+
+$(67::,y)
+parameter ber_template
+
+$(0)
+	ql	fixed:ojet
+	qs	parameter:ojet
+	dl	fixed:iodl
+	ds	parameter:oidl
+	z	0, b
+
+</pre>
+
+<h3>Generated Tables with Base_Displacement View</h3>
+
+
+
+
+Name structures may be nested to a depth eight levels 
 
 
 <h3>Assembling Structures Larger than the Address Space</h3>
