@@ -170,6 +170,67 @@ Each subscript may be expressed algorithmically as <i>label_name(name*function+c
 A subscripted label reference which does not exist has the value of zero because it
 counts an empty set
 
+<p>
+Macros generate and use labels which are discarded at the end of the macro assembly.
+Labels only remain for the calling level of assembly if they are promoted with trailing
+asterisk
+<pre>
+
+$ masmx -lnx
+MASMX 7r3
+0/-INPUT>>
+macro1*	$proc
+	macro2
+	$end
+
+macro2*	$proc
+macro3*	$proc
+manifest****
+private***
+unseen
+	$end
+	macro3
+	$end
+
+$(4:04000)
+	macro1
+	$end
+  :                            1 macro1* $proc
+  :                            2  macro2
+  :                            3  $end
+  :                            4 
+  :                            5 macro2* $proc
+  :                            6 macro3* $proc
+  :                            7 manifest****
+  :                            8 private***
+  :                            9 unseen
+  :                            10  $end
+  :                            11  macro3
+  :                            12  $end
+  :                            13 
+  :                            14 $(4:04000)
+  :                            15  macro1
+  :                            16  $end
+MACRO1=:P1:0:000000
+MACRO2=:P1:0:000001
+MANIFEST+=$04:004000
+PRIVATE=$04:004000
+-INPUT>>=0<000000
+:$(04):004000:004000 
+-INPUT>>: object code 47 bytes: 0 errors: 0 undefined labels
+$
+$ cat temp.txo
+
++MANIFEST:$04:004000
+:$04*000000:004000:004000
+
+
+</pre>
+<p>
+One asterisk is added to promote a label one  macro level. An asterisk at the main
+assembly level externalises the label
+
+
 <h3>Command Field</h3>
 
 The command field is the first field to follow any whitespace. It may contain 
@@ -2743,7 +2804,7 @@ field zero (the call name) is the new field one. The number of fields is one gre
 <i>proc_name</i>(&mu;,&nu;:*&sigma;) is a unary asterisk on subfield &mu;,&nu;:&sigma;
 
 <p>
-Four more features of macro processing are shown here
+Five more features of macro processing are shown here
 
 <p>
 Macros may contain macros, so only the outer macro can call the inner macro
@@ -2762,6 +2823,16 @@ part of the label in in quotes
 <p>
 Macros can assign a new value to the label on the call line. It is referenced
 with an asterisk in column 1
+
+<p>
+Macros generate and use labels which are discarded at the end of the macro assembly.
+Labels only remain for the calling level of assembly if they are promoted with trailing
+asterisk
+
+<p>
+One asterisk is added to promote a label one  macro level. An asterisk at the main
+assembly level externalises the label
+
 
 <pre>
 	
