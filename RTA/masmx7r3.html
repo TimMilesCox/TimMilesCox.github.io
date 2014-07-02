@@ -2380,9 +2380,9 @@ $(0)
 Name structures may be nested to a depth eight levels
 <pre>
 
-$ freeware/masmx/masmx.7r3/masmx spiko -lnx
+$ masmx spoka -lnxk
 MASMX 7r3
-3/spiko.msm
+3/spoka.msm
 *EOF*
   :                            1 start*	$tree
   :                            2 onedown	$tree
@@ -2398,14 +2398,14 @@ MASMX 7r3
   :                            12 	$root
   :                            13 
 *EOF*
-START+=$00:000000
-START:ONEDOWN+=$00:000000
-START:ONEDOWN:TWODOWN+=$00:000000
-START:ONEDOWN:TWODOWN:SPOON+=$00:000000
-START:AGAIN+=$00:000004
-START:AGAIN:AND_AGAIN+=$00:000004
-START:AGAIN:AND_AGAIN:FIDDLE+=$00:000004
-spiko.msm=0<000003
+start+=$00:000000
+start:onedown+=$00:000000
+start:onedown:twodown+=$00:000000
+start:onedown:twodown:spoon+=$00:000000
+start:again+=$00:000004
+start:again:and_again+=$00:000004
+start:again:and_again:fiddle+=$00:000004
+spoka.msm=0<000003
 :$(00):000000:000008 
 
 </pre>
@@ -2415,7 +2415,7 @@ name structures at the same storage address
 
 <pre>
 
-$ masmx spiko -lnx
+$ masmx -lnkx spiko.msm
 MASMX 7r3
 3/spiko.msm
 *EOF*
@@ -2437,15 +2437,15 @@ MASMX 7r3
   :                            15 	$root
   :                            16 
 *EOF*
-SPIKO+=$00:000000
-SPIKO:HEXAWORD+=$00:000000
-START+=$00:000000
-START:ONEDOWN+=$00:000000
-START:ONEDOWN:TWODOWN+=$00:000000
-START:ONEDOWN:TWODOWN:SPOON+=$00:000000
-START:AGAIN+=$00:000004
-START:AGAIN:AND_AGAIN+=$00:000004
-START:AGAIN:AND_AGAIN:FIDDLE+=$00:000004
+spiko+=$00:000000
+spiko:hexaword+=$00:000000
+start+=$00:000000
+start:onedown+=$00:000000
+start:onedown:twodown+=$00:000000
+start:onedown:twodown:spoon+=$00:000000
+start:again+=$00:000004
+start:again:and_again+=$00:000004
+start:again:and_again:fiddle+=$00:000004
 spiko.msm=0<000003
 :$(00):000000:000008 
 
@@ -2454,7 +2454,7 @@ spiko.msm=0<000003
 <h3>Data-generating Sections with Base_Displacement View</h3>
 
 Data-generating sections may also be constructed for
-base + displacement addressing if their location is
+base + displacement addressing in case their location is
 beyond the operand direct address range 32768 words and within
 available ranges of the effective address space 16777216 words
 
@@ -2484,12 +2484,11 @@ MASMX 7r3
   :                            10 
   :                            11 $(0:64)
 00:000040 500045              +12 	lx	(TABLE1)
-00:000041 4FA000              +13 	ql	one
+00:000041 77A000              +13 	fm	one
 00:000042 67A004              +14 	fa	two
 00:000043 6FA008              +15 	fan	three
-00:000044 47A00C              +16 	qs	"O'Reilly"
+00:000044 7FA00C              +16 	fd	"O'Reilly"
   :                            17 
-  :                            18 
 *EOF*
 00:000045+013C00
 :$(00):000040:000046 :$(14):013C00:013C10 
@@ -2501,13 +2500,12 @@ $14:013C00
 400001C00000000000000000 400001D00000000000000000
 400001E00000000000000000 400001F00000000000000000
 $00:000040
-500045 4FA000 67A004 6FA008 47A00C
+500045 77A000 67A004 6FA008 7FA00C
 $00:000045
 013C00
 
 :$00*000000:000040:000046
 :$14*000000:013C00:013C10
-
 
 </pre>
 
