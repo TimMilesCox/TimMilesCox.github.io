@@ -171,12 +171,12 @@ A subscripted label reference which does not exist has the value of zero because
 counts an empty set
 
 <p>
-Macros generate and use labels which are discarded at the end of the macro assembly.
+Macros generate and use labels which are discarded at the end of the macro expansion.
 Labels only remain for the calling level of assembly if they are promoted with trailing
 asterisk
 <pre>
 
-$ masmx -lnx visible visible
+$ masmx -lnxk visible visible
 MASMX 7r3
 3/visible.msm
   :                            1 macro1*	$proc
@@ -197,17 +197,17 @@ MASMX 7r3
   :                            16 $(14:0E000)
   :                            17 	macro1
   :                            18 	$end
-MACRO1=:P1:0:000000
-MACRO2=:P1:0:000001
-MANIFEST+=$0E:00E000
-PRIVATE=$0E:00E000
-VISIBLE=00E000
+macro1=:P1:0:000000
+macro2=:P1:0:000001
+manifest+=$0E:00E000
+private=$0E:00E000
+visible=00E000
 visible.msm=0<000003
 :$(0E):00E000:00E000 
 visible.msm: object code 47 bytes: 0 errors: 0 undefined labels
-$ cat visible.txo
+Tim-Coxs-MacBook:~ timcox$ cat visible.txo
 
-+MANIFEST:$0E:00E000
++manifest:$0E:00E000
 :$0E*000000:00E000:00E000
 $
 
@@ -2811,7 +2811,7 @@ Macros can assign a new value to the label on the call line. It is referenced
 with an asterisk in column 1
 
 <p>
-Macros generate and use labels which are discarded at the end of the macro assembly.
+Macros generate and use labels which are discarded at the end of the macro expansion.
 Labels only remain for the calling level of assembly if they are promoted with trailing
 asterisk
 
