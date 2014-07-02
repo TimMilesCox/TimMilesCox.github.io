@@ -2618,6 +2618,200 @@ software handling tables and arrays references very few labels
 
 <h2>10: $proc and $func Macros</h2>
 
+<b>$proc</b> directive heads an inline macro. <b>$end></b> directives ends all macros
+and also ends the assembly. End of input also ends the assembly
+
+<p>
+Macros reference actual parameters as a function of their own call name
+
+<p>
+For this reason macros tend to very cryptic titles with separate
+call names assigned a latent value
+
+<p>
+Macros names are only visible if they are promoted with asterisk* Names
+which are not promoted are reusable is other macros
+<pre>
+
+$ masmx -ln
+MASMX 7r3
+0/-INPUT>>
+p	$proc
+dem1*	$name	33
+dem2*	$name	99
+
+	+	p(0, 0), p(1, 1), p(1, 3), p(2, 1:1)*p(2, 1:2):d
+	$end
+
+	dem1	0aaa,,-12 25:4
+	dem2	0bbb,,12        3:3
+	$end
+  :                            1 p $proc
+  :                            2 dem1* $name 33
+  :                            3 dem2* $name 99
+  :                            4 
+  :                            5  + p(0, 0), p(1, 1), p(1, 3), p(2, 1:1)*p(2, 1:2):d
+  :                            6  $end
+  :                            7 
+00:000000 021AAAFF4064        +8  dem1	0aaa,,-12	25:4
+00:000002 063BBB00C009        +9  dem2	0bbb,,12	3:3
+  :                            10  $end
+:$(00):000000:000004 
+
+</pre>
+
+It is visible that <b>$proc</b> macros interpret actual parameters as <b>field,subfield:substring field...</b>
+
+<p>
+The call name is p(0, 0) and has a latent value
+
+<p>
+Forward references are possible in two-pass <b>$proc</b> macros, flagged with *
+<pre>
+
+maybe*	$proc	*
+	tp	estimation
+	j	maybe_not
+?	$do	maybe(),	lcal	maybe(?, 1)
+maybe_not
+	$end
+
+</pre>
+
+<i>proc_name</i>() is the count of actual argument fields after the callname
+
+<p>
+<i>proc_name</i>(&mu;) is the count of subfields in field &mu;
+
+<p>
+<i>proc_name</i>(&mu;,&nu;:) is the count of substrings in subfield &mu;,&nu;
+
+<p>
+However if <i>proc_name</i>() is an argument calling another macro,
+all the actual parameters are passed. If <i>proc_name</i>(&mu;) is
+an argument calling another macro, all the subfields of field &mu;
+are passed
+
+<pre>
+
+$ masmx sort_out -ln
+MASMX 7r3
+3/sort_out.msm
+*EOF*
+  :                            1 
+  :                            2 p	$proc
+  :                            3 sort_out* $name
+  :                            4 index	$equ	p()+1
+  :                            5 ?	$do	p(),	+	p(1, 2), p(index-?, 1)
+  :                            6 	$end
+  :                            7 
+  :                            8 p	$proc
+  :                            9 backslang* $name
+  :                            10 ?	$do	p(),	+	p(?, 1), p(?, 3), p(?, 2)
+  :                            11 	$end
+  :                            12 
+  :                            13 p       $proc
+  :                            14 yaname* $name		101
+  :                            15         sort_out        p()
+  :                            16         backslang       p(3) p(2) p(1)
+  :                            17 	$end
+  :                            18 
+00:000000 028007              +19 	yaname,40	1, 2, 3	   4, 5, 6     7, 8, 9
+00:000001 028004              +19 
+00:000002 028001              +19 
+00:000003 028065              +19 
+00:000004 070908              +19 
+00:000005 040605              +19 
+00:000006 010302              +19 
+  :                            20 
+*EOF*
+:$(00):000000:000007 
+
+</pre>
+
+When all the parameters are passed to a new macro with argument <i>proc_name</i>(),
+field zero (the call name) is the new field one. The number of fields is one greater
+
+<p>
+<i>proc_name</i>(&mu;,*&nu;) is a unary asterisk on subfield &mu;,&nu;
+
+<p>
+<i>proc_name</i>(&mu;,&nu;:*&sigma;) is a unary asterisk on subfield &mu;,&nu;:&sigma;
+
+<p>
+Three more features of macro processing are shown here
+
+<p>
+Macros may contain macros, so only the outer macro can call the inner macro
+
+<p>
+<b>$proc</b> macros may be flagged with a location counter to assemble in a target
+program section. Any 2-pass asterisk comes before the section flag and separate, as
+<pre>
+
+macro_name	$proc	*	$(TARGET_LOCATOR)
+
+</pre>
+Macros can construct a label combining a parameter with other symbols. The parameter
+part of the label in in quotes
+
+<p>
+Macros can assign a new value to the label on the call line. It is referenced
+with an asterisk in column 1
+
+<pre>
+	
+$ masmx indicate indicate -ln
+MASMX 7r3
+3/indicate.msm
+*EOF*
+  :                            1: 	$include	freeware/RTA1/rta/def/rta.def
+  :                            2 
+  :                            3 react*  $proc
+  :                            4 indicate* $proc	$(1)
+  :                            5 *	+	0
+  :                            6 	$end
+  :                            7 "react(1, 1)" indicate
+  :                            8 	tz 	*react(1, 1)
+  :                            9 	lcal	*react(1, 1)
+  :                            10 	$end
+  :                            11 
+  :                            12 $(1:01000)
+  :                            13 $(0:64)
+  :                            14 
+01:001000 000000              +15 	react	quick
+00:000040 709000              +15 
+00:000041 3E9000              +15 
+01:001001 000000              +16 	react	right
+00:000042 709001              +16 
+00:000043 3E9001              +16 
+  :                            17 
+*EOF*
+:$(00):000040:000044 :$(01):001000:001002 
+indicate.msm: object code 138 bytes: 0 errors: 0 undefined labels
+$ cat indicate.txo
+
+$01:001000
+000000
+$00:000040
+709000 3E9000
+$01:001001
+000000
+$00:000042
+709001 3E9001
+:$00*000000:000040:000044
+:$01*000000:001000:001002
+
+
+<pre>
+Function macros are not inline commands. They appear in expressions and generate a value.
+
+<p>
+<b>$func</b> directive heads a function macro and  <b>$end></b>end it. Function macros have
+a <b>$return</b> directive which returns a 192-bit value
+
+
+
 <h2>Appendix A: masmx Linking for RTA1</h2>
 
 <h3>A.1 masmx Output File Formats</h3>
@@ -3124,8 +3318,23 @@ $(32::FS_99*4096)
 
 </pre>
 
-Utility lstring writes the generated image in a load tuples format. A ROM
-image is then turned into a plain array file by utility slab
+
+<b>$include,$void</b> acquires the names of external software without
+including its code
+<pre>
+
+$ masmx -lnkb
+
+        $include                freeware/RTA1/rta/def/map1.def
+
+        $include,$void		kernel
+        $include,$binary        app_code        . this application
+
+</pre>
+Utility lstring writes the generated image in a load tuples format
+
+<p>
+slab utility reads a load tuples file and writes a ROM image
 
 <p>
 At process start, macro <b>$base_d</b> bases storage assigned by the kernel.
