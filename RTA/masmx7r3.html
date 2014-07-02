@@ -176,54 +176,40 @@ Labels only remain for the calling level of assembly if they are promoted with t
 asterisk
 <pre>
 
-$ masmx -lnx
+$ masmx -lnx visible visible
 MASMX 7r3
-0/-INPUT>>
-macro1*	$proc
-	macro2
-	$end
-
-macro2*	$proc
-macro3*	$proc
-manifest****
-private***
-unseen
-	$end
-	macro3
-	$end
-
-$(4:04000)
-	macro1
-	$end
-  :                            1 macro1* $proc
-  :                            2  macro2
-  :                            3  $end
-  :                            4 
-  :                            5 macro2* $proc
-  :                            6 macro3* $proc
-  :                            7 manifest****
-  :                            8 private***
-  :                            9 unseen
-  :                            10  $end
-  :                            11  macro3
-  :                            12  $end
-  :                            13 
-  :                            14 $(4:04000)
-  :                            15  macro1
-  :                            16  $end
+3/visible.msm
+  :                            1 macro1*	$proc
+  :                            2 	macro2
+  :                            3 visible* $equ	invisible
+  :                            4 	$end
+  :                            5 
+  :                            6 macro2* $proc
+  :                            7 macro3* $proc
+  :                            8 manifest****
+  :                            9 private***
+  :                            10 unseen
+  :                            11 invisible**
+  :                            12 	$end
+  :                            13 	macro3
+  :                            14 	$end
+  :                            15 
+  :                            16 $(14:0E000)
+  :                            17 	macro1
+  :                            18 	$end
 MACRO1=:P1:0:000000
 MACRO2=:P1:0:000001
-MANIFEST+=$04:004000
-PRIVATE=$04:004000
--INPUT>>=0<000000
-:$(04):004000:004000 
--INPUT>>: object code 47 bytes: 0 errors: 0 undefined labels
+MANIFEST+=$0E:00E000
+PRIVATE=$0E:00E000
+VISIBLE=00E000
+visible.msm=0<000003
+:$(0E):00E000:00E000 
+visible.msm: object code 47 bytes: 0 errors: 0 undefined labels
+$ cat visible.txo
+
++MANIFEST:$0E:00E000
+:$0E*000000:00E000:00E000
 $
-$ cat temp.txo
-
-+MANIFEST:$04:004000
-:$04*000000:004000:004000
-
 
 </pre>
 <p>
