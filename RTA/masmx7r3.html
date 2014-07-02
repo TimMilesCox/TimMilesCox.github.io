@@ -2618,19 +2618,21 @@ software handling tables and arrays references very few labels
 
 <h2>10: $proc and $func Macros</h2>
 
-<b>$proc</b> directive heads an inline macro. <b>$end></b> directives ends all macros
+<b>$proc</b> directive heads an inline macro. <b>$end</b> directives ends all macros
 and also ends the assembly. End of input also ends the assembly
 
 <p>
-Macros reference actual parameters as a function of their own call name
+Macros reference actual parameters as a function of their <b>$proc</b>
+or <b>$func</b> label
 
 <p>
-For this reason macros tend to very cryptic titles with separate
-call names assigned a latent value
+For this reason macros tend to cryptic titles with separate
+call names assigned a latent value with <b>$name</b> directive
 
 <p>
-Macros names are only visible if they are promoted with asterisk* Names
-which are not promoted are reusable is other macros
+Macro labels  are only visible if they are promoted with asterisk* Names
+which are not promoted are reusable in the calling assembly. Many macros
+may have the same <b>$proc</b> label, making paraform language easy to write
 <pre>
 
 $ masmx -ln
@@ -2688,8 +2690,10 @@ maybe_not
 
 <p>
 However if <i>proc_name</i>() is an argument calling another macro,
-all the actual parameters are passed. If <i>proc_name</i>(&mu;) is
-an argument calling another macro, all the subfields of field &mu;
+all the actual parameters are passed
+
+<p>
+If <i>proc_name</i>(&mu;) is an argument calling another macro, all the subfields of field &mu;
 are passed
 
 <pre>
@@ -2739,7 +2743,7 @@ field zero (the call name) is the new field one. The number of fields is one gre
 <i>proc_name</i>(&mu;,&nu;:*&sigma;) is a unary asterisk on subfield &mu;,&nu;:&sigma;
 
 <p>
-Three more features of macro processing are shown here
+Four more features of macro processing are shown here
 
 <p>
 Macros may contain macros, so only the outer macro can call the inner macro
@@ -2803,7 +2807,7 @@ $00:000042
 :$01*000000:001000:001002
 
 
-<pre>
+</pre>
 Function macros are not inline commands. They appear in expressions and generate a value.
 
 <p>
