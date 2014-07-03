@@ -722,6 +722,31 @@ at the end of another program section
 [tag]	$lit	55
 
 </pre>
+A literal may also be a macro generating data or code
+<pre>
+
+$ masmx lstruct -lnk
+MASMX 7r3
+3/lstruct.msm
+*EOF*
+  :                            1 	$path		freeware/RTA1/rta
+  :                            2: 	$include	def/rta.def
+  :                            3: 	$include	t77.4/ip.def
+  :                            4 	$path
+  :                            5 
+  :                            6 $(3:03000/$3)
+  :                            7 buffer	$res		2048
+  :                            8 $(0:64)
+00:000040 970100              +9 	ex		(dl		$3($net_socket	127.0.0.1:8080))
+  :                            10 	$do		$<256,$(0:256)
+  :                            11 
+*EOF*
+00:000100+CF3800
+03:003800+7F0000011F90
+:$(00):000040:000101 :$(03):003000:003802 
+
+
+</pre>
 A literal which is not automatic  has a literal pool
 tag before the opening parenthesis
 <pre>
@@ -755,7 +780,7 @@ $(0:64)
 
 </pre>
 
-<h3>More about Strings</h3>
+<h3>Character Strings</h3>
 
 The last literal example was a string. Bytes are any size you
 say they are, default 8-bits, padded with either zero or space to integral words
@@ -2662,6 +2687,57 @@ software handling tables and arrays references very few labels
 
 <h2>9: $do Iteration</h2>
 
+<b>$do</b> directive repeats a line of code
+<pre>
+
+[tag]	$do	count,[label]	command	[command_arguments]
+
+</pre>
+
+For example
+<pre>
+
+	$do	$o('k')=0,	$exit	this assembly requires option -k
+</pre>
+
+A column 1 tag on <b>$do</b> has a value incrementing from 1. This value
+may be used in labels and values of iterated code
+
+<pre>
+
+$ masmx -klnx
+MASMX 7r3
+0/-INPUT>>
+$(30:01E000)
+TIMES	$set	5
+
+index	$do	TIMES,float(TIMES+1-index)	1*+index-1
+	$end
+  :                            1 $(30:01E000)
+  :                            2 TIMES $set 5
+  :                            3 
+1E:01E000 400001800000000000000000
+                              +4 index $do TIMES,float(TIMES+1-index) 1*+index-1
+1E:01E004 400004A00000000000000000
+                              +4 
+1E:01E008 400007C80000000000000000
+                              +4 
+1E:01E00C 40000AFA0000000000000000
+                              +4 
+1E:01E010 40000E9C4000000000000000
+                              +4 
+  :                            5  $end
+TIMES=000005
+index=000005
+float(5)=$1E:01E000
+float(4)=$1E:01E004
+float(3)=$1E:01E008
+float(2)=$1E:01E00C
+float(1)=$1E:01E010
+-INPUT>>=0<000000
+:$(1E):01E000:01E014 
+
+</pre>
 <h2>10: $proc and $func Macros</h2>
 
 <b>$proc</b> directive heads an inline macro. <b>$end</b> directives ends all macros
@@ -2924,14 +3000,32 @@ log2.msm=0<000003
 
 </pre>
 
-A function macro can be flagged only to expand on the second assembler pass.
+Functions are not permitted to generate code in the current location counter
+<p>
+A function macro can be flagged to expand only on the second assembler pass.
 The flag is an asterisk on the title line
 <pre>
 
-later*	$func	*
-	$return	$literal_loc40(transmission_block	netaddress(later(1, 1))	;
-							netaddress(later(2, 1)))
-	$end
+$ masmx lquick -lnk
+MASMX 7r3
+3/lquick.msm
+*EOF*
+  :                            1 	$path		freeware/RTA1/rta
+  :                            2: 	$include	def/rta.def
+  :                            3: 	$include	t77.4/ip.def
+  :                            4 
+  :                            5 later*	$func	*
+  :                            6 	$return	$5($net_socket	later(1, 1))
+  :                            7 	$end
+  :                            8 
+  :                            9 $(5:05000/$5)
+  :                            10 $(0:64)
+  :                            11 
+00:000040 CF5000              +12 	dl	later(127.0.0.1:8080)
+  :                            13 
+*EOF*
+05:005000+7F0000011F90
+:$(00):000040:000041 :$(05):005000:005002 
 
 </pre>
 
