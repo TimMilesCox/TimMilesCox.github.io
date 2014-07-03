@@ -113,13 +113,13 @@ The line of assembly language code has an arbitrary number of fields
 
 <pre>
 
-label	command		argument1[,argument1_subfield2,...]]	[argumentN[,argumentN_subfiel2,...]]	[. comment ]
+[label]	[command]		[argument1[,argument1_subfield2,...]]	[argumentN[,argumentN_subfiel2,...]]	[. comment ]
 
 </pre>
 Lines may be continued
 <pre>
 
-label	command		 argument1[,argument1_subfield2,...]	;
+[label]	[command]	[argument1[,argument1_subfield2,...]]	;
 			[argument2[,argument1_subfield2,...]]	;
 			[argumentN[,argumentN_subfield2,...]] 
 
@@ -698,21 +698,58 @@ A literal is a constant declared as an operand and
 assembled at the end of a designated section
 
 <p>
-Literals look like immediate operands but are storage
-constants of any size. The instruction contains their
-address, not their value
-
-<p>
 An automatic literal is an operand starting and ending
 with parenthesis. Automatic literals are  enabled with
 assembly flag -a in <b>rta.def</b>
 <pre>
 
-	$set_option	"a"
-	
+        $set_option     "a"
+
 </pre>
-By default automatic literals are assembled at the end
-of program section $(0)
+Literals look like immediate operands but are storage
+constants of any size. The instruction contains their
+address, not their value
+<pre>
+
+$ masmx -lnz
+MASMX 7r3
+0/-INPUT>>
+	$list	0
+	$include	freeware/RTA1/rta/def/rta.def
+	$list
+$(31:01F000)
+	$list	0
+?	$do	1024,number(?)	1.75*+?-1
+	$list
+$(3:03000)
+$(0:64)
+	lx	(number(512))
+	lk	(127*/16)
+	dl      (1.65*+1200000)
+	$lit	3
+	ly, xi	("the result is %f":10)
+	$do	$<256,$(0:256)
+        $end
+  :                            428  $list
+  :                            429 $(31:01F000)
+  :                            432  $list
+  :                            433 $(3:03000)
+  :                            434 $(0:64)
+00:000040 500100              +435  lx (number(512))
+00:000041 480101              +436  lk (127*/16)
+00:000042 CF0102              +437  dl      (1.65*+1200000)
+  :                            438  $lit 3
+00:000043 5D3000              +439  ly, xi ("the result is %f":10)
+  :                            440  $do $<256,$(0:256)
+  :                            441         $end
+00:000100+01F7FC
+00:000101+7F0000
+00:000102+7CD38BAD344C64F0DD0432C5
+03:003000+74686520726573756C742069732025660A00
+:$(00):000040:000106 :$(03):003000:003006 :$(1F):01F000:020000 
+
+</pre>
+By default automatic literals are assembled at the end of program section $(0)
 
 <p>
 The <b>$lit</b> directive may place automatic literals 
@@ -722,7 +759,7 @@ at the end of another program section
 [tag]	$lit	55
 
 </pre>
-A literal may also be a macro generating data or code
+A literal may contain a macro generating data or code
 <pre>
 
 $ masmx lstruct -lnk
@@ -782,8 +819,8 @@ $(0:64)
 
 <h3>Character Strings</h3>
 
-The last literal example was a string. Bytes are any size you
-say they are, default 8-bits, padded with either zero or space to integral words
+Strings generate the containing number of data words. The default byte size
+is 8 bits and the default data code is ASCII
 <pre>
 
 $ masmx strings -ln
@@ -2949,15 +2986,15 @@ This operand expression obtains a functional value log2()
 
 </pre>
 <p>
-<b>$func</b> directive heads a function macro and  <b>$end</b>ends it. Function macros have
-a <b>$return</b> directive which returns a 192-bit value
+<b>$func</b> directive heads a function macro and  <b>$end</b> ends it. Function macros
+return a 192-bit value with  <b>$return</b> directive
 
 <p>
-Arguments for a function are in parentheses. There are an arbitrary number of field,
-subfield and substring arguments
+Arguments for a function are in parentheses. They are field, subfield and substring
+arguments of arbitrary number
 
 <p>
-This function returns log 2 of the containing power 2 of one parameter
+This function returns log 2 of the containing power 2 
 
 <pre>
 
