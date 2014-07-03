@@ -849,9 +849,25 @@ Note: strings.msm Line 12: trailing zero bits in last data word of string
 :$(00):000000:000015 
 
 </pre>
-Padding to word fill is zero with option <b>-c</b> or <b>-z</b> and space
-with neither or both <b>-cz</b>
+Padding to word fill is zero with option <b>-z</b> otherwise space
 
+<p>
+Nondisplay byte values can be placed in strings
+<pre>
+
+$ masmx -ln
+MASMX 7r3
+0/-INPUT>>
+LF	$equ	10
+edit	"the result is %f":LF:0
+	$end
+  :                            1 LF $equ 10
+00:000000 74686520726573756C742069732025660A00
+                              +2 edit "the result is %f":LF:0
+  :                            3  $end
+:$(00):000000:000006 
+
+</pre>
 <p>
 In <b>masmx.7r3</b> the masmx-internal label <b>$bits</b> contains
 the number of bits containing the characters in the string after the
