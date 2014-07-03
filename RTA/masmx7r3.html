@@ -2802,8 +2802,8 @@ program section. Any 2-pass asterisk comes before the section flag and separate,
 macro_name	$proc	*	$(TARGET_LOCATOR)
 
 </pre>
-Macros can construct a label combining a parameter with other symbols. The parameter
-part of the label in in quotes
+Macros can construct a label combining a parameter with other symbols. The label is
+constructed in quotes
 
 <p>
 Macros can assign a new value to the label on the call line. It is referenced
@@ -2831,9 +2831,9 @@ MASMX 7r3
   :                            4 indicate* $proc	$(1)
   :                            5 *	+	0
   :                            6 	$end
-  :                            7 "react(1, 1)" indicate
-  :                            8 	tz 	*react(1, 1)
-  :                            9 	lcal	*react(1, 1)
+  :                            7 "react(1, 1)pointer" indicate
+  :                            8 	tz 	*react(1, 1)pointer
+  :                            9 	lcal	*react(1, 1)pointer
   :                            10 	$end
   :                            11 
   :                            12 $(1:01000)
@@ -2865,12 +2865,75 @@ $00:000042
 
 </pre>
 Function macros are not inline commands. They appear in expressions and generate a value.
+This operand expression obtains a functional value log2()
+<pre>
 
+	la, xi	20*log2(30)
+
+</pre>
 <p>
-<b>$func</b> directive heads a function macro and  <b>$end></b>end it. Function macros have
+<b>$func</b> directive heads a function macro and  <b>$end</b>ends it. Function macros have
 a <b>$return</b> directive which returns a 192-bit value
 
+<p>
+Arguments for a function are in parentheses. There are an arbitrary number of field,
+subfield and substring arguments
 
+<p>
+This function returns log 2 of the containing power 2 of one parameter
+
+<pre>
+
+$ masmx log2 -lnxk
+MASMX 7r3
+3/log2.msm
+*EOF*
+  :                            1 
+  :                            2 f	$func
+  :                            3 log2*	$name
+  :                            4 fulcrum	$set	f(1, 1)-1
+  :                            5 	$do	fulcrum<1,	$return	0
+  :                            6 log	$do	48,	$do	1*/log>fulcrum,	$return	log
+  :                            7 	$return	-1
+  :                            8 	$end
+  :                            9 
+  :                            10 log2:zero	$equ	log2(0)
+  :                            11 log2:1	$equ	log2(1)
+  :                            12 log2:2	$equ	log2(2)
+  :                            13 log2:3	$equ	log2(3)
+  :                            14 log2:15	$equ	log2(15)
+  :                            15 log2:16	$equ	log2(16)
+  :                            16 log2:17	$equ	log2(17)
+  :                            17 log2:16383	$equ	log2(16383)
+  :                            18 log2:16384	$equ	log2(16384)
+  :                            19 log2:16385	$equ	log2(16385)
+  :                            20 
+*EOF*
+log2=:N65:F:0:000000
+log2:zero=000000
+log2:1=000000
+log2:2=000001
+log2:3=000002
+log2:15=000004
+log2:16=000004
+log2:17=000005
+log2:16383=00000E
+log2:16384=00000E
+log2:16385=00000F
+log2.msm=0<000003
+
+</pre>
+
+A function macro can be flagged only to expand on the second assembler pass.
+The flag is an asterisk on the title line
+<pre>
+
+later*	$func	*
+	$return	$literal_loc40(transmission_block	netaddress(later(1, 1))	;
+							netaddress(later(2, 1)))
+	$end
+
+</pre>
 
 <h2>Appendix A: masmx Linking for RTA1</h2>
 
