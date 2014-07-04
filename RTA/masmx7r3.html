@@ -1977,14 +1977,14 @@ Absolute program counter is updated with B0 + effective address
 
 
 </pre>
-Return instructions <b>lret</b> <b>fret</b> <b>iret</b> have a sign extended immediate
+Return instructions <b>lret</b> <b>fret</b> <b>ir</b> have a sign extended immediate
 operand which is added to the return address on the stack. Nonzero operand causes return
 to a location before or after the return address on the stack
 
 	<blockquote>
 	<b>lret</b> returns from <b>lcal</b><br><br>
 	<b>fret</b> returns from <b>call</b><br><br>
-	<b>iret</b> returns form  an interrupt whether external or internal
+	<b>ir</b> returns form  an interrupt whether external or internal
 	</blockquote>
 
 Internal interrupt instruction <b>ii</b> also has a sign extended immediate operand. The
@@ -2029,7 +2029,7 @@ Inter-bank jumps <b>go</b> and <b>call</b> read a single word operand of format
 	    16-bit pointer	 6-bit
 	    to 4K bank edge	 vector
 
-<div    style="FF0000">
+<div    style="color:FF0000">
 	or
 </div>
 
