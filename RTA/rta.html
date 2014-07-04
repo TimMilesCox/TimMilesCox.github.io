@@ -6011,7 +6011,7 @@ operate without lock in the register stack and with lock in storage.
 	|				go and call Between Banks				|
 	|_______________________________________________________________________________________|
 	|											|
-	|	Inter-bank jumps <b>go</b> and <b>call</b> read a single word storage operand	|
+	|	Inter-bank jumps <b>go</b> and <b>call</b> read a single word storage operand			|
 	|	of format									|
 	|											|
 	|											|
@@ -6037,10 +6037,10 @@ operate without lock in the register stack and with lock in storage.
 	|											|
 	|											|
 	|											|
-	|	<b>call</b> instruction pushes the program-counter minus B0 * 4096 on the	|
+	|	<b>call</b> instruction pushes the program-counter minus B0 * 4096 on the		|
 	|	internal stack then pushes B0							|
 	|											|
-	|	<b>go</b> and <b>call</b> update the program counter				|
+	|	<b>go</b> and <b>call</b> update the program counter						|
 	|											|
 	|											|
 	|       B0 = (operand bit 22) ? operand[21..3] * 8 : operand[21..6] / 64		|
