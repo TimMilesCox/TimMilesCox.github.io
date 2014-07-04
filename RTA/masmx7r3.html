@@ -2017,28 +2017,55 @@ $(0:64)
 
 </pre>
 
+Interrupts construct a four-word stack frame at the interrupt internal stack top
+
+<p>
+If the interrupted routine is an application (PSR bit 23 = 0) then interrupt <b>sp</b> is
+copied to interrupt <b>fp</b> to mark the interrupted application frame
+
+<pre>
+
+		_________________________________
+	0,sp	|	latent parameter	|
+		|_______________________________|
+	1,sp	|	interrupted PSR		|
+		|_______________________________|
+	2,sp	|	interrupted B0		|
+		|_______________________________|
+	3,sp	|	interrupted PC minus B0*|
+		|_______________________________|
+
+</pre>
+<b>ii</b> instruction places a latent parameter value zero in the frame
+
+<p>
+<b>ir</b> discards the latent parameter and copies saved PSR to PSR and saved B0 to B0.
+B0 * 4094 + interrupted offset is written to the program counter. The frame is removed
+from the stack
+
+<p>
 Inter-bank jumps <b>go</b> and <b>call</b> read a single word operand of format
 
 <pre>
 <div	style="color:0000FF">
 
-	    21		      6        0
-	________________________________
-	|00|bbbb bbbb bbbb bbbb| vector|
-	|__|___________________|_______|
-	    16-bit pointer	 6-bit
-	    to 4K bank edge	 vector
+		    21		      6        0
+		________________________________
+		|00|bbbb bbbb bbbb bbbb| vector|
+		|__|___________________|_______|
+		    16-bit pointer	 6-bit
+		    to 4K bank edge	 vector
 
 <div    style="color:FF0000">
-	or
+		OR
 </div>
 
 	    21                    3   0
-	________________________________
-	|01|bbbb bbbb bbbb bbbb bbb|vvv|
-	|__|_______________________|___|
-	    19-bit pointer	    3-bit
-	    to 32K bank edge	    vector
+		________________________________
+		|01|bbbb bbbb bbbb bbbb bbb|vvv|
+		|__|_______________________|___|
+		    19-bit pointer	    3-bit
+		    to 32K bank edge	    vector
 </div>
 </pre>
 
