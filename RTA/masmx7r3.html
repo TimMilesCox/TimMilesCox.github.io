@@ -1940,13 +1940,13 @@ Absolute program counter is updated with B0 + effective address
 <pre>
 
         _________________________________________________________________________________________________________________________
-        |       mnemonic|   fffff.jjj   |                       |  action				symbol B0* = B0 * 4096	|
+        |       mnemonic|   fffff.jjj   |                       |  action:symbol B0* = B0 * 4096 / B0** =B0 * b22 ? 32768 : 4096|
         |_______________|_______________|_______________________|_______________________________________________________________|
         |       lret	|   00110.101   |  local return		|  word @ internal stack top + xi + B0* -> PC, sp++		|
         |_______________|_______________|_______________________|_______________________________________________________________|
-        |       go	|   11110.111   |  go to another bank	|  word @ ea bank pointer part->B0*->PC += vector part		|
+        |       go	|   11110.111   |  go to another bank	|  word @ ea bank pointer part -> B0** ->PC += vector part	|
         |_______________|_______________|_______________________|_______________________________________________________________|
-        |       call	|   11111.111   |  call another bank	|  push PC-B0*, push B0, word @ ea bank part-> B0* -> PC+=vector|
+        |       call	|   11111.111   |  call another bank	|  push PC-B0*, push B0, word @ ea bank part-> B0**-> PC+=vector|
         |_______________|_______________|_______________________|_______________________________________________________________|
         |       fret	|   00111.101   |  far bank return	|  pop B0* -> PC += pop offset from internal stack += xi	|
         |_______________|_______________|_______________________|_______________________________________________________________|
@@ -1977,10 +1977,9 @@ Absolute program counter is updated with B0 + effective address
 
 
 </pre>
-Return instructions <b>lret</b>  <b>fret</b>  <b>iret</b> have a sign extended immediate
-operand which is added to the return address on the stack. This value is zero to return to
-the instruction after call. A a negative value skips backwards from the return point. A
-positive nonzero value skips forward
+Return instructions <b>lret</b> <b>fret</b> <b>iret</b> have a sign extended immediate
+operand which is added to the return address on the stack. Nonzero operand causes return
+to a location before or after the return address on the stack
 
 	<blockquote>
 	<b>lret</b> returns from <b>lcal</b><br><br>
@@ -2017,6 +2016,39 @@ $(0:64)
 :$(00):000040:000101 
 
 </pre>
+
+Inter-bank jumps <b>go</b> and <b>call</b> read a single word operand of format
+
+<pre>
+<div	style="color:0000FF">
+
+	    21		      6        0
+	________________________________
+	|00|bbbb bbbb bbbb bbbb| vector|
+	|__|___________________|_______|
+	    16-bit pointer	 6-bit
+	    to 4K bank edge	 vector
+
+<div    style="FF0000">
+	or
+</div>
+
+	    21                    3   0
+	________________________________
+	|01|bbbb bbbb bbbb bbbb bbb|vvv|
+	|__|_______________________|___|
+	    19-bit pointer	    3-bit
+	    to 32K bank edge	    vector
+</div>
+</pre>
+
+<b>call</b> instruction pushes the program-counter minus B0[21..6] * 4096 on the internal stack
+then pushes B0. Then
+<pre>
+
+	PC = (operand bit 22) ? operand[21..3] * 32768 ++ operand[2..0] : operand[21..6] * 4096 ++ operand[5..0]
+
+</pre>
 <h3>Control and I/O Instructions</h3>
 
 
@@ -2048,7 +2080,27 @@ $(0:64)
 	Assembly Language Examples
 	__________________________
 
+	la	transmission:buffer_bank<div	style="color:FF0000">
+	sabr	BSOCKB</div>
+	<div	style="color:0000FF">
+	on	see$1
+	la, xi	ABT+2</div><div    style="color:FF0000">
+	?	$do	23,	reload	?*2</div>
+
 </pre>
+<b>sabr</b> instruction copies the symbolic identity of a storage bank to 
+Thread Control Block + 64 + ea and writes the absolute value to I/O port[ea]
+
+<p>
+bank identity is identical to absolute value when bit 23 of the symbolic
+identity is zero. Symbolic bank identities with bit 23 = one are not
+implemented
+
+<p>
+<b>reload</b> instruction reads two symbolic bank identifiers at the
+address in register a and writes their absolute values to I/O port[ea]
+and I/O port[ea + 1]. Register a is incremented by 2
+
 
 <h2>Application Memory, Location Counters and Dynamic Data Segment Load</h2>
 
