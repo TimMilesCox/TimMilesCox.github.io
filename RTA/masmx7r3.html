@@ -2076,12 +2076,12 @@ Inter-bank jumps <b>go</b> and <b>call</b> read a single word operand of format
 </div>
 </pre>
 
-<b>call</b> instruction pushes the program-counter minus B0[21..0] * 4096 on the internal stack
-then pushes B0. Then
+<b>call</b> instruction pushes the program-counter minus B0 * 4096 on the internal stack
+then pushes B0. <b>go</b> and <b>call</b> update the program counter
 <pre>
 
-	B0 = (operand bit 22) ? operand[21..3] / 8 : operand[21..6 / 64]
-	PC = B0 * 4096 ++ (operand bit 22) ? operand[2..0] :  operand[5..0]
+	B0 = (operand bit 22) ? operand[21..3] / 8 : operand[21..6] / 64
+	PC = B0 * 4096 ++ (operand bit 22) ? operand[2..0] : operand[5..0]
 
 </pre>
 <h3>Control and I/O Instructions</h3>
