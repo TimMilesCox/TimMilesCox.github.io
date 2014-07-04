@@ -1935,6 +1935,60 @@ Absolute program counter is updated with B0 + effective address
 </pre>
 
 
+<h3>Non-Addressable Registers</h3>
+
+There are two non-addressable registers, the 48-bit absolute program counter and the 24-bit processor state register
+
+<p>
+34 bits of the absolute program counter are used. Absolute PC is never stored in addressable space.
+Bank and offset components of PC are stored separately and updates to PC are constructed from bank and offset parts
+
+<p>
+PSR is stored and loaded at interrupt and interrupt return. Its flag assignments are
+<pre>
+
+		23             18   16     14           8   7   6   5   4           0
+		_______________________________________________________________________
+		| I | 0 0 0 0 | i i i | 0 | see$          | H | R | R | W | 0 0 0 | C |
+		|   |         |       |   | 1 2 3 4 5 6 7 |   | Z |16 |16 |       |   |
+		|___|_________|_______|___|_______________|___|___|___|___|_______|___|
+
+
+		I = 0 = current state is application: registers are 0..127
+		    1 =                    interrupt: registers are 128..255
+
+		iii	interrupt mask
+
+		see$1 = 0 = data window 01000..01FFF  = private stack window B1
+		 	1 =				Thread Control Block
+
+		see$2 = 0 = data window 02000..02FFF  = application vector list
+			1 =				kernel vector list
+
+		see$3
+		see$4
+		see$5
+		see$6
+		see$7	select kernel data windows instead of application windows B3..B7
+
+		half$w = 0 = read / write thirdwords
+			 1 = read / write halfwords
+
+		b$streamZR = 0 = do not clear a at start of rsr instruction
+			     1 = clear a at start of rsr instruction
+
+		b$stream16r = 0 = use 24 bits of data words in Bitstream Read Channel
+			      1 = use 16 bits
+
+		b$stream16w = 0 = use 24 bits of data words in Bitstream Write Channel
+			      1 = use 16 bits
+
+		carry$ = carry from high-order position of integer adds and integer negative adds
+
+
+</pre>
+
+
 <h3>Call Returns, Bank Jumps and Interrupts</h3>
 
 <pre>
