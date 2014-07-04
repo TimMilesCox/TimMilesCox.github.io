@@ -6159,9 +6159,9 @@ operate without lock in the register stack and with lock in storage.
 
 				go	*target_identifier_indirectly
 
-				go	(BANK_ADDRESS/4096*/6++3)
+				go	(MEMORY/4096*64++VECTOR_0_63)
 
-				go	(HIGH_MEMORY_ADDRESS/32768*/3++AVECTOR)
+				go	(0400000++HIGH_MEMORY_ADDRESS/32768*8++VECTOR_0_7)
 
 
 
@@ -6182,7 +6182,8 @@ operate without lock in the register stack and with lock in storage.
 				|							|
 				|	Far Bank Call					|
 				|							|
-				|	push Program Counter minus B0 to Internal Stack	|
+				|	push Program Counter minus B0 * 4096		|
+				|	to Internal Stack				|
 				|							|
 				|	push B0	to Internal Stack			|
 				|							|
@@ -6239,9 +6240,9 @@ operate without lock in the register stack and with lock in storage.
 
 				call		*target_identifier_indirectly
 
-				call		(PAGE_INDEX*/6++VECTOR_OFFSET)
+				call		(LOCATION/4096*64++VECTOR_0_63)
 
-				call		(HIGH_MEMORY_32KBLOCK*/3++ROUTINE_VECTOR)
+				call		(0400000++HIGH_MEMORY/32768*8++VECTOR_0_7)
 
 
 
