@@ -1970,12 +1970,51 @@ Absolute program counter is updated with B0 + effective address
   :                            434 $(0:64)
   :                            435 examine<div	style="color:red">
 00:000040 783000              +436 	tp	left 
-00:000041 350000              +437 	lret	0
+00:000041 350000              +437 	lret	0	. return to instruction after lcal
 00:000042 703001              +438 	tz	right
-00:000043 350000              +439 	lret	0
-00:000044 350001              +440 	lret	1</div>
+00:000043 350000              +439 	lret	0	. return to instruction after lcal
+00:000044 350001              +440 	lret	1	. return and skip one instruction</div>
 
 
+</pre>
+Return instructions <b>lret</b>  <b>fret</b>  <b>iret</b> have a sign extended immediate
+operand which is added to the return address on the stack. This value is zero to return to
+the instruction after call. A a negative value skips backwards from the return point. A
+positive nonzero value skips forward
+
+	<blockquote>
+	<b>lret</b> returns from <b>lcal</b><br><br>
+	<b>fret</b> returns from <b>call</b><br><br>
+	<b>iret</b> returns form  an interrupt whether external or internal
+	</blockquote>
+
+Internal interrupt instruction <b>ii</b> also has a sign extended immediate operand. The
+low-order six bits are a vector value. Bits 21..6 designate the 4K-word start address of
+the bank containing the ISR
+<pre>
+
+$ masmx -kln
+MASMX 7r3
+0/-INPUT>>
+	$path		freeware/RTA1/rta/def
+	$list		0
+	$include	rta.def
+	$include	ii.def
+	$list
+$(0:64)
+	ql		(routine, PRIORITY, PARAMETER, EXTERNAL_STACKFRAME)
+	ii		THREAD$
+	$do	$<256,$(0:256)
+	$end
+  :                            1  $path  freeware/RTA1/rta/def
+  :                            558  $list
+  :                            559 $(0:64)
+00:000040 4F0100              +560  ql  (routine, PRIORITY, PARAMETER, EXTERNAL_STACKFRAME)<div	style="color:FF0000">
+00:000041 750047              +561  ii  THREAD$</div>
+  :                            562  $do $<256,$(0:256)
+  :                            563  $end
+00:000100+[0003]06:[0002]06*/06:[0001]06*/0C:[0000]06*/12:000000
+:$(00):000040:000101 
 
 </pre>
 <h3>Control and I/O Instructions</h3>
