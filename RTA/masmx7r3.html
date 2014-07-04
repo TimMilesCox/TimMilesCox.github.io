@@ -1924,7 +1924,7 @@ Absolute program counter is updated with B0 + effective address
         |_______________|_______________|_______________________|_______________________________________________________|
         |       jdz	|   01111.100   |  jump double zero	|  jump if 48-bit integer in registers a and b = zero	|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       lcal    |   00111.110   |  local call           |  push absolute PC - B0 on internal stack, jump to ea  |
+        |       lcal    |   00111.110   |  local call           |  push absolute PC - B0* on internal stack, jump to ea	|
         |_______________|_______________|_______________________|_______________________________________________________|
 
 
