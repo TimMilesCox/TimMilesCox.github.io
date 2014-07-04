@@ -6012,7 +6012,7 @@ operate without lock in the register stack and with lock in storage.
 	|	Inter-bank jumps <b>go</b> and <b>call</b> read a single word operand of format	|
 	|											|
 	|											|
-	|	<div    style="color:0000FF">							|
+	|											|<div    style="color:0000FF">
 	|											|
         |        		    21                6       0					|
 	|	                ________________________________				|
@@ -6021,17 +6021,17 @@ operate without lock in the register stack and with lock in storage.
         |       		    16-bit pointer       6-bit					|
 	|	                    to 4K bank edge      vector					|
 	|											|
-	|	<div    style="color:FF0000">							|
+	|											|<div    style="color:FF0000">
         |       		OR								|
-	|	</div>										|
 	|											|
+	|											|</div>
         |       		    21                    3   0					|
 	|	                ________________________________				|
         |       		|01|bbbb bbbb bbbb bbbb bbb|vvv|				|
 	|	                |__|_______________________|___|				|
         |       		    19-bit pointer          3-bit				|
-	|	                    to 32K bank edge        vector				|
-	|	</div>										|
+	|	                    to 32K bank edge        vector				|</div>
+	|											|
 	|											|
 	|											|
 	|	<b>call</b> instruction pushes the program-counter minus B0 * 4096 on the	|
@@ -6043,8 +6043,7 @@ operate without lock in the register stack and with lock in storage.
 	|       B0 = (operand bit 22) ? operand[21..3] * 8 : operand[21..6] / 64		|
         |	PC = B0 * 4096 ++ (operand bit 22) ? operand[2..0] : operand[5..0]		|
 	|											|
-	|											|
-	|       <div    style="color:0000FF">							|
+	|											|<div    style="color:0000FF">		|											|
 	|	                        _____________________					|
         |		                go / call destination					|
         |       		        _____________________					|
@@ -6073,7 +6072,7 @@ operate without lock in the register stack and with lock in storage.
 	|											|
 	|											|
 	|											|
-        |	</div>										|
+	|											|</div>
 	|$ masmx ibj -ln									|
 	|MASMX 7r3										|
 	|3/ibj.msm										|
