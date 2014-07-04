@@ -2134,7 +2134,7 @@ Inter-bank jumps <b>go</b> and <b>call</b> read a single word operand of format
 then pushes B0. <b>go</b> and <b>call</b> update the program counter
 <pre>
 
-	B0 = (operand bit 22) ? operand[21..3] / 8 : operand[21..6] / 64
+	B0 = (operand bit 22) ? operand[21..3] * 8 : operand[21..6] / 64
 	PC = B0 * 4096 ++ (operand bit 22) ? operand[2..0] : operand[5..0]
 
 </pre>
