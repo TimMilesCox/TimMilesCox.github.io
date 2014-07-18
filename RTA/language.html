@@ -32,8 +32,11 @@ This document is about
 	formal calling sequences used in structured assembly language code
 	<ol>
 		<li>structured realtime in the internal stack</li>
+		<li>calling and constructing the call argument stream</li>
+		<li>macro conversion of call arguments</li>
+		<li>the called routine: parameters and dynamic data</li>
 		<li>recursive programming and zero-net internal stack</li>
-		<li>trapping wrong argument lists</le>
+		<li>trapping wrong argument lists</li>
 	</ol>
 	</li>
 	<li>
@@ -110,10 +113,180 @@ They are intended to support future C compilers
 and to make a single call interface available for any style of
 programming language
 
+<h3>2.2 Calling and Constructing the Argument Stream</h3>
+
+<b>c / lc</b> macro embeds far and near call instructions
+<b>call</b> and <b>lcal</b>, first pushing parameters on the
+internal stack, and afterwards clearing the internal stack
+
 <p>
-Three stack management services are contained in
-the macro <b>$head_near/far</b> and one internal stack
-management service is contained in the macro <b>c / lc</b>
+<b>c / lc</b> finalises the parameter list by pushing a stack walkback before
+the <b>call / lcal</b> instruction and popping the internal stack pointer on
+return. If there are no parameters, it doesn't. Then the effect is the same
+as issuing a <b>call</b> or <b>lcal</b> instruction directly
+
+<pre>
+
+
+$ masmx ruxample -lnk
+MASMX 7r3
+3/ruxample.msm
+*EOF*
+  :                            1        $path           ../def
+  :                            2:       $include        rta.def
+  :                            3        $path           ../language
+  :                            4:       $include        stack.def
+  :                            5        $path
+  :                            6
+  :                            7
+  :                            8 $(3:03000)
+  :                            9 left   $res    4
+  :                            10 right $res    4
+  :                            11 centre        $res    4
+  :                            12       $lit
+  :                            13
+  :                            14 $(0:64)
+  :                            15
+  :                            16
+                                        c       (floating_algorithm)    left,,          float           ;
+                                                                        (1.875:d),,     floating_packed ;
+00:000040 8F3004              +19                                       right,,         float
+00:000041 5F300C              +19
+00:000042 8F3000              +19
+00:000043 FCF00C              +19
+00:000044 FF300E              +19
+00:000045 38000F              +19
+  :                            20
+00:000046 473008              +21       qs      centre
+  :                            22
+  :                            23
+  :                            24       $do     $<256,$(0:256)
+  :                            25
+*EOF*
+03:00300c+401F00000000
+03:00300e+[0000]18:000000
+:$(00):000040:000100 :$(03):003000:00300F
+ruxample.msm: object code 174 bytes: 0 errors: 1 undefined labels
+
+
+</pre>
+
+Between the data name and the data type of each <b>c / lc</b> argument is an index register
+subfield which is not always typed
+<pre>
+
+
+	lc	routine	left,,float	;
+			right,,float	;
+			centre, x, int	;
+			36, y, long
+
+
+</pre>
+If the datum is direct-addressed, an index register is not named because
+none is used
+
+<p>
+The assembly may otherwise already know a base + displacement register
+for the data name. If it is in the submacros <b>params() scalars() xframe()</b>
+or any other base + displacement section, the assembler does already know the
+default index base. Names like this have the masmx label type <b>$equf</b>
+which is an equate to a tuple of attributes
+
+<p>
+The index field is typed to use indexed addressing, where the
+name or value  is not associated with an index register, or in order
+to override its default index register
+
+<p>
+The third subfield in each argument may be a a type known to RTA1 macro language
+<pre>
+
+$ masmx loademup.msm -ln
+MASMX 7r3
+3/loademup.msm
+*EOF*
+  :                            1 
+  :                            2 	$path		../
+  :                            3: 	$include	def/rta.def
+  :                            4: 	$include	language/stack.def
+  :                            5 
+  :                            6 $(3:03000)
+  :                            7 data	$res	20
+  :                            8 
+  :                            9 $(0:64)
+  :                            10 
+                                	c	(routine_far)	data		;
+                                				data+10,,xi	;
+                                				99, b, i	;
+00:000040 F93004              +14 				data+4,,t1
+00:000041 FCD063              +14 
+00:000042 FD300A              +14 
+00:000043 F83000              +14 
+00:000044 FCF004              +14 
+00:000045 FF0100              +14 
+00:000046 38000F              +14 
+  :                            15 
+  :                            16 	$do	$<256,$(0:256)
+*EOF*
+00:000100+[0000]18:000000
+:$(00):000040:000101 :$(03):003000:003014 
+
+</pre>
+or parameters may be of type known to <b>c / lc</b> macro
+<pre>
+
+$ masmx -ln types
+MASMX 7r3
+3/types.msm
+*EOF*
+  :                            1 	$path		../
+  :                            2: 	$include	def/rta.def
+  :                            3: 	$include	language/stack.def
+  :                            4 	$path
+  :                            5 $(0:64)
+                                inward	$head_far	 params(left, float	;
+  :                            7 				right,float	)
+  :                            8 
+                                        lc      routine left,,float     ;
+                                                        right,,float    ;
+                                                        centre, x, int  ;
+                                                        36, y, long	;
+00:000040 5F0106              +13 			(1.875:d),, floating_packed            
+00:000041 9FB024              +13 
+00:000042 FDA100              +13 
+00:000043 8FF00E              +13 
+00:000044 8FF00E              +13 
+00:000045 FCF00F              +13 
+[+0000]0f
+00:000046 3E0000              +13 
+00:000047 38000F              +13 
+  :                            14 
+  :                            15 	$do	$<256,$(0:256)
+  :                            16 centre
+00:000100 000006              +17 ?	$do	6,	7-?
+00:000101 000005              +17 
+00:000102 000004              +17 
+00:000103 000003              +17 
+00:000104 000002              +17 
+00:000105 000001              +17 
+  :                            18 
+*EOF*
+00:000106+401F00000000
+:$(00):000040:000108 
+
+</pre>
+<p>
+or subfield 3  may be a macro name which processes the parameter as it loads it
+
+
+<h3>2.3 Macro Conversion of Call Arguments</h3>
+
+<b>c / lc</b> macro can attach macros to individual arguments
+to carry out conversion or formatting of actual parameters
+as they are pushed
+
+<h3>2.4 The Called Routine: Parameters and Dynamic Data</h3>
 
 <p>
 Macro <b>$head_near/far</b> constructs up to three lists of names which
@@ -129,10 +302,9 @@ two of those lists, <b>scalars</b> in the internal stack
 and <b>xframe</b> in the external stack
 
 <p>
-<b>params()</b> and <b>scalars()</b> feature here:
+A routine without large dynamic data may have <b>params()</b> and <b>scalars()</b> but not <b>xframe()</b>
 
 <pre>
-
 
 
 $ masmx rtxample -ln
@@ -183,61 +355,6 @@ rtxample.msm: object code 229 bytes: 0 errors: 0 undefined labels
 
 </pre>
 
-<p>
-The <b>c / lc</b> macro embeds far and near call instructions
-<b>call</b> and <b>lcal</b>, first pushing parameters on the
-internal stack, and afterwards clearing the internal stack
-
-<p>
-<b>c / lc</b> finalises the parameter list by pushing a stack walkback before
-the <b>call / lcal</b> instruction and popping the internal stack pointer on
-return. If there are no parameters, it doesn't. Then the effect is the same
-as issuing a <b>call</b> or <b>lcal</b> instruction directly
-
-<pre>
-
-$ masmx ruxample -lnk
-MASMX 7r3
-3/ruxample.msm
-*EOF*
-  :                            1 	$path		../def
-  :                            2: 	$include	rta.def
-  :                            3 	$path		../language
-  :                            4: 	$include	stack.def
-  :                            5 	$path
-  :                            6 
-  :                            7 
-  :                            8 $(3:03000)
-  :                            9 left	$res	4
-  :                            10 right	$res	4
-  :                            11 centre	$res	4
-  :                            12 	$lit
-  :                            13 
-  :                            14 $(0:64)
-  :                            15 
-  :                            16 
-                                	c	(floating_algorithm)	left,,		float		;
-                                					(1.875:d),,	floating_packed	;
-00:000040 8F3004              +19 					right,,		float
-00:000041 5F300C              +19 
-00:000042 8F3000              +19 
-00:000043 FCF00C              +19 
-00:000044 FF300E              +19 
-00:000045 38000F              +19 
-  :                            20 
-00:000046 473008              +21 	qs	centre
-  :                            22 
-  :                            23 
-  :                            24 	$do	$<256,$(0:256)
-  :                            25 
-*EOF*
-03:00300c+401F00000000
-03:00300e+[0000]18:000000
-:$(00):000040:000100 :$(03):003000:00300F 
-ruxample.msm: object code 174 bytes: 0 errors: 1 undefined labels
-
-
-</pre>
 <p>
 <b>params()</b> maps names onto the parameters pushed in <b>c / lc</b>
 
@@ -366,7 +483,7 @@ saverlod.msm: object code 147 bytes: 0 errors: 0 undefined labels
 </pre>
 
 
-<h3>2.2 Recursive Programming and Zero Net Internal Stack</h3>
+<h3>2.5 Recursive Programming and Zero Net Internal Stack</h3>
 
 
 The RTA1 internal stack is a register array for  realtime programming.
@@ -633,7 +750,7 @@ not used to bring faulty code into service. The parameters which the <b>$zero_st
 routine thinks it has are not the intended parameters until the real problem is fixed
 
 
-<h3>2.3 Trapping Wrong Argument Lists</h3>
+<h3>2.6 Trapping Wrong Argument Lists</h3>
 <p>
 An initial check  on the call frame can also be opted to isolate problems in code
 development and testing
