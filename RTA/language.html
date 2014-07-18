@@ -350,16 +350,16 @@ of arithmetic registers <b>a:b:mantissa2:mantissa3</b>
 <b>c / lc</b> is not concerned how many data words these macros read
 
 	<blockquote>
-	<b>c / lc</b> pushes arithmetic register <b>a</b>
+	<b>c / lc</b> adds arithmetic register <b>a</b> to the internal stack
 	after a macro with <b>$name</b> value <b>107</b><br><br>
 
-        <b>c / lc</b> pushes arithmetic registers <b>a:b</b>
-        after a macro with <b>$name</b> value <b>105</b><br>
-	one double-push instruction adds <b>a:b</b> to the internal stack<br><br>
+        <b>c / lc</b> adds arithmetic registers <b>a:b</b> to the internal stack
+	with a double-push instruction after a macro with <b>$name</b> value <b>105</b><br><br>
 
-        <b>c / lc</b> pushes arithmetic register <b>a:b:mantissa2:mantissa3</b>
-        after a macro with <b>$name</b> value <b>106</b><br>
-	one quad-push instruction adds <b>a:b:mantissa2:mantissa3</b> to the internal stack
+	<b>c / lc</b> adds arithmetic registers <b>a:b:mantissa2:mantissa3</b>
+	to the internal stack with a quad-push instruction after a macro with
+	<b>$name</b> value <b>106</b><br><br>
+	
 	</blockquote>
 
 A parameter generating macro receives two subfields before its own name as argument,
