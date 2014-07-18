@@ -285,6 +285,84 @@ or subfield 3  may be a macro name which processes the parameter as it loads it
 <b>c / lc</b> macro can attach macros to individual arguments to
 generate, convert or format actual parameters as they are pushed
 
+<p>
+The macro name takes the place of the data type subfield 3
+<pre>
+
+$ masmx newtotal.msm -ln
+MASMX 7r3
+3/newtotal.msm
+*EOF*
+  :                            1 	$path		../
+  :                            2: 	$include	def/rta.def
+  :                            3: 	$include	language/stack.def
+  :                            4 
+  :                            5 p		$proc
+  :                            6 long2float*	$name	106
+  :                            7 		dl	p(1, 1), p(1, 2)
+  :                            8 		call	(long2fp)
+  :                            9 		$end
+  :                            10 
+  :                            11 $(0)
+00:000000 B60040              +12 newtotal*	$vector	addon
+  :                            13 $(0:64)
+  :                            14 addon	$head_far	 params(increment, long)
+  :                            15 
+00:000040 CFF003              +16 	c	(total_up)	increment,,long2float
+00:000041 FF0047              +16 
+00:000042 8F0004              +16 
+00:000043 FCF004              +16 
+00:000044 FF0048              +16 
+00:000045 38000F              +16 
+  :                            17 
+00:000046 3D0000              +18 	$ret
+  :                            19 
+*EOF*
+00:000047+[0000]18:000000
+00:000048+[0001]18:000000
+:$(00):000000:000049 
+
+</pre>
+
+Macro <b>c (total_up)</b>
+
+	<blockquote>
+	executed the two instructions of macro <b>long2float</b><br><br>
+	pushed the four arithmetic registers a:b:mantissa2:mantissa3<br><br>
+	</blockquote>
+
+then pushed the internal stack walkback word, called the target routine, and finally
+popped the internal stack walkback word as <b>c / lc</b> macro always does
+
+<p>
+Parameter-generating macro <b>long2float</b> belongs to the ring of macros with
+<b>$name</b> value <b>106</b>
+
+<p>
+<b>c / lc</b> macro follows macros in <b>Ring 106</b> with a quadword push instruction
+of arithmetic registers <b>a:b:mantissa2:mantissa3</b>
+
+<p>
+<b>c / lc</b> macro restricts which macros may generate actual parameters to
+<b>Ring 105</b>, <b>Ring 106</b> and <b>Ring 107</b>
+
+<p>
+<b>c / lc</b> is not concerned how many data words these macros read
+
+	<blockquote>
+	<b>c / lc</b> pushes arithmetic register <b>a</b>
+	after a macro with <b>$name</b> value <b>107</b><br><br>
+
+        <b>c / lc</b> pushes arithmetic registers <b>a:b</b>
+        after a macro with <b>$name</b> value <b>105</b><br>
+	one double-push instruction adds <b>a:b</b> to the internal stack<br><br>
+
+        <b>c / lc</b> pushes arithmetic register <b>a:b:mantissa2:mantissa3</b>
+        after a macro with <b>$name</b> value <b>106</b><br>
+	one quad-push instruction adds <b>a:b:mantissa2:mantissa3</b> to the internal stack<br><br>
+	</blockquote>
+
+
 <h3>2.4 The Called Routine: Parameters and Dynamic Data</h3>
 
 <p>
