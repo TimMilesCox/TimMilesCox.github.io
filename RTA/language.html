@@ -196,13 +196,13 @@ which is an equate to a tuple of attributes
 <p>
 The index field is typed to use indexed addressing, where the
 name or value  is not associated with an index register, or in order
-to override its default index register
+to override a default index register
 
 <p>
 The third subfield in each argument may be a a type known to RTA1 macro language
 <pre>
 
-$ masmx loademup.msm -ln
+$ masmx loademup -ln
 MASMX 7r3
 3/loademup.msm
 *EOF*
@@ -217,11 +217,11 @@ MASMX 7r3
   :                            9 $(0:64)
   :                            10 
                                 	c	(routine_far)	data		;
-                                				data+10,,xi	;
+                                				-10,,xi		;
                                 				99, b, i	;
 00:000040 F93004              +14 				data+4,,t1
 00:000041 FCD063              +14 
-00:000042 FD300A              +14 
+00:000042 FDFFF6              +14 
 00:000043 F83000              +14 
 00:000044 FCF004              +14 
 00:000045 FF0100              +14 
