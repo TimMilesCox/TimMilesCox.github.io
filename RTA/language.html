@@ -26,6 +26,7 @@ This document is about
 
 <ol>
 	<li>
+	far call targets: $vector macro
 	formal calling sequences used in structured assembly language code
 	<ol>
 		<li>structured realtime in the internal stack</li>
@@ -39,8 +40,52 @@ This document is about
 
 </ol>
 
-<h2>1. Formal Calling Sequences used in Structured Assembly Language Code</h2>
-<h3>1.1 Structured Realtime in the Internal Stack</h3>
+<h2>1. Far Call Targets: $vector Macro</h2>
+
+<b>$vector</b> publishes routines which are the target
+of a far <b>call</b> instruction. It's a procedural macro coded
+at the front of the containing bank. It generates the jump
+instruction at one of the 64 jump pad positions and labels the
+handle value which identifies its bank:vector tuple
+<pre>
+
+handle_name*    <b>$vector</b>  bank_internal_name
+
+</pre>
+The handle value is placed in the single-word constant or
+variable operand of <b>go</b> and <b>call</b> instructions.
+It encodes the target bank identifier and a six-bit offset
+location of <b>$vector</b>
+<pre>
+
+
+        <b>$vector</b> goes in the first 64 words of a bank
+        on a 4K word bank edge.
+        The 64 entries at the bank start are a jump pad
+
+        23  21                 6|5    0
+        ________________________|_______
+        |00|   bank identifier  |offset|
+        |__|____________________|______|
+
+
+        Instruction banks at addresses from 256 Megawords
+        to 16 Gigawords are assigned at a granularity of 32K words
+        and have eight entry vectors
+
+        23  21                    3|2 0
+        ___________________________|____
+        |01|   bank identifier     |off|
+        |__|_______________________|set|
+
+
+</pre>
+<p>
+The target bank is any size, but
+only 64 or 8 vector locations are externally addressable
+
+<h2>2. Formal Calling Sequences used in Structured Assembly Language Code</h2>
+<h3>2.1 Structured Realtime in the Internal Stack</h3>
 <p>
 These calling sequences have made some parts of the kernel simpler to write
 
@@ -62,56 +107,6 @@ subroutine arguments are several and where register use is hard to remember.
 They are intended to support future C compilers
 and to make a single call interface available for any style of
 programming language
-
-<p>
-Macro definition file <b>language/stack.def</b> implements five services
-for subroutine calls
-
-<p>
-The simplest of these five services is <b>$vector</b>
-
-<p>
-<b>$vector</b> is about routines which are the target
-of a far <b>call</b> instruction. It's a procedural macro coded
-at the front of the containing bank. It generates the jump
-instruction at one of the 64 jump pad positions and labels the
-handle value which identifies its bank:vector tuple
-<pre>
-
-handle_name*	<b>$vector</b>	bank_internal_name
-
-</pre> 
-The handle value is placed in the single-word constant or
-variable operand of <b>go</b> and <b>call</b> instructions.
-It encodes the target bank identifier and a six-bit offset
-location of <b>$vector</b>
-<pre>
-
-
-	<b>$vector</b> goes in the first 64 words of a bank
-	on a 4K word bank edge.
-	The 64 entries at the bank start are a jump pad
-
-	23  21		       6|5    0
-	________________________|_______
-	|00|   bank identifier	|offset|
-	|__|____________________|______|
-
-
-	Instruction banks at addresses from 256 Megawords
-	to 16 Gigawords are assigned at a granularity of 32K words
-	and have eight entry vectors
-
-        23  21                    3|2 0
-        ___________________________|____
-        |01|   bank identifier	   |off|
-        |__|_______________________|set|
-
-
-</pre>
-<p>
-The target bank is any size, but
-only 64 or 8 vector locations are externally addressable
 
 <p>
 Three stack management services are contained in
@@ -369,7 +364,7 @@ saverlod.msm: object code 147 bytes: 0 errors: 0 undefined labels
 </pre>
 
 
-<h3>1.2 Recursive Programming and Zero Net Internal Stack</h3>
+<h3>2.2 Recursive Programming and Zero Net Internal Stack</h3>
 
 
 The RTA1 internal stack is a register array for  realtime programming.
@@ -636,7 +631,7 @@ not used to bring faulty code into service. The parameters which the <b>$zero_st
 routine thinks it has are not the intended parameters until the real problem is fixed
 
 
-<h3>1.3 Trapping Wrong Argument Lists</h3>
+<h3>2.3 Trapping Wrong Argument Lists</h3>
 <p>
 An initial check  on the call frame can also be opted to isolate problems in code
 development and testing
@@ -723,7 +718,7 @@ Here it's checking for 14 words beyond the actual stack pointer value
 <b>-UO</b> checks are not linked with <b>$zero_stack</b>. They are generated at
 every <b>$head_near/far</b> in the assembly when opted
 
-<h2>2. Runtime Algorithmic Expressions</h2>
+<h2>3. Runtime Algorithmic Expressions</h2>
 
 Here a simple algorithm with five inputs is executed in five instructions, including
 operand acquisition from storage
