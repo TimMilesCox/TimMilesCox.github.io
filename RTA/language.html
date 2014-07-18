@@ -328,7 +328,7 @@ Macro <b>c (total_up)</b>
 
 	<blockquote>
 	executed the two instructions of macro <b>long2float</b><br><br>
-	pushed the four arithmetic registers a:b:mantissa2:mantissa3<br><br>
+	pushed the four arithmetic registers <b>a:b:mantissa2:mantissa3</b><br><br>
 	</blockquote>
 
 then pushed the internal stack walkback word, called the target routine, and finally
@@ -362,6 +362,9 @@ of arithmetic registers <b>a:b:mantissa2:mantissa3</b>
 	one quad-push instruction adds <b>a:b:mantissa2:mantissa3</b> to the internal stack<br><br>
 	</blockquote>
 
+A parameter generating macro receives two subfields before its own name as argument,
+a value or address with optional index tag. In the example, input name <b>increment</b> is
+recognised as being base + displacement on the internal stack pointer
 
 <h3>2.4 The Called Routine: Parameters and Dynamic Data</h3>
 
