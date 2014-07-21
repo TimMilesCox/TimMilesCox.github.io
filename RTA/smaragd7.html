@@ -1783,11 +1783,11 @@ processing resolving the handle. The two <b>tcp_rx</b> calls here are
 the equivalent of
 <pre>
 
-	c	(recv)	tcp_socket_handle	application_data,,xi	4	0
+	c	(recv)	tcp_socket_handle	application_data,,xi	4,,xi	0,,xi
 	jna	problem
 	dl	application_data
 	dsl	8
-	call	(recv)	tcp_socket_handle	application_data,,xi	a	0
+	call	(recv)	tcp_socket_handle	application_data,,xi	a	0,,xi
 	jna	problem
 
 </pre>
@@ -1893,7 +1893,7 @@ alternated to portmapper
 <pre>
 
 	c	(add_hv_port)	;
-		($sockaddr	RPC_PROGRAM 172.29.7.11:PORT_NUMBER I_F),,quadword
+		($sockaddr	<i>RPC_PROGRAM 172.29.7.11:PORT_NUMBER I_F</i>),,quadword
 
 </pre>
 </div>
