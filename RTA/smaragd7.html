@@ -979,8 +979,9 @@ problem. There is no errno variable
 	close UDP socket
 	________________
 
-	<b>close</b> in UDP renders the port inactive
-	and makes the socket handle unassigned
+	<b>close</b> in UDP frees the port and makes
+	the socket handle number reassignable within
+	the process. The free port accepts no traffic
 
 
 	connect TCP socket
@@ -1140,12 +1141,12 @@ problem. There is no errno variable
 
 
 	close() removes the connection and makes the socket
-	handle unassigned
+	handle number free reassignable within the process
 
 	a shareable port remains available for <b>bind()</b>
 	and may still have sockets bound to it
 	
-	a port not configured for sharing becomes reassignable
+	a port not configured for sharing becomes available
 	for binding to one socket
 
 	close() returns immediately. There is no blocking
@@ -1167,7 +1168,7 @@ and allow responses to be transmitted at very low overhead
 
 <p>
 A server which has succesfully bound to its UDP port can
-use the long virtual address of the kernel port structure to
+use the long address of the kernel port structure to
 examine its input queue for User Datagrams
 
 <div	style="font-size:11pt">
@@ -1624,7 +1625,7 @@ possible with services bound to <b>portmapper()</b>
 
 		jna	bind_error
 
-		dl	10		. save the long virtual address
+		dl	10		. save the long address
 		ds	port_socket_long_address . of the port socket
 
 		sabr	BSOCKET		. and base it
@@ -1959,7 +1960,7 @@ in system services
 					application d$save = handle number
 					applicatio a = bank of control cell
 
-					Return long virtual address in
+					Return long address in
 					application registers 10, 11
 
 	KERNEL$B1          87		= bank 1  vector  23
@@ -2325,7 +2326,7 @@ The call <b>fs_find</b> advances from a 48-bit starting point in registers
 </div>
 
 The starting point is the pointer to the first block of a directory.
-It is a  long virtual address with the layout
+It is a long address with the layout
 
 <div    style="font-size:11pt">
 <pre>
@@ -2352,16 +2353,16 @@ The string only has zero-padding, not zero termination. The length in register
 <b>r</b> is the containing number of words of the name
 
 <p>
-The return value in <b>a:b</b> is a new long virtual address pointing
+The return value in <b>a:b</b> is a new long address pointing
 to the target file or directory target entry. If the target is not found,
 the return is zero
 
 <p>
-The long virtual address does not need to be based before the call
+The long address does not need to be based before the call
 
 <p>
-<b>fs_dsearch</b> is similar to <b>fs_find</b>, except the input long
-virtual address must point to a directory descriptor. A search
+<b>fs_dsearch</b> is similar to <b>fs_find</b>, except the input
+long address must point to a directory descriptor. A search
 will take place within that directory
 
 <div    style="font-size:11pt">
@@ -2377,12 +2378,12 @@ will take place within that directory
 </pre>
 </div>
 
-<b>fs_dsearch</b> returns the long virtual address of the first extent
+<b>fs_dsearch</b> returns the long address of the first extent
 descriptor of the file in <b>a:b</b>
 
 <p>
 <b>fs_xbase</b> places the file extent data pointed by extent descriptor
-<b>a:b</b> into the memory space, and returns the long virtual
+<b>a:b</b> into the memory space, and returns the long 
 address of the following extent descriptor in registers <b>a:b</b>
 
 <div    style="font-size:11pt">
@@ -2401,13 +2402,13 @@ address of the following extent descriptor in registers <b>a:b</b>
 
 Register <b>y</b> points to the file data. The whole extent is in the
 address space. <b>r</b> contains the number of octets in the extent.
-<b>a:b</b> contain the long virtual address of the following extent
+<b>a:b</b> contain the long address of the following extent
 descriptor
 
 <p>
 Routines <b>fs_1st</b> and <b>fs_read</b> in the memory array file system
 interface are components for more complex calls. <b>fs_1st</b> returns the
-long virtual address of the first directory entry in the default file system.
+long address of the first directory entry in the default file system.
 <b>fs_read</b> returns the directory next entry. The caller must filter and
 interpret the returned entries
 
