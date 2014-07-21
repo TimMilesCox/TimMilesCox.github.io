@@ -221,7 +221,7 @@ size of 4096 words for modularity
 
 <p>
 Network call routines are in bank 2 at address 8192 and file system call
-routines are in bank 5 at address 20480
+routines are in bank 6 at address 24576
 
 <p>
 Their vector values are these ranges
@@ -538,7 +538,7 @@ A macro <b>$base_d</b> does this
 	$include	vector.def
 
 
-        $base_d		DATA_SPACE
+        $base_d		<i>DATA_SPACE</i>
 
 </pre>
 </div>
@@ -641,29 +641,29 @@ far return instruction <b>fret</b>
 
 
 
-	ql	(start_address, thread_priority, parameter, initial_fp:q)
+	ql	(<i>start_address, thread_priority, parameter, initial_fp</i>:q)
 	ii	THREAD$
 
 </pre>
 </div>
 
 <p>
-The thread <b>start_address</b> is in the current instruction bank
+The thread <i>start_address</i> is in the current instruction bank
 
 <p>
-<b>thread_priority</b> is in the range <b>0..PRIORITIES-1</b>
+<i>thread_priority</i> is in the range <b>0..PRIORITIES-1</b>
 
 <p>
-<b>parameter</b> is an integer value or address delivered in register <b>a</b>
+<i>parameter</i> is an integer value or address delivered in register <b>a</b>
 of the new thread
 
 <p>
-<b>initial_fp</b> is the value of external stack pointer <b>fp</b> at
+<i>initial_fp</i> is the value of external stack pointer <b>fp</b> at
 thread execution start
 
 <p>
 The new thread has a new thread control block. All other resources are as
-the calling thread. All threads have visibility of the handles list
+the calling thread. All threads have visibility of the process handles list
 
 <h3>2.2 Adding and Releasing Program Storage: BANK$ ARRAY$ BANK$FREE</h3>
 
@@ -702,7 +702,7 @@ pointer. Zero = no memory granted
         $include        ii.def
 
 
-	la, xi	WORDS_REQUESTED
+	la, xi	<i>WORDS_REQUESTED</i>
 	ii	BANK$
 
 </pre>
@@ -726,7 +726,7 @@ pointer. Zero = no memory granted
         $include        ii.def
 
 
-	la, xi	4K_BLOCKS_REQUESTED
+	la, xi	<i>4K_BLOCKS_REQUESTED</i>
 	ii	ARRAY$
 
 </pre>
@@ -748,7 +748,7 @@ application register a is the bank pointer
         $include        ii.def
 
 
-	la	BANK_INDEX
+	la	<i>BANK_INDEX</i>
 	ii	BANK$FREE
 
 </pre>
