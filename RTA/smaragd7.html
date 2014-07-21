@@ -2023,7 +2023,7 @@ The targeted file system interface has a POSIX-like API
 
 	int write(int handle, char *buffer, int words);
 
-	unsigned long lseek(int handle, unsigned long target_word, int whence);
+	unsigned long lseek(int handle, long target_word, int whence);
 
 	int rewind(int handle);
 
@@ -2036,23 +2036,23 @@ of read() and write() plus target-position and result-position of lseek()
 are a count of words
 
 <p>
-An open flag O_8 makes the open file a stream of octets instead of words. Return
-value and length argument of read() and write() are then a count of octets. So
-are the target-position and result-position of lseek()
+An open flag O_8 makes the open file a stream of octets instead of words.
+Return value and length argument of read() and write() are then a count of
+octets. So are the target-position and result-position of lseek()
 
 <p>
-There is no difference in the organisation of the file system between open()
-for the rta default word stream interface and open() for octets. The octet
-stream interface is intended for situations like NFS server. The word stream
-interface is better optimised
+There is no difference in the organisation of the file system between
+open() for the default word stream interface and open() for octets.
+The octet stream interface is intended for situations like NFS server.
+The word stream interface is better optimised
 
 <p>
 The files recorded in the file system are not in any way different according
 to whether they are loaded, read or written with the word or octet interface
 
 <p>
-There is also minimal API for transmitting entire files on networks and it
-uses no handles but presents each buffered file extent successively
+There is also a minimal API for transmitting entire files on networks.
+It uses no handles but presents each buffered file extent successively
 to the socket
 
 <p>
@@ -2119,11 +2119,12 @@ Two low-level calls used to read files in Core Resident File Systems are
 </pre>
 
 The filename used at the intialisation call is an assembly label exported
-at the construction of the file system image. The utility 4kformat is executed
-with -x option causing the file system to be written as a linkable masmx .txo
-file and the filename to be exported as a label for linking. This name must be
-unique in the load image because it is a link label as well as a filename.
-The link label is not compartmented by directory structure
+at the construction of the file system image. The utility <b>4kformat</b>
+is executed with <b>-x</b> option causing the file system to be written as
+a linkable masmx <b>.txo</b> file and the filename to be exported as a label
+for linking. This name must be unique in the load image because it is a link
+label as well as a filename. Link labels are not compartmented by directory
+structure
 
 <pre>
 
@@ -2135,9 +2136,9 @@ The link label is not compartmented by directory structure
 	.
 
 </pre>
-The two periods are required. They are not a hint at further text. The first period
-returns from directory seg$load to volume root directory fsystem8. The second
-period exits 4kformat utility
+The two periods are required. They are not a hint at further text.
+The first period returns from directory seg$load to volume root
+directory fsystem5. The second period exits 4kformat utility
 
 <p>
 The inclusion of fsystem5.txo in the final image has the pattern
@@ -2163,7 +2164,7 @@ in the accompanying manual <b>masmx for RTA1</b>
 <h3>5.4 Access Block for File Systems in RTA1 smaragd7</h3>
 
 The access block for data files is common for file system types. At the POSIX
-interface this structure is assigned by open. Otherwise the calles supplies it
+interface this structure is assigned by open. Otherwise the caller supplies it
 
 <pre>
 
@@ -2178,7 +2179,7 @@ interface this structure is assigned by open. Otherwise the calles supplies it
 	________________________________________________
 	|	serialp:fs_type	|	serialp:device	|
 	|_______________________|_______________________|
-	|		serialp:extent			|
+	|		serialp:extentp			|
 	|_______________________________________________|
 	|		serialp:absolute_pointer	|
 	|_______________________________________________|
@@ -2226,7 +2227,7 @@ current octet position relative to the start of the file
 This structure is the first parameter by address of these file system low-level calls
 <pre>
 
-	fsrom_da	start core file with using known offset of 1st extent descriptor
+	fsrom_da	start core file using known offset of 1st extent descriptor
 	fsrom_read	read data words from core file
 
 	fs_dev_start	start file with using long address of 1st extent descriptor
@@ -2276,7 +2277,7 @@ file index.html rta.doc/index.html
 file rta.html rta.doc/rta.txt
 file smaragd7.html rta.doc/smaragd7.txt
 file language.html rta.doc/language.txt
-file masmxRTA.html rta.doc/masmxRTA.txt
+file masmx7r3.html rta.doc/masmx7r3.txt
 file connect.html rta.doc/connect.txt
 file q_a.html rta.doc/q_a.txt
 file footnote.html rta.doc/footnote.txt
@@ -2462,14 +2463,14 @@ the entry type and size in words, excluding the format word itself
 
         47                                             0
         _________________________________________________
-        |  'V'  |   0   | words |  granules in device	|
+        |  'V'  |   0   | words | device granules 23..0	|
         |_______|_______|_______|_______________________|
         |            next assignable granule            |
         |_______________________________________________| 
         |words written dir.block|words free in dir.block|       
-        |___extent descriptor___|_______________________|
-        |        name...        ...         ...
         |_______________________|_______________________|
+        | device granules 47..24|	name...        ...         ...
+        |_=_device_gigawords____|_______________________|
 
 
 
