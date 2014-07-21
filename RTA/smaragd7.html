@@ -2445,15 +2445,13 @@ the entry type and size in words, excluding the format word itself
 
 	47					       0
 	_________________________________________________
-	|  'T'  |   0   | words | granules first extent	|
+	|  'D'  |   0   | words | granules first extent	|
 	|_______|_______|_______|_______________________|
         | 		   start granule		|
 	|_______________________________________________|
-	|   granule containing next extent descriptor	|
-	|_______________________________________________|
-	|   word offset next	|words written dir.block|
+	|words written dir.block|words free in dir.block|
 	|___extent descriptor___|_______________________|
-	|words free in dir.block|        name...        ...         ...
+	|	name...   ...   ...   ...   ...   ...   ...   ...
 	|_______________________|_______________________|
 	
 
@@ -2469,7 +2467,7 @@ the entry type and size in words, excluding the format word itself
         |_______________________________________________| 
         |words written dir.block|words free in dir.block|       
         |_______________________|_______________________|
-        | device granules 47..24|	name...        ...         ...
+        | device granules 47..24|	name...   ...	...   ...
         |_=_device_gigawords____|_______________________|
 
 
@@ -2487,7 +2485,7 @@ the entry type and size in words, excluding the format word itself
         |_______________________________________________| 
         |   word offset next    |file total octets 47..24     
         |___extent descriptor___|_______________________|
-        |file total octets 23..0|	name...		...	   ...
+        |file total octets 23..0|	name...   ...   ...  ...
         |_______________________|_______________________|
 
 
