@@ -348,22 +348,22 @@ used as building blocks for services
         $include        ii.def
 
 
-        ql      	(start_vector, PRIORITY, DATA_SPACE, -B1_OCCURENCES:q)
+        ql      	(<i>start_vector, PRIORITY, DATA_SPACE, -B1_OCCURENCES</i>:q)
         ii      	SPAWN$
 
 </pre>
 </div>
 
 <p>
-<b>start_vector</b> is the bank.vector value where the process initial
+<i>start_vector</i> is the <i>bank.vector</i> value where the process initial
 thread starts
 
 <p>
 The highest priority is zero and the lowest PRIORITIES-1
 
 <p>
-<b>DATA_SPACE</b> is the size of application initial data which has
-program names and addresses, i.e. <b>static</b> and <b>global</b>
+<i>DATA_SPACE</i> is the size of application initial data which has
+program names and addresses, i.e. <b>static</b> plus <b>global</b>
 
 <p>
 The kernel writes the start address of program storage in the process
@@ -371,7 +371,7 @@ vector bank. The application bases the assigned storage in relocation
 registers B3..B31
 
 <p>
-<b>-B1_OCCURENCES</b> is a negative number indicating the number of 4096-word
+<i>-B1_OCCURENCES</i> is a negative number indicating the number of 4096-word
 frames the application requires in its private B1 stack. The default is
 -1, which means the application uses one private B1 frame
 
@@ -595,7 +595,7 @@ When the wait time is expired, the task becomes a candidate for switching
         $include        ii.def
 
 
-	la, xi		microseconds
+	la, xi		<i>microseconds</i>
 	ii		TWAIT$
 
 </pre>
