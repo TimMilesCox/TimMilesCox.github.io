@@ -58,9 +58,18 @@ handle_name*    <b>$vector</b>  bank_internal_name
 
 </pre>
 The handle value is placed in the single-word constant or
-variable operand of <b>go</b> and <b>call</b> instructions.
-It encodes the target bank identifier and a six-bit offset
-location of <b>$vector</b>
+variable operand of <b>go</b> and <b>call</b> instructions
+<pre>
+
+
+		call	handle
+
+
+handle		+	handle_name
+
+</pre>
+The handle value  encodes the target bank identifier and
+six-bit offset location where <b>$vector</b> macro is assembled
 <pre>
 
 
