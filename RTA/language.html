@@ -928,6 +928,29 @@ every <b>$head_near/far</b> in the assembly when opted
 
 <h2>3. Runtime Algorithmic Expressions</h2>
 
+<p>
+<b>$xqt_fp</b> and <b>$xqt_i</b> directives code an instruction plan in a
+compiler-like fashion to solve expressions at run-time
+
+<p>
+Assemblers mostly resolve expressions whose tokens are all known at assembly time
+
+<p>
+<b>$xqt_fp</b> and <b>$xqt_i</b> directives plan instruction steps with the
+support of target-specific macros with fixed call-names known to masmx 
+
+<p>
+<b>$xqt_fp</b> and <b>$xqt_i</b> resolve expressions combining constants and
+variables. <b>$xqt_i</b> processes integers and can resolve all expression steps
+between constants at assembly time, planning the fewest possible instructions
+for run time calculation
+
+<p>
+<b>$xqt_fp</b> by contrast includes constants as well as variables in expressions,
+but does not attempt assembly-time calculation of expression steps between floating
+constants
+
+<p>
 Here a simple algorithm with five inputs is executed in five instructions, including
 operand acquisition from storage
 <pre>
@@ -978,10 +1001,7 @@ four operators, and turned it into a sequence of five instructions which deliver
 four-word floating result of the operations in the result registers <b>a:b:6:7</b>
 
 <p>
-Assemblers mostly solve expressions whose tokens are all known at assembly time
-
-<p>
-But three of these tokens are identifiers whose content is only known at runtime
+Three of these tokens are identifiers whose content is only known at runtime
 
 <p>
 <b>$xqt_fp</b> directive scans an expression and calls macro code to write an
@@ -989,33 +1009,19 @@ instruction plan. The tokens which could be solved at assembly time
 appear as literals at the foot of the program
 
 <p>
-Run-time expression-solving is required in compilers as distinct from
-assemblers. But RTA1 has no compilers at present, so the <b>$xqt_fp</b>
-directive supports future compilers and supports run-time expressions
-right now
-
-<p>
 Exactly five instructions for five operands is as efficient as straight-line
 computing can get
 
 <p>
-Load-store triadic architectures need at least ten instructions to load
+Load-store triadic architectures need at least ten instructions to loa
 and then compute. RTA1 reduces this to five instructions
 with its seamless operand hierarchy of registers and memory
 
 <p>
-masmx.7r3 has of course a <b>$xqt_i</b> directive which applies arithmetic, boolean,
-shift and comparison operations to integers, at assembly as far as possible
-and in an instruction plan thereafter
+<b>$xqt_fp</b> and <b>$xqt_i</b> instruction plans have the purpose of loading
+a final result in the result registers. If masmx can solve the whole expression
+at assembly time, only a constant load instruction is generated
 
-<p>
-<b>$xqt_fp</b> and <b>$xqt_i</b> directives essentially and initially plan
-a load to the result registers. If masmx can solve the whole expression at
-assembly time, only a constant load instruction is generated
-
-<p>
-Macro code to realise each successive operation in the algorithm is target-specific
-and described in the manuals <b>masmx for RTA1</b> and <b>masmx.7r3</b>
 
 <i>
 <pre>
