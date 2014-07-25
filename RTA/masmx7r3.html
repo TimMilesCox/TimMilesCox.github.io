@@ -3321,6 +3321,145 @@ MASMX 7r3
 :$(00):000040:000041 :$(05):005000:005002 
 
 </pre>
+<h2>11: Runtime Algorithmic Expressions: $xqt_i and $xqt_fp</h2>
+
+<p>
+Assemblers mostly resolve expressions whose tokens are all known at assembly time
+
+<p>
+<b>$xqt_fp</b> and <b>$xqt_i</b> directives code an instruction plan in a
+compiler-like fashion however, to solve expressions involving run-time variables
+
+<p>
+These instruction steps are planned with the support of target-specific macros with
+fixed call-names known to masmx 
+
+<p>
+<b>$xqt_i</b> processes integers and can resolve all expression steps
+between constants at assembly time, planning the fewest possible instructions
+for run time calculation
+
+<p>
+In this example the subexpression right of the OR operator <b>++</b> has been
+resolved at assembly time, but left of <b>++</b> a multiply, two adds and a
+shift must take place at runtime
+
+<p>
+The running accumulation is maintained in 48 bits, but it is judged to contain
+only 24 significands until a double load, an add, a negative add, a multiply, or
+a boolean operation on 48 bits has taken place. The first operation <b>one,,w0*4</b>
+could be executed in one multiply step because it was known that the multiplicand
+had 24 or less significands. These rules are in the target-specific macro code and
+not in masmx
+
+<pre>
+
+$ masmx boolean -lnk
+MASMX 7r3
+3/boolean.msm
+  :                            1 	$path		../
+  :                            2: 	$include	def/rta.def
+  :                            3: 	$include	language/fpxpress.def
+  :                            4: 	$include	language/i_xpress.def
+  :                            5 	$path
+  :                            6 
+  :                            7 $(3:03000)
+03:003000 000001              +8 one	1
+03:003001 000000000002        +9 two	2d
+03:003003 000000000003        +10 three	3d
+  :                            11 $(0:64)
+00:000040 603000              +12 	$xqt_i	two+one,,w0*4+three*/16++12*/40
+00:000041 960018              +12 
+00:000042 E00100              +12 
+00:000043 D73001              +12 
+00:000044 D73003              +12 
+00:000045 360010              +12 
+00:000046 900101              +12 
+00:000047 980102              +12 
+  :                            13 	$do	$<256,$(0:256)
+  :                            14 	$end
+00:000100+000004
+00:000101+0C0000000000
+:$(00):000040:000103 :$(03):003000:003005 
+
+
+</pre>
+<p>
+<b>$xqt_fp</b> by contrast includes constants as well as variables in expressions,
+but does not attempt assembly-time calculation of expression steps between floating
+constants
+
+<p>
+<b>$xqt_fp</b> concerns four-function arithmetic only, and operands are four words
+in size
+
+<p>
+Here a simple algorithm with five inputs is executed in five instructions, including
+operand acquisition from storage
+<pre>
+
+
+$ masmx -ln r2xample.msm
+MASMX 7r3
+3/r2xample.msm
+*EOF*
+  :                            1 	$path		../def
+  :                            2: 	$include	rta.def
+  :                            3 	$path		../language
+  :                            4: 	$include	stack.def
+  :                            5: 	$include	fpxpress.def
+  :                            6 	$path
+  :                            7 $(0:0)
+  :                            8 
+00:000000 B60040              +9 floating_algorithm*  $vector fp_routine
+  :                            10 
+  :                            11 $(0:64)
+  :                            12 
+  :                            13 fp_routine 
+                                	$head_far	 params(one,	float		;
+                                				two,	float		;
+  :                            16 				three,	float)
+  :                            17 
+00:000040 4FF003              +18 	$xqt_fp		one*1.75*+1200000*two/3.0*-625000-three
+00:000041 770100              +18 
+00:000042 77F007              +18 
+00:000043 7F0104              +18 
+00:000044 6FF00B              +18 
+  :                            19 
+  :                            20 
+00:000045 3D0000              +21 	fret		0
+  :                            22 
+  :                            23 	$do		$<256,$(0:256)
+  :                            24 	
+*EOF*
+00:000100+7CD38BB7B396D7AA20B6E083
+00:000104+2051D5B8447B77478A23F5F7
+:$(00):000000:000108 
+r2xample.msm: object code 190 bytes: 0 errors: 0 undefined labels
+
+
+</pre>
+masmx has taken an expression with five operands and four operators, and
+turned it into a sequence of five instructions which deliver the four-word
+floating result of the operations in the result registers <b>a:b:mantissa2:mantissa3</b>
+
+<p>
+Three of these tokens are identifiers whose content is only known at runtime
+
+<p>
+<b>$xqt_fp</b> directive scans an expression and calls macro code to write an
+instruction plan. The tokens which are constants appear as literals at the foot
+of the program
+
+<p>
+Exactly five instructions for five operands is as efficient as straight-line
+computing can get
+
+<p>
+Load-store triadic architectures need at least ten instructions to load
+and then compute. RTA1 reduces this to five instructions
+with its seamless operand hierarchy of registers and memory
+
 
 <h2>Appendix A: masmx Linking for RTA1</h2>
 
