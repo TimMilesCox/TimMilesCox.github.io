@@ -3506,8 +3506,8 @@ instruction plan. The tokens which are constants appear as literals at the foot
 of the program
 
 <p>
-A #define preprocess and masmx text substitution are both usually absent in
-assembly for RTA1, but would not conflict
+A <b>#define</b> preprocess and masmx <b>$text</b> substitution are both usually
+absent in assembly for RTA1, but would not conflict
 
 <p>
 masmx decides whether a token is a self-evident value or a variable reference
@@ -3539,13 +3539,20 @@ bucket	$equf	4096
 </pre>
 would cause a storage reference
 
+In RTA1 the supporting macro language in <b>fpxpress.def</b> and <b>i_xpress.def</b> potentially
+uses all of <b>[r k x y a b mantissa2 mantissa3 8 9 10 11 d$save d$save1 d$save2 d$ave3]</b>
+
 <p>
-I this assembly label <b>FACTOR</b> has been generated as a constant because <b>$equ</b>
-connected <b>FACTOR</b> to a number value and not a stored location. A constant is generated
-at the foot of the program
+Register variables in in macro constructs <b>params() scalars()</b> and external stack names in
+<b> xframe()</b> are <b>$equf</b> labels and therefore referenced as variables
+
+<p>
+In this assembly <b>FACTOR</b> has been generated as a constant (visible at
+the foot of the program) because <b>$equ</b> connected <b>FACTOR</b> to a
+number value and not a stored location
 <pre>
 
-$ ~/masmx mammoth -lnka
+$ ~/masmx mammoth -lnk
 MASMX 7r3
 3/mammoth.msm
 *EOF*
@@ -3582,14 +3589,6 @@ MASMX 7r3
 
 
 </pre>
-<p>
-In RTA1 the supporting macro language in <b>fpxpress.def</b> and <b>i_xpress.def</b> potentially
-uses all of <b>[r k x y a b mantissa2 mantissa3 8 9 10 11 d$save d$save1 d$save2 d$ave3]</b>
-
-<p>
-Register variables in in macro constructs <b>params() scalars()</b> and external stack names in
-<b> xframe()</b> are <b>$equf</b> labels and therefore referenced as variables
-
 
 
 <h2>Appendix A: masmx Linking for RTA1</h2>
