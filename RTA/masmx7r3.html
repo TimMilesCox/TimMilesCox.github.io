@@ -3107,8 +3107,21 @@ callname*	$name		100
 
 </pre>
 The call name is <b><i>name_of_macro</i>(0, 0)</b> and has the latent value of the <b>$name</b> line
+one macro may have any number of name lines
+<pre>
 
-<p>
+p       $proc
+
+sar*    $name   0
+sbr*    $name   1
+dsr*    $name   2
+jdr*    $name   3
+
+sal*    $name   4
+sbl*    $name   5
+dsl*    $name   6
+
+</pre>
 Forward references are possible in two-pass <b>$proc</b> macros, flagged with *
 <pre>
 
