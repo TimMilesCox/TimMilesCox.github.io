@@ -310,14 +310,14 @@ assembly level externalises the label
 
 <p>
 A label declared at the main assembly with <b>$set</b> directive cannot accidentally
-be export from the assembly by subsequent sets. <b>$set</b> labels may be changed in
-value but a label global to the assembly cannot be changed to an exported label
+be exported from the assembly by subsequent sets. <b>$set</b> labels may be changed
+in value but a label global to the assembly cannot be changed to an exported label
 
 <p>
 Macros can therefore use many asterisks to make sure they are updating a
-global (and not a macro-local) <b>$set</b> label without risking a clash
-with other assemblies. In this sample assembly the output file does not
-contain an exported label, or in this case anything at all
+global (and not a nested macro-local) <b>$set</b> label without risking a
+clash with other assemblies. In this sample assembly the output file does
+not contain an exported label, or in this case anything at all
 <pre>
 
 $ masmx attestor -lnx
