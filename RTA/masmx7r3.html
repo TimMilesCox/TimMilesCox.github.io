@@ -3094,20 +3094,25 @@ example above <b>p</b>
 <p>
 Reference paraforms have the syntax
 <pre>
+
+		<b>callname	haddock	0 0 chips, peas, salt:vinegar</b>
+
 macroname	$proc
 
 callname*	$name		100	
 
-		macroname(1, 1)		. the first subfield of the first argument field
-		macroname(4, 1:3)	. the third substring of the first subfield
-					. of the fourth argument field
+		macroname(1, 1)		. the first subfield of the first argument field, = <b>haddock</b>
+		macroname(4, 3:2)	. the second substring of the third subfield
+					. of the fourth argument field, = <b>vinegar</b>
 
-		macroname(0, 0)		. the name used to invoke the macro, value 100 here
+		macroname(0, 0)		. the name used to invoke the macro, = <b>100</b>
 
 
 </pre>
 The call name is <b><i>name_of_macro</i>(0, 0)</b> and has the latent value of the <b>$name</b> line
-one macro may have any number of name lines
+
+<p>
+One macro may have any number of name lines
 <pre>
 
 p       $proc
@@ -3122,10 +3127,10 @@ sbl*    $name   5
 dsl*    $name   6
 
 </pre>
-<b>$name</b> labels need to be promoted with an asterisk to be visble outside the macro.
-The label of <b>$proc</b> is also allowed to be promoted with asterisk and callable so
-long as it is unique in the assembly. However there is only one <b>$proc</b> line in the
-macro and a latent value cannot be given 
+<b>$name</b> labels need to be promoted with an asterisk to be visible outside the macro.
+The label of <b>$proc</b> is also allowed to be promoted with asterisk and callable if it
+is unique in the assembly. However there is only one <b>$proc</b> line in the macro and a
+latent value cannot be given 
 
 <p>
 Forward references are possible in two-pass <b>$proc</b> macros, flagged with *
