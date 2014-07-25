@@ -34,7 +34,7 @@ See also the licensing notice at the foot of this document
 	<li>Assembly Language</li>
 		<ol>
 		<li>Labels</li>
-		<li>Command and Arguments Field</li>
+		<li>Command and Arguments Fields</li>
 		</ol>
 	<li>Data Constants</li>
 		<ol>
@@ -79,7 +79,7 @@ See also the licensing notice at the foot of this document
 		<li>Base + Displacement Sections, Void Sections and Structure by Pointer</li>
 			<ol>
 			<li>Void Sections and Structures by Pointer</li>
-			<li>Data-generating Sections with Base_Displacement View</li>
+			<li>Data-generating Sections with Base + Displacement View</li>
 			</ol>
 		<li>Structured Data</li>
 		<li>Assembling Structures Larger than the Address Space</li>
@@ -215,7 +215,7 @@ Lines may be continued
 			[argumentN[,argumentN_subfield2,...]] 
 
 </pre>
-<h3>Labels</h3>
+<h3>3.1: Labels</h3>
 A label starts in column 1 and ends in whitespace. A label may contain letters, digits, $_?!@: and
 starts with a letter or _?!@
 
@@ -309,7 +309,7 @@ One asterisk is added to promote a label one  macro level. An asterisk at the ma
 assembly level externalises the label
 
 
-<h3>Command Field</h3>
+<h3>3.2: Command and Arguments Fields</h3>
 
 The command field is the first field to follow any whitespace. It may contain 
 
@@ -2750,7 +2750,7 @@ $(0)
 No data is generated inside void sections, even if data is declared. That allows
 macros which otherwise generate data to be coded
 
-<h3>7.5.2: Data-generating Sections with Base_Displacement View</h3>
+<h3>7.5.2: Data-generating Sections with Base + Displacement View</h3>
 
 Data-generating sections may also be constructed for
 base + displacement addressing in case their location is
@@ -3624,6 +3624,7 @@ bucket	$equf	4096
 </pre>
 would cause a storage reference
 
+<p>
 In RTA1 the supporting macro language in <b>fpxpress.def</b> and <b>i_xpress.def</b> potentially
 uses all of <b>[r k x y a b mantissa2 mantissa3 8 9 10 11 d$save d$save1 d$save2 d$ave3]</b>
 
