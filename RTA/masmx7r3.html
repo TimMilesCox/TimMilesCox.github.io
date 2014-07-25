@@ -23,6 +23,82 @@ See also the licensing notice at the foot of this document
 </i>
 </center>
 
+	<li>Place of this Manual and References to Related Material
+		<li>Organisation of this Manual</li>
+		<li>RTA1 Architecture Specification</li>
+		<li>masmx Reference Manual</li>
+		<li>Coding examples for RTA1 Architecture and smaragd7 Kernel</li>
+	</li>
+	<li>masmx Settings for RTA1</li>
+	<li>Assembly Language
+		<li>Labels</li>
+		<li>Command and Arguments Field</li>
+	</li>
+	<li>Data Constants
+		<li>Expressions and Numbers</li>
+		<li>Literals</li>
+		<li>Character Strings</li>
+		<li>Number Constants with Equal-Size Bit Fields</li>
+	</li>
+	<li>$form Bit-Field Structures</li>
+	<li>Instructions and Operands
+		<li>Register / Memory Operand Continuum</li>
+		<li>Programmable Register Model</li>
+		<li>Instruction Layout</li>
+		<li>Single Integer Instructions</li>
+		<li>Single Integer Store Instructions</li>
+		<li>Single Integer Load Instructions</li>
+		<li>Test Instructions</li>
+		<li>Index Register Add Instructions</li>
+		<li>Boolean Algebra Instructions</li>
+		<li>Single Integer Add Instructions</li>
+		<li>Multiply</li>
+		<li>Multiply Fractional</li>
+		<li>Divide</li>
+		<li>Large Load and Store Instructions</li>
+		<li>Large Integer Arithmetic Instructions</li>
+		<li>Floating Arithmetic Instructions</li>
+		<li>Storage Modify Instructions</li>
+		<li>Shift Instructions</li>
+		<li>Bit Stream Instructions</li>
+		<li>Jump Instructions</li>
+		<li>Non-Addressable Registers</li>
+		<li>Call Returns, Bank Jumps and Interrupts</li>
+		<li>Control and I/O Instructions</li>
+	</li>
+	<li>Application Memory, Location Counters and Dynamic Data Segment Load
+		<li>Location Counters</li>
+		<li>Loadable vs ROM Systems and Absolute Code vs Relocatable Code</li>
+		<li>Data Sections $(1) and $(3)</li>
+		<li>seg$load Realtime RAM Initialisation</li>
+		<li>Base + Displacement Sections, Void Sections and Structure by Pointer
+			<li>Void Sections and Structures by Pointer</li>
+			<li>Data-generating Sections with Base_Displacement View</li>
+		</li>
+		<li>Structured Data</li>
+		<li>Assembling Structures Larger than the Address Space</li>
+	</li>
+	<li>$do Iteration</li>
+	<li>$proc and $func Macros
+		<li>$proc: Command and Instruction Macros</li>
+		<li>$func: Macros to generate Assembly-Time Values</li>
+	</li>
+	<li>10: Runtime Algorithmic Expressions: $xqt_i and $xqt_fp</li>
+
+	<blockquote>
+	Appendix A: masmx Linking for RTA1
+		<blockquote>
+		A.1 masmx Output File Formats<br>
+		A.2 masmx Linking<br>
+		A.3 lstring Load String Utility<br>
+		A.4 slab ROM Image Utility<br>
+		A.5 Core Resident File Systems used in Software RAM Segment Load
+		</blockquote>
+	Appendix B: masmx Directive and Function Names<br>
+	Appendix C: masmx Command Line
+	</blockquote>
+
+
 <h2>1: Place of this Manual and References to Related Material</b>
 
 <h3>1.1: Organisation of this Manual</h3>
@@ -37,7 +113,8 @@ data segment loading are described, plus linking and code formatting utilities
 RTA1 instructions are listed by functional group in this manual,
 and the storage geometry of application programs is described
 
-<p>
+<h3>1.2: RTA1 Archirecture Specification></h3>
+
 To see in full RTA architecture and instruction set specification,
 refer to <a href="http://timmilescox.github.io/RTA/rta">
 RTA Processor Programmable Architecture Specification</a>
@@ -46,13 +123,13 @@ RTA Processor Programmable Architecture Specification</a>
 Or online to your emulated machine <b>http://172.29.7.7:8080</b> and hit the architecture specification button <b>rta</b>
 
 
-<h3>1.2: masmx Reference Manual</h3>
+<h3>1.3: masmx Reference Manual</h3>
 
 To see everything masmx does,
 refer to <a href="http://timmilescox.github.io/masmx">
 masmx documentation and download</a>
 
-<h3>1.3: Coding Examples for RTA1 Architecture and smaragd7 Kernel</h3>
+<h3>1.4: Coding Examples for RTA1 Architecture and smaragd7 Kernel</h3>
 
 For RTA1 assembly examples,        
 Complete source code and assembly listing of the smaragd7 kernel and of some application protocols are in the repository RTA1
@@ -2591,7 +2668,7 @@ where data cannot be generated or an actual data structure or list of structures
 <p>
 Base + displacement sections are widely used in conjunction with structured data
 
-<h3>Void Sections and Structure by Pointer</h3>
+<h3>7.5.1: Void Sections and Structure by Pointer</h3>
 
 A program section may have no initial addresses but instead a base register. They are
 a template of the sort which is variously called a dsect and a pointer. The syntax is
@@ -2664,6 +2741,66 @@ $(0)
 
 No data is generated inside void sections, even if data is declared. That allows
 macros which otherwise generate data to be coded
+
+<h3>7.5.2: Data-generating Sections with Base_Displacement View</h3>
+
+Data-generating sections may also be constructed for
+base + displacement addressing in case their location is
+beyond the operand direct address range 32768 words and within
+available ranges of the effective address space 16777216 words
+
+<p>
+To assemble structures 16 Megawords and beyond see the next section
+<b>Assembling Structures Larger than the Address Space</b>
+
+<pre>
+
+$ masmx -kln oreilly oreilly
+MASMX 7r3
+3/oreilly.msm
+*EOF*
+  :                            1:       $include        freeware/RTA1/rta/def/rta.def
+  :                            2
+  :                            3 TABLE1 $equ    79*1024
+  :                            4
+  :                            5 $(20:TABLE1,x)
+14:000000 400001C00000000000000000
+                              +6 one    +       1.5
+14:000004 400001D00000000000000000
+                              +7 two    +       1.625
+14:000008 400001E00000000000000000
+                              +8 three  +       1.75
+14:00000C 400001F00000000000000000
+                              +9 "O'Reilly" +   1.875
+  :                            10
+  :                            11 $(0:64)
+00:000040 500045              +12       lx      (TABLE1)
+00:000041 77A000              +13       fm      one
+00:000042 67A004              +14       fa      two
+00:000043 6FA008              +15       fan     three
+00:000044 7FA00C              +16       fd      "O'Reilly"
+  :                            17
+*EOF*
+00:000045+013C00
+:$(00):000040:000046 :$(14):013C00:013C10
+oreilly.msm: object code 228 bytes: 0 errors: 0 undefined labels
+$
+$ cat oreilly.txo
+
+$14:013C00
+400001C00000000000000000 400001D00000000000000000
+400001E00000000000000000 400001F00000000000000000
+$00:000040
+500045 77A000 67A004 6FA008 7FA00C
+$00:000045
+013C00
+
+:$00*000000:000040:000046
+:$14*000000:013C00:013C10
+
+</pre>
+
+
 
 <h3>7.6: Structured Data</h3>
 
@@ -2776,67 +2913,7 @@ spiko.msm=0<000003
 
 </pre>
 
-<h3>7.7: Data-generating Sections with Base_Displacement View</h3>
-
-Data-generating sections may also be constructed for
-base + displacement addressing in case their location is
-beyond the operand direct address range 32768 words and within
-available ranges of the effective address space 16777216 words
-
-<p>
-To assemble structures 16 Megawords and beyond see the next section
-<b>Assembling Structures Larger than the Address Space</b>
-
-<pre>
-
-$ masmx -kln oreilly oreilly
-MASMX 7r3
-3/oreilly.msm
-*EOF*
-  :                            1: 	$include	freeware/RTA1/rta/def/rta.def
-  :                            2 
-  :                            3 TABLE1	$equ	79*1024
-  :                            4 
-  :                            5 $(20:TABLE1,x)
-14:000000 400001C00000000000000000
-                              +6 one	+	1.5
-14:000004 400001D00000000000000000
-                              +7 two	+	1.625
-14:000008 400001E00000000000000000
-                              +8 three	+	1.75
-14:00000C 400001F00000000000000000
-                              +9 "O'Reilly" +	1.875
-  :                            10 
-  :                            11 $(0:64)
-00:000040 500045              +12 	lx	(TABLE1)
-00:000041 77A000              +13 	fm	one
-00:000042 67A004              +14 	fa	two
-00:000043 6FA008              +15 	fan	three
-00:000044 7FA00C              +16 	fd	"O'Reilly"
-  :                            17 
-*EOF*
-00:000045+013C00
-:$(00):000040:000046 :$(14):013C00:013C10 
-oreilly.msm: object code 228 bytes: 0 errors: 0 undefined labels
-$
-$ cat oreilly.txo
-
-$14:013C00
-400001C00000000000000000 400001D00000000000000000
-400001E00000000000000000 400001F00000000000000000
-$00:000040
-500045 77A000 67A004 6FA008 7FA00C
-$00:000045
-013C00
-
-:$00*000000:000040:000046
-:$14*000000:013C00:013C10
-
-</pre>
-
-
-
-<h3>7.8: Assembling Structures Larger than the Address Space</h3>
+<h3>7.7: Assembling Structures Larger than the Address Space</h3>
 <p>
 
 Arrays too large for the static data space and  many times larger than the 16-Megaword
@@ -4258,7 +4335,7 @@ $
 </pre>
 
 
-<h3>A.4 Core Resident File Systems used in Software RAM Segment Load</h3>
+<h3>A.5 Core Resident File Systems used in Software RAM Segment Load</h3>
 
 The input binary_image_filename is a load strings output from the
 following utility steps. First all the RAM-destined part of an
