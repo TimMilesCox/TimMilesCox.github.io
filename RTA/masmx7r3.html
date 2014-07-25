@@ -4507,6 +4507,8 @@ $ masmx	-kx+y	# displays masmx internal names
 masmx name	label category	|syntax column 1
 __________	________________|_______________
 				|
+$		section header	|$(<i>number[:parameters]</i>)		. see section 7 of this manual
+				|
 $		function	|	+	$			. location counter $ or $(number)
 $a		function	|	+	$a			. absolute $a current address or $a(value)
 $ascii		directive	|	$ascii				. generate direct ASCII:ASCII data code as input
@@ -4574,7 +4576,7 @@ $return		directive	|	$return		<i>expression</i>	. leave a macro. return value fr
 $root		directive	|	$root				. end of $tree or $branch structure
 $set		directive	|label	$set		<i>expression</i>	. temporary equate, may be changed
 $set_option	directive	|	$set_option	"flaGS"		. set assembly options
-$snap=		directive	|	$snap[,1]	[2]		. list label table fixed or dynamic part
+$snap		directive	|	$snap[,1]	[2]		. list label table fixed or dynamic part
 $sterm		directive	|	$sterm		<i>value</i>		. change the substring character, default ':'
 $store		directive	|	$store		<i>path</i>		. default output file name [*.txo]
 $suffix		directive	|	$suffix		[1|2]		. integer notation by suffix h o|q b d
