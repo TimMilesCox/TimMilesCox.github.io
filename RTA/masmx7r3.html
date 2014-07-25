@@ -308,7 +308,40 @@ $
 One asterisk is added to promote a label one  macro level. An asterisk at the main
 assembly level externalises the label
 
+<p>
+A label declared at the main assembly with <b>$set</b> directive cannot accidentally
+be export from the assembly by subsequent sets. <b>$set</b> labels may be changed in
+value but a label global to the assembly cannot be changed to an exported label
 
+<p>
+Macros can therefore use many asterisks to make sure they are updating a
+global (and not a macro-local) <b>$set</b> label without risking a clash
+with other assemblies. In this sample assembly the output file does not
+contain an exported label, or in this case anything at all
+<pre>
+
+$ masmx attestor -lnx
+MASMX 7r3
+3/attestor.msm
+*EOF*
+  :                            1 "$$local"	$set	1
+  :                            2 
+  :                            3 outward*	$proc
+  :                            4 "$$local"******	$set	2
+  :                            5 		$end
+  :                            6 
+  :                            7 		outward
+  :                            8 
+*EOF*
+$$LOCAL=000002
+OUTWARD=:P1:0:000000
+attestor.msm=0<000003
+
+attestor.msm: object code 0 bytes: 0 errors: 0 undefined labels
+$ cat temp.txo
+$
+
+</pre>
 <h3>3.2: Command and Arguments Fields</h3>
 
 The command field is the first field to follow any whitespace. It may contain 
