@@ -3122,6 +3122,12 @@ sbl*    $name   5
 dsl*    $name   6
 
 </pre>
+<b>$name</b> labels need to be promoted with an asterisk to be visble outside the macro.
+The label of <b>$proc</b> is also allowed to be promoted with asterisk and callable so
+long as it is unique in the assembly. However there is only one <b>$proc</b> line in the
+macro and a latent value cannot be given 
+
+<p>
 Forward references are possible in two-pass <b>$proc</b> macros, flagged with *
 <pre>
 
