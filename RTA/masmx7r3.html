@@ -3506,13 +3506,90 @@ instruction plan. The tokens which are constants appear as literals at the foot
 of the program
 
 <p>
-Exactly five instructions for five operands is as efficient as straight-line
-computing can get
+A #define preprocess and masmx text substitution are both usually absent in
+assembly for RTA1, but would not conflict
 
 <p>
-Load-store triadic architectures need at least ten instructions to load
-and then compute. RTA1 reduces this to five instructions
-with its seamless operand hierarchy of registers and memory
+masmx decides whether a token is a self-evident value or a variable reference
+by these rules
+
+	<blockquote>
+	a field of digits is a value<br><br>
+	a label on a line where a storage value is, is a location<br><br>
+	a label equated or set to digits is a value<br><br>
+	a label equated or set to a storage label or to a location counter is a location<br><br>
+	a label equated or set to another label is what that label is<br><br>
+	a <b>$equf</b> label is a location
+	</blockquote>
+
+Therefore a construction
+<pre>
+
+bucket	$equ	4096
+
+</pre>
+would not cause a storage reference, but an immediate value.
+
+<p>
+The construction
+<pre>
+
+bucket	$equf	4096
+
+</pre>
+would cause a storage reference
+
+<p>
+I this assembly label <b>FACTOR</b> has been generated as a constant because <b>$equ</b>
+connected <b>FACTOR</b> to a number value and not a stored location. A constant is generated
+at the foot of the program
+<pre>
+
+$ ~/masmx mammoth -lnka
+MASMX 7r3
+3/mammoth.msm
+*EOF*
+  :                            1 	$path		../
+  :                            2: 	$include	def/rta.def
+  :                            3: 	$include	language/stack.def
+  :                            4: 	$include	language/fpxpress.def
+  :                            5 $(0)
+00:000000 B60040              +6 mammoth* $vector	sum
+  :                            7 $(3:03000)
+03:003000 40000F800000000000000000
+                              +8 left	16384*+0
+03:003004 7CD38AFBEEFAC15E58C049D8
+                              +9 right	1.2*+1200000
+  :                            10 
+  :                            11 $(0:64)
+  :                            12 
+  :                            13 FACTOR	$equ	1.875
+  :                            14 
+                                sum	$head_far	 params(first,	float	;
+  :                            16 				second,	float	)
+  :                            17 
+00:000040 4FF007              +18 	$xqt_fp		-left-right+first+second*FACTOR
+00:000041 770100              +18 
+00:000042 6F3000              +18 
+00:000043 6F3004              +18 
+00:000044 67F003              +18 
+00:000045 3D0000              +19 	$ret
+  :                            20 	$do	$<256,$(0:256)
+  :                            21 
+*EOF*
+00:000100+400001F00000000000000000
+:$(00):000000:000104 :$(03):003000:003008 
+
+
+</pre>
+<p>
+In RTA1 the supporting macro language in <b>fpxpress.def</b> and <b>i_xpress.def</b> potentially
+uses all of <b>[r k x y a b mantissa2 mantissa3 8 9 10 11 d$save d$save1 d$save2 d$ave3]</b>
+
+<p>
+Register variables in in macro constructs <b>params() scalars()</b> and external stack names in
+<b> xframe()</b> are <b>$equf</b> labels and therefore referenced as variables
+
 
 
 <h2>Appendix A: masmx Linking for RTA1</h2>
