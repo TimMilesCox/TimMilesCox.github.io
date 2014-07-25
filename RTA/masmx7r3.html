@@ -3087,10 +3087,26 @@ dem2*	$name	99
 
 </pre>
 
-It is visible that <b>$proc</b> macros interpret actual parameters as <b>field,subfield:substring field...</b>
+<b>$proc</b> macros interpret actual parameters from their <b>field,subfield:substring</b>
+position. Parameters are referenced by the label on the <b>$proc</b> line which is in the
+example above <b>p</b>
 
 <p>
-The call name is p(0, 0) and has a latent value
+Reference paraforms have the syntax
+<pre>
+macroname	$proc
+
+callname*	$name		100	
+
+		macroname(1, 1)		. the first subfield of the first argument field
+		macroname(4, 1:3)	. the third substring of the first subfield
+					. of the fourth argument field
+
+		macroname(0, 0)		. the name used to invoke the macro, value 100 here
+
+
+</pre>
+The call name is <b><i>name_of_macro</i>(0, 0)</b> and has the latent value of the <b>$name</b> line
 
 <p>
 Forward references are possible in two-pass <b>$proc</b> macros, flagged with *
