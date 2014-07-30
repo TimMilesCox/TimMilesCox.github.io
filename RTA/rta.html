@@ -5701,7 +5701,7 @@ operate without lock in the register stack and with lock in storage.
 
 
 	Load Shift and Count	lsc
-	____________________	lsc
+	____________________	---
 
 				_________________________________________________________
 				|							|
@@ -5808,7 +5808,7 @@ operate without lock in the register stack and with lock in storage.
 				|							|
 				|	load Arithmetic Register b with 		|
 				|	   (register / storage AND Mask Register k)	|
-					OR (Register b AND (NOT Mask Register k))	|
+				|	OR (Register b AND (NOT Mask Register k))	|
 				|_______________________________________________________|
 				|	operand is the storage word at EA		|
 				|_______________________________________________________|
