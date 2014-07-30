@@ -3510,7 +3510,7 @@ immediate operand
 				|							|
 				|	this instruction does not write the TCB current	|
 				|	saved base list as sabr instruction does, but	|
-				|	writes the values in that list  to the hardware	|
+				|	writes the values in that list to the hardware	|
 				|	relocation registers. Its use is the loadup beat|
 				|	of thread/process switch, not bank selection	|
 				|_______________________________________________________|
@@ -3562,7 +3562,7 @@ immediate operand
 	|																|
 	|			Bank B1 is a window in a private stack									|
 	|																|
-	|			sabre and reload instructions concern banks B2..B63							|
+	|			sabr and reload instructions concern banks B2..B63							|
 	|																|
 	|			applications execute sabr instruction to base memory blocks in B2..B63					|
 	|			sabr also copies the relocation values through to the TCB						|
