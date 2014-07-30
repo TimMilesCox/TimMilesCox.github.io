@@ -127,7 +127,7 @@ is implemented in one I/O port
 
 </pre>
 Bit 22 of the relocation pointer is "big" or "big bank".
-Device 0 is system memory, so system memory is placed the address space
+Device 0 is system memory, so system memory is placed in the address space
 in ranges of 4096-word blocks or in ranges of 262144-word blocks.
 
 <p>
@@ -286,7 +286,7 @@ A push is a load into CPU registers in RTA1, and a pop is a store
 	|		|    registers	|		|	registers + storage
 	|		|		|		|
 	|		|_______________|		|
-	|		|	sp--	|		|
+	|		|	--sp	|		|
 	|		|_______________|		|
 	|				|		|
 	|				|		|
@@ -3507,6 +3507,13 @@ immediate operand
 				|							|
 				|	value of EA can be 2..62			|
 				|_______________________________________________________|
+				|							|
+				|	this instruction does not write the TCB current	|
+				|	saved base list as sabr instruction does, but	|
+				|	writes the values in that list  to the hardware	|
+				|	relocation registers. Its use is the loadup beat|
+				|	of thread/process switch, not bank selection	|
+				|_______________________________________________________|
 				|	operand is relocation base registers  EA, EA + 1|
 				|_______________________________________________________|
 
@@ -3514,11 +3521,8 @@ immediate operand
 	assembler syntax	reload			RELOCATION_REGISTER_PAIR[, {x|y|a|b|fp|sp}]
 				reload			*base_register_id_variable
 
-	assembler example	la, xi		BASE_REGISTER_SAVEAREA
-				reload		2
-				reload		4
 
-	assembler example	la, xi		TCB_BASE_REGISTER_TABLE
+	assembler example	la, xi		TCB_BASE_REGISTER_TABLE+B2
 			?	$do		USER_BANKS/2,	reload	?*2
 
 				_________________________________________________________
