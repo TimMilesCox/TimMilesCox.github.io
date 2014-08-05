@@ -167,7 +167,7 @@ or like this
 masmx already has these default settings. They are correct for RTA1
 <pre>
 
-        $word                   24		. size denominator of generated code
+        $word                   24		. unit of generated code + bits size single integer
         $quantum		24		. addressable storage location bits size
         $awidth                 24:48		. address space : executable space
         $floating_point         96		. default size of floating constant
@@ -4623,7 +4623,103 @@ $zenith		function	|	$if	$zenith&gt<i>LIMIT</i>
 
 <h2>Appendix C: masmx Command Line</h2>
 
+There are up to two file names in the masmx command line. There are an arbitrary number of fields of
+single-letter case-sensitive option flags
 <pre>
+
+$ masmx -Fla source[.msm] binary[.txo] -GS -opQqci
+
+</pre>
+
+If the second filename is missing, the output is <b>temp.txo</b>. Directive <b>$store</b> in the source
+text assigns a different default output filename
+
+<p>
+If the first filename is missing, masmx reads source from stdin and constructs a file <b>temp.msm</b>
+
+<p>
+Flags used in RTA1 are
+<pre>
+
+	-a	allow automatic literals. Already set in rta.def
+	-d	list load addresses not program-visible addresses in breakpointed sections
+	-e	list generated code word-space-word
+	-k	labels case-significant
+	-l	list to include depth set by <b>$list</b>, default assembly main file
+	-n	list relocation information when -l
+	-p	list <b>$proc</b> macro text + actual arguments where <p>$plist</b> value &gt; macro nesting depth
+	-q	list <b>$func</b> macro text + actual arguments where <p>$plist</b> value &gt; macro nesting depth
+	-r	list <b>$proc</b> and <b>$func</b> macro text + actual arguments
+		on first asssembly pass where <p>$plist</b> value &gt; macro nesting depth
+	-u	mark assembly in error if labels are unresolved: final assembly or link
+	-w	silent assembly
+	-x	list labels
+	-+	include masmx internal labels in list, for example -x+y
+	-y	order label list
+	-z	string zero-fill to containing word. Default space
+	-F	floating constant rounding guard pattern is 110 instead of 111
+	-G	floating constant rounding guard pattern is 101 instead of 111
+	-Q	expand a <b>$func</b> macro name found in an expression even if it is screened with "quotes"
+	-Z	zero-fill <b>$res</b> buffers
+
+
+
+</pre>
+
+masmx link flags. A link is an assembly with <b>$include,$binary</b>
+<pre>
+
+	-b	collate input files by segment
+	-j	label references in incremental link remain label references until absolute
+
+</pre>
+RTA1 structured programming macros <b>head_near / far</b> and <b>$ret</b> respond to unassigned
+assembly flags <b>-VUOS</b>
+<pre>
+
+	-V	display stack-handling decisions
+	-S	<b>$ret</b>  macro reconstructs caller parameter list in internal stack
+		when returning from <b>$zero_stack</b> mode <b>head_near / far</b> routine
+	-O	check enough parameters from <b>lc / c</b> call
+	-U	check exact number of parameters
+
+</pre>
+infrequently used masmx options for any target
+<pre>
+
+	-f	flag certain errors in 2nd assembly pass, allow listing
+	-g	flag certain errors in 1st assembly pass
+	-h	stop after the first assembly pass
+	-o	force filenames to lowercase
+	-s	generate a source file <b>temp.msm</b> on first pass with <b>$text</b> translations applied
+		default behaviour with when input is stdin
+	-E	allow <b>$equ</b> labels to alter on first pass
+		<b>$set</b> labels alter on either pass without restriction
+
+</pre>
+masmx flags not conventionally used in RTA1 are
+<pre>
+
+	-c	C-Language number syntax and character escapes
+		string zero-fill to containing word when -c XOR -z option
+	-m	Motorola number syntax $hex @octal %bits
+
+
+</pre>
+
+-v flag is for targets with descriptor-list-translated hardware relocation. This is not determined in the RTA1 roadmap
+
+<pre>
+
+        -v      do not add section breakpoint addresses to load addresses
+                Encode the breakpoint address as a section abstract in binary output
+
+</pre>
+
+masmx flags which otherwise cannot be used with RTA1
+<pre>
+
+	-i	sign extend intrasegment address on add to giant breakpoint
 
 </pre>
 
