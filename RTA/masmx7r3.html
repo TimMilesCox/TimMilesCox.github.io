@@ -4643,14 +4643,13 @@ Flags used in RTA1 are
 
 	-a	allow automatic literals. Already set in rta.def
 	-d	list load addresses not program-visible addresses in breakpointed sections
-	-e	list generated code word-space-word
 	-k	labels case-significant
 	-l	list to include depth set by <b>$list</b>, default assembly main file
 	-n	list relocation information when -l
-	-p	list <b>$proc</b> macro text + actual arguments where <p>$plist</b> value &gt; macro nesting depth
-	-q	list <b>$func</b> macro text + actual arguments where <p>$plist</b> value &gt; macro nesting depth
+	-p	list <b>$proc</b> macro text + actual arguments where <b>$plist</b> value &gt; macro nesting depth
+	-q	list <b>$func</b> macro text + actual arguments where <b>$plist</b> value &gt; macro nesting depth
 	-r	list <b>$proc</b> and <b>$func</b> macro text + actual arguments
-		on first asssembly pass where <p>$plist</b> value &gt; macro nesting depth
+		on first asssembly pass where <b>$plist</b> value &gt; macro nesting depth
 	-u	mark assembly in error if labels are unresolved: final assembly or link
 	-w	silent assembly
 	-x	list labels
@@ -4687,6 +4686,7 @@ assembly flags <b>-VUOS</b>
 infrequently used masmx options for any target
 <pre>
 
+	-e	list generated code word-space-word
 	-f	flag certain errors in 2nd assembly pass, allow listing
 	-g	flag certain errors in 1st assembly pass
 	-h	stop after the first assembly pass
