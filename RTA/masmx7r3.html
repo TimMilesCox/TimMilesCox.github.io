@@ -1396,7 +1396,8 @@ sign extended to 24 bits
 
 
 </pre>
-The $equf directive can represent all the subfield attributes of an operand with one name
+<b>$equf</b> directive can represent all the subfield attributes of an operand
+with one name
 <pre>
 
 		header_byte	$equf		directory, y, t1
@@ -2194,7 +2195,7 @@ to a location before or after the return address on the stack
 <b>lret</b> transfers the word at the stack top + operand xi + B0 * 4096 to the program counter. sp++
 
 <p>
-<b>fret></b> transfers to the word at the stack top to B0 then the next word + operand xi
+<b>fret</b> transfers to the word at the stack top to B0 then the next word + operand xi
 + B0 * 4096 to the program counter. sp += 2
 
 Internal interrupt instruction <b>ii</b> also has a sign extended immediate operand. The
@@ -2250,7 +2251,7 @@ copied to interrupt <b>fp</b> to mark the interrupted application frame
 
 <p>
 <b>ir</b> discards the latent parameter and copies saved PSR to PSR and saved B0 to B0.
-B0 * 4094 + interrupted offset is written to the program counter. The frame is removed
+B0 * 4094 + interrupted offset + XI is written to the program counter. The frame is removed
 from the stack
 
 <p>
@@ -2358,7 +2359,7 @@ freeware/RTA1/rta/fs/fs.txo:$(0) 477 words decimal from hexadecimal 000000 to 00
         |_______________|_______________|_______________________|_______________________________________________________|
 	|	outB	|   00011.100	|  out a to I/O port ea |  							|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       reload	|   00100.100   |  reload base registers|  2 * bank index @ *a *(a+1) -> io ports [ea, ea + 1]	|
+        |       reload	|   00100.100   |  reload base registers|  2 * bank index @ *a,*(a+1)->io ports[ea, ea+1]. a+=2	|
         |_______________|_______________|_______________________|_______________________________________________________|
         | emulator_cool	|   00101.100   |			|  usleep the emulator thread ea microseconds		|
         |_______________|_______________|_______________________|_______________________________________________________|
@@ -2819,47 +2820,47 @@ To assemble structures 16 Megawords and beyond see the next section
 
 <pre>
 
-$ masmx -kln oreilly oreilly
+$ masmx oreilly oreilly -kln
 MASMX 7r3
 3/oreilly.msm
 *EOF*
-  :                            1:       $include        freeware/RTA1/rta/def/rta.def
-  :                            2
-  :                            3 TABLE1 $equ    79*1024
-  :                            4
+  :                            1: 	$include	..//def/rta.def
+  :                            2 
+  :                            3 TABLE1	$equ	79*1024
+  :                            4 
   :                            5 $(20:TABLE1,x)
 14:000000 400001C00000000000000000
-                              +6 one    +       1.5
+                              +6 one	+	1.5
 14:000004 400001D00000000000000000
-                              +7 two    +       1.625
+                              +7 two	+	1.625
 14:000008 400001E00000000000000000
-                              +8 three  +       1.75
+                              +8 three	+	1.75
 14:00000C 400001F00000000000000000
-                              +9 "O'Reilly" +   1.875
-  :                            10
+                              +9 "O'Reilly" +	1.875
+  :                            10 
   :                            11 $(0:64)
-00:000040 500045              +12       lx      (TABLE1)
-00:000041 77A000              +13       fm      one
-00:000042 67A004              +14       fa      two
-00:000043 6FA008              +15       fan     three
-00:000044 7FA00C              +16       fd      "O'Reilly"
-  :                            17
+00:000040 500100              +12 	lx	(TABLE1)
+00:000041 77A000              +13 	fm	one
+00:000042 67A004              +14 	fa	two
+00:000043 6FA008              +15 	fan	three
+00:000044 7FA00C              +16 	fd	"O'Reilly"
+  :                            17 
+  :                            18 	$do	$<256,$(0:256)	. literal table must be above register addresses
 *EOF*
-00:000045+013C00
-:$(00):000040:000046 :$(14):013C00:013C10
+00:000100+013C00
+:$(00):000040:000101 :$(14):013C00:013C10 
 oreilly.msm: object code 228 bytes: 0 errors: 0 undefined labels
-$
 $ cat oreilly.txo
 
 $14:013C00
 400001C00000000000000000 400001D00000000000000000
 400001E00000000000000000 400001F00000000000000000
 $00:000040
-500045 77A000 67A004 6FA008 7FA00C
-$00:000045
+500100 77A000 67A004 6FA008 7FA00C
+$00:000100
 013C00
 
-:$00*000000:000040:000046
+:$00*000000:000040:000101
 :$14*000000:013C00:013C10
 
 </pre>
@@ -3344,9 +3345,6 @@ field zero (the call name) is the new field one. The number of fields is one gre
 
 <p>
 <i>proc_name</i>(&mu;,*&nu;) is a unary asterisk on subfield &mu;,&nu;
-
-<p>
-<i>proc_name</i>(&mu;,&nu;:*&sigma;) is a unary asterisk on subfield &mu;,&nu;:&sigma;
 
 <p>
 Five more features of macro processing are shown here
@@ -4669,7 +4667,8 @@ masmx link flags. A link is an assembly with <b>$include,$binary</b>
 <pre>
 
 	-b	collate input files by segment
-	-j	label references in incremental link remain label references until absolute
+	-j	do not transform label references in incremental link to locator references
+		until the containing section is absolute
 
 </pre>
 RTA1 structured programming macros <b>head_near / far</b> and <b>$ret</b> respond to unassigned
