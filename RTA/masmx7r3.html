@@ -1444,17 +1444,17 @@ The integer store instructions do not update <b>carry$</b>
 
 	<div    style="color:FF0000">
 	sx		save_pointer
-        sb, h2          control_word
+        sb, h2          control_word, y
 	sa		total
-        z               lock_cell
+        z               lock_cell, x
+	sr		*(HIGH_ADDRESS)
         <div>
-
 	<div	style="color:0000FF">
 	push, t1	before
 	push		update<div><div    style="color:FF0000">
 	pop		before
 	pop, t1		before
-	<div>
+	</div>
 
 </pre>
 
@@ -1488,6 +1488,18 @@ The integer load instructions do not update <b>carry$</b>
 
 	Assembly Language Examples
 	__________________________
+
+	<div    style="color:FF0000">
+	lr	HOW_MANY,,xi
+	lk	(0FFC000)
+
+	ly	*pointer_array_cursor
+	la	8, y
+	lb, i	6, a
+
+	push, t1        before
+        push            update
+	</div>
 
 
 </pre>
@@ -1559,7 +1571,10 @@ The index register add instructions do not update <b>carry$</b>
 	Assembly Language Examples
 	__________________________
 
-
+	<div  style="color:FF0000">
+	ax, xi	-30000
+	ay	increment
+	</div>
 </pre>
 
 <h3>6.9: Boolean Algebra Instructions</h3>
@@ -1589,6 +1604,16 @@ The boolean algebra instructions do not update <b>carry$</b>
 	Assembly Language Examples
 	__________________________
 
+	<div  style="color:FF0000">
+
+	orB,xi	BASE_32
+	or	(0800000s)
+	and	mask,,h2
+
+	xor	key, x
+	xorB	key+1, x
+
+	</div>
 
 </pre>
 
@@ -1622,6 +1647,11 @@ of the 2s complement would write carry
 	Assembly Language Examples
 	__________________________
 
+	<div  style="color:FF0000">
+	aa	0, b
+	ab, xi	-INCREMENT
+	ana	6, x
+	</div>
 
 </pre>
 
@@ -1646,6 +1676,9 @@ by the operand and stores the 48-bit product in arithmetic registers a:b
 	Assembly Language Examples
 	__________________________
 
+	<div  style="color:FF0000">
+	m	scale, x
+	</div>
 
 </pre>
 
@@ -1680,7 +1713,9 @@ integer multiplicands more than one word in length
 	Assembly Language Examples
 	__________________________
 
-
+	<div  style="color:FF0000">
+	mf	1000,,xi
+	</div>
 
 </pre>
 
@@ -1733,6 +1768,11 @@ stored in register 6 mantissa2
 	__________________________
 
 
+	<div  style="color:FF0000">
+	d	proportions, y
+	d, xi	1000
+	</div>
+
 </pre>
 
 
@@ -1761,6 +1801,18 @@ stored in register 6 mantissa2
 
 	Assembly Language Examples
 	__________________________
+
+
+	<div  style="color:FF0000">
+	qpush	from, y
+	qpop	to, x
+
+	ql	float
+	qs	0, sp
+
+	dl	socka
+	ds	save
+	</div>
 
 </pre>
 
@@ -1792,7 +1844,26 @@ stored in register 6 mantissa2
 	Assembly Language Examples
 	__________________________
 
+	<div  style="color:FF0000">
+	da	INTERVAL
+	dan	usecs
+	</div><div      style="color:0000FF">
+	la	('F'*/16)
+	lk	(255*/16s)
+	</div><div      style="color:FF0000">
+	mta	0, fp
+	</div><div	style="color:0000FF">
+	j	not_file_descriptor
+	lk	(00FFFF)
+	</div><div      style="color:FF0000">
+	mlb	0, fp
 
+	da	more
+	sc	wrapped
+
+	dlsc	integer2
+
+	</div>
 </pre>
 
 
