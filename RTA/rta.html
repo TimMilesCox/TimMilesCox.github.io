@@ -783,11 +783,11 @@ is reloaded and all flags are restored
 		48-bit-operand instructions
 
 		PRIORITY$ is a feature not of RTA1 architecture, but of the smaragd7 kernel
-		developed to run the emulated prototype. It is a copy of the running task's
+		developed to run the emulated prototype. It is a copy of the running thread's
 		priority stored here for quick retrieval at task switch
 
 		REALTIME$_CLOCK is a decrementing timer count which switches the running
-		task on expiry. If the initial REALTIME$_CLOCK value assigned to the task
+		thread on expiry. If the initial REALTIME$_CLOCK value assigned to the thread
 		is zero, neither decrement nor switch interrupt takes place
 
 
