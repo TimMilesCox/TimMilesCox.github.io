@@ -395,7 +395,7 @@ The kernel assigns a single storage area containing
 
 	<li>B1 banks</li>
 
-	<li>Task (or initial thread) Control Block</li>
+	<li>Initial Thread Control Block</li>
 
 	<li>a vector bank</li>
 
@@ -603,8 +603,8 @@ When the wait time is expired, the thread becomes a candidate for switching
 
 <h4>2.1.4 EXIT$</h4>
 <p>
-<b>EXIT$</b> deletes the thread. If that is the process main thread, all threads
-in the process exit, all handles close, and all resources are surrendered
+<b>EXIT$</b> deletes the thread. Subsidiary threads also exit. When the process
+initial thread exits, all handles close
 
 <div    style="font-size:11pt">
 <pre>
