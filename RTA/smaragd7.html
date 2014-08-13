@@ -617,8 +617,8 @@ initial thread exits, all handles close
 </pre>
 </div>
 
-Storage which the thread has acquired with BANK$ and ARRAY$ returns to the kernel
-when the thread exits if the storage has not already been freed
+Storage which the thread acquires with BANK$ and ARRAY$ returns to the kernel
+when the thread exits if the storage is not freed earlier
 
 <p>
 If the application internal stack is empty (sp = 128), hardware raises
