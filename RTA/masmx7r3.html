@@ -2705,7 +2705,7 @@ $(1:01000)
 
 </pre>
 
-smaragd7 kernel assigns at least one 4096-word B1 bank at thread start, but does not 
+smaragd7 kernel assigns at least one 4096-word B1 bank at process start, but does not 
 place any values in it. The application may assemble B1 at a read-only load-address
 in the ROM system image, and copy the initial values on startup.
 
