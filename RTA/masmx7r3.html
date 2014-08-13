@@ -2339,19 +2339,19 @@ MASMX 7r3
 	$include	ii.def
 	$list
 $(0:64)
-	ql		(routine, PRIORITY, PARAMETER, EXTERNAL_STACKFRAME)
+	ql		(routine, PRIORITY, PARAMETER, EXTERNAL_STACKFRAME:q)
 	ii		THREAD$
 	$do	$<256,$(0:256)
 	$end
   :                            1  $path  freeware/RTA1/rta/def
-  :                            558  $list
-  :                            559 $(0:64)
-00:000040 4F0100              +560  ql  (routine, PRIORITY, PARAMETER, EXTERNAL_STACKFRAME)<div	style="color:FF0000">
-00:000041 750047              +561  ii  THREAD$</div>
-  :                            562  $do $<256,$(0:256)
-  :                            563  $end
-00:000100+[0003]06:[0002]06*/06:[0001]06*/0C:[0000]06*/12:000000
-:$(00):000040:000101 
+  :                            581  $list
+  :                            582 $(0:64)
+00:000040 4F0100              +583  ql  (routine, PRIORITY, PARAMETER, EXTERNAL_STACKFRAME:q)<div style="color:FF0000">
+00:000041 750047              +584  ii  THREAD$</div>
+  :                            585  $do $<256,$(0:256)
+  :                            586  $end
+00:000100+[0003]18:[0002]18*/18:[0001]18*/30:[0000]18*/48:000000000000000000000000
+:$(00):000040:000104 
 
 </pre>
 
