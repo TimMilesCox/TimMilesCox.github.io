@@ -51,17 +51,19 @@ This document is about
 of a far <b>call</b> instruction. It's a procedural macro coded
 at the front of the target bank
 
+<p>
 <b>$vector</b> generates the jump instruction at one of the
 64 jump pad positions and labels the handle value which
 identifies its <b>bank:vector</b> tuple
 <pre>
 
-.	<b>$vector</b> goes in the first 64 words of a bank
+.	<b>$vector</b> goes in the first 64 words of an
+.	instruction bank
 .	64 words at bank start are externally addressable
 .	They are a jump pad
 
 $(0::LOAD_LOCATION)	
-handle_name*    <b>$vector</b>  routine1
+handle_name*	<b>$vector</b>	routine1
 handle_name2*	<b>$vector</b>	routine2
 		$do	64-$,	fret	0	. no entry
 routine1
