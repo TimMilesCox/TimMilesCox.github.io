@@ -721,18 +721,31 @@ They are four words
 <pre>
 
 
-		$ masmx -ln
+$ masmx -ln
 MASMX 7r3
 0/-INPUT>>
-	1.75*+1250000
-	1.75*-1250000
-	$end
-00:000000 7F5C5BF331AD4B6FFBBCAAB2
-                              +1 	1.75*+1250000
-00:000004 00A3A7CE52225BC80EDFF592
-                              +2 	1.75*-1250000
-  :                            3 	$end
-:$(00):000000:000008 
+        $list		0
+	$include	../def/rta.def
+	$list
+$(3:03000)
+left	1.75*+1250000
+right	1.75*-1250000
+$(0:64)
+left_plus_right
+	ql	left
+	fa	right
+
+
+  :                            451 		$list
+  :                            452 $(3:03000)
+03:003000 7F5C5BF331AD4B6FFBBCAAB2
+                              +453 left		1.75*+1250000
+03:003004 00A3A7CE52225BC80EDFF592
+                              +454 right	1.75*-1250000
+  :                            455 $(0:64)
+  :                            456 left_plus_right
+00:000040 4F3000              +457 		ql	left
+00:000041 673004              +458 		fa	right
 
 
 </pre>
