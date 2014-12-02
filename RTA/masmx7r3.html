@@ -3592,7 +3592,7 @@ notionally 256 terawords but physically constrained to 16 gigawords
 
 <p>
 A giant address offset is introduced to the location counter as a breakpoint address
-with leading *asterisk
+with leading *asterisk. This is a word address offset
 
 <pre>
 
@@ -3602,15 +3602,11 @@ $(54::*00000A000000)
 
 The address breakpoint is incremented as repeat structures assemble. In the
 example case following, the array root location of zero does not look giant
-by most standards. The application will obtain storage from the kernel and
-pass the load address to the segment load routine <b>array$seg$load</b>. See
-Appendix A: masmx Linking for RTA1 
+by most standards
 
 <p>
-The structure may be assembled with the application or independently. In any
-case it uses separate location counters from the rest of the assembly, for
-separate load-formatting. This follows the need of ROM based systems to
-submit data segments to a run-time segment loader
+If the array is read-only in nonvolatile memory, the root address ARRAY_INDEX
+would contain a start address, although that might be supplied at link
 
 <pre>
 
@@ -3652,37 +3648,6 @@ MASMX 7r3
 36:000000012494:40000079B6DE  +30 
   :                            31                 $list
   :                            32 
-
-
-</pre>
-
-<p>
-
-Pointers in a structure of many large system memory banks take two words
-and have a format
-<pre>
-
-	  46  bank identifier 30      24     18       word offset      0
-	_________________________________________________________________
-	|0 1|bbbb bbbb bbbb bbbb|000 000|window| www www www www www www|
-	|___|___________________|_______|______|________________________|
-	 47  45			 29	 23	 17
-
-</pre>
-Pointers like this may be assembled in the data structure as cross-reference
-and chain links. The field <b>window</b> must agree with with the address
-space window where sabr instruction will base the leading edge of the target
-element. See function macro <b>long_pointer()</b> above
-
-<p>
-In the giant structure example above, this pointer is not quite complete
-at assembly time, because the start location of the array is not known. So
-the start bank identity is added to bits 45:30 of the pointer before the
-containing bank is based
-<pre>
-
-
-
   :                            33 $(68::,b)
   :                            34 structure       my_structure
   :                            35 
@@ -3702,22 +3667,9 @@ containing bank is based
  
 </pre>
 
-If the load address of a giant array <i>is</i> known at assembly time, the add
-instruction at line 38 is not needed. The label ARRAY_INDEX is then the start
-bank identity. A non-update array in non-volatile memory may be at a location
-known at assembly time
-
-<p>
-It is also possible to put labels on each element of an assembled array,
-although this is not advised if there are millions of elements, because
-software will not use many labels
-<pre>
-
-
-?	$do	12000,float(?)	structure	float(?+1)	. next pointer, last instance = zero
-
-
-</pre>
+Kernel routine <b>array$segment$load</b> unpacks giant arrays to RAM if required from
+ROM-resident file-systems at application start. See Appendix A, Section A.5: Core Resident
+File Systems used in Software RAM Segment Load
 
 <h2>8: $do Iteration</h2>
 
