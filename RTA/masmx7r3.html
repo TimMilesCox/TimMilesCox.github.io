@@ -3333,7 +3333,7 @@ shuttle.msm=0<000003
 </pre>
 
 <p>
-Any initial values are spaced arguments of the <b>$record</b> record lines
+Any initial values are spaced arguments of the <b>$record</b> lines
 
 <p>
 An argument on a <b>$record</b> line is not a bit length but a data value for a contained field
@@ -3409,6 +3409,56 @@ MASMX 7r3
 <p>
 <b>$proc</b> macros can assign actual arguments to any nested <b>$record</b> in their scope
 <pre>
+
+$ masmx catalog.msm -lnkx
+MASMX 7r3
+3/catalog.msm
+*EOF*
+  :                            1 	$byte	9
+  :                            2 	$octal
+  :                            3 
+  :                            4 p	$proc
+  :                            5 inventory* $name
+  :                            6 *	$record		p(1, 1)
+  :                            7 clawhammer $record	p(4, 1)	p(4, 2)
+  :                            8 clawhammer_6lb	9
+  :                            9 clawhammer_8lb	9
+  :                            10 	$root
+  :                            11 saw	$record
+  :                            12 handsaw	$record		p(2, 1) p(2, 2)
+  :                            13 handsaw_12in	9
+  :                            14 handsaw_10in	9
+  :                            15 	$root
+  :                            16 hacksaw	$record		p(3, 1)	p(3, 2)
+  :                            17 hacksaw_9in	9
+  :                            18 hacksaw_7in	9	
+  :                            19 	$root
+  :                            20 	$root
+  :                            21 catalogue	90
+  :                            22 	$root
+  :                            23 	$end
+  :                            24 
+  :                            25 $(4:040000)
+004:00040000 012013014020036023141165164165155156040163164157
+                              +26 list1	inventory	"autumn stocktake" 12,16 30,19 10,11
+  :                            27 
+*EOF*
+inventory=:N129:P:0:000000
+list1=$04:00004000,,,,00000090
+list1:clawhammer=$04:00004000,,,,00000012
+list1:clawhammer:clawhammer_6lb=$04:00004000,,,,00000009
+list1:clawhammer:clawhammer_8lb=$04:00004000,,,00000009,00000009
+list1:saw=$04:00004000,,,00000012,00000024
+list1:saw:handsaw=$04:00004000,,,00000012,00000012
+list1:saw:handsaw:handsaw_12in=$04:00004000,,,00000012,00000009
+list1:saw:handsaw:handsaw_10in=$04:00004001,,,00000003,00000009
+list1:saw:hacksaw=$04:00004001,,,0000000C,00000012
+list1:saw:hacksaw:hacksaw_9in=$04:00004001,,,0000000C,00000009
+list1:saw:hacksaw:hacksaw_7in=$04:00004001,,,00000015,00000009
+list1:catalogue=$04:00004002,,,00000006,0000005A
+catalog.msm=0<00000003
+:$(4):00040000:00040006 
+
 
 </pre>
 
@@ -3570,12 +3620,11 @@ Arrays too large for the static data space and  many times larger than the 16-Me
 address space may be assembled, up the the limit of available memory
 
 <p>
-An array of seven and one quarter megawords may be in static space $(3)
-all  at once.
-That requires 29 available address windows in the range B3 to B31
+In smaragd7 prototype RTOS, up 29 memory windows B3..B31 are application
+static space $(3). An array of seven and one quarter megawords fits in this space
 
 <p>
-Otherwise a frame of adjacent address windows provides a moving cursor in the array
+A frame of adjacent address windows provides a moving cursor over larger arrays
 
 <p>
 Any array may be assembled instead of constructed at run time. There are cases where
@@ -3606,7 +3655,7 @@ by most standards
 
 <p>
 If the array is read-only in nonvolatile memory, the root address ARRAY_INDEX
-would contain a start address, although that might be supplied at link
+contains a start address, although that may be supplied at link
 
 <pre>
 
@@ -3724,6 +3773,9 @@ float(1)=$1E:01E010
 :$(1E):01E000:01E014 
 
 </pre>
+
+The line of repeated code may be a macro name subassembling complex data or instructions
+
 <h2>9: $proc and $func Macros</h2>
 
 <h3>9.1: $proc: Command and Instruction Macros</h3>
