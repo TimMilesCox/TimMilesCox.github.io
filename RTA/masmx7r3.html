@@ -3215,6 +3215,7 @@ DIVISOR
 
 
 
+
 <h3>7.7: Bit-Aligned Memory Structures: $record / $root</h3>
 
                         <h3>7.7.1: What's it For?</h3>
@@ -3227,18 +3228,18 @@ to labels which represent a tuple of
 
 </pre>
 A single line of macro code can subsequently present each data field or group
-of data fields to the application. Difficult and error-prone efforts are 
+of data fields to the application. Difficult and error-prone efforts are
 avoided for the developer
 
 <p>
 <b>$record</b> has application to
 
-	<ul>
-	<li>data acquired from systems of difference architecture to the target</li>
-	<li>data which is compressed for storage</li>
-	<li>data from offset fields of memory-mapped I/O registers</li>
-	<li>data exchanged over unusual communication protocols</li>
-	</ul>
+        <ul>
+        <li>data acquired from systems of different architecture to the target</li>
+        <li>data which is compressed for storage</li>
+        <li>data from offset fields of memory-mapped I/O registers</li>
+        <li>data exchanged over unusual communication protocols</li>
+        </ul>
 
 
                         <h3>7.7.2: Structure Description</h3>
@@ -3252,17 +3253,17 @@ MASMX 7r3
 3/record.msm
 *EOF*
   :                            1 $(3:03000)
-  :                            2 
+  :                            2
   :                            3 outermost $record
-  :                            4 first_field	9
-  :                            5 ?	$do	3,field(?)	9
-  :                            6 inner	$record
-  :                            7 ?	$do	4,field(?)	3
-  :                            8 	$root
+  :                            4 first_field    9
+  :                            5 ?      $do     3,field(?)      9
+  :                            6 inner  $record
+  :                            7 ?      $do     4,field(?)      3
+  :                            8        $root
   :                            9 trailing 12
-  :                            10 	$root
-  :                            11 	
-  :                            12 
+  :                            10       $root
+  :                            11
+  :                            12
 *EOF*
 outermost=$03:003000,,,,00003C
 outermost:first_field=$03:003000,,,,000009
@@ -3277,7 +3278,7 @@ outermost:inner:field(4)=$03:003001,,,000015,000003
 outermost:trailing=$03:003002,,,,00000C
 ?=$03:000004
 record.msm=0<000003
-:$(03):003000:003003 
+:$(03):003000:003003
 
 
 </pre>
@@ -3302,9 +3303,9 @@ $ masmx shuttle -lnkx
 MASMX 7r3
 3/shuttle.msm
 *EOF*
-  :                            1 
+  :                            1
   :                            2 $(3:03000)
-  :                            3 
+  :                            3
   :                            4 define1 $branch
   :                            5 first   $record 12 "tramway"
   :                            6 flag    12
@@ -3317,7 +3318,7 @@ MASMX 7r3
   :                            13 goods   56
 03:003000 00B73687574746C650  +14         $root
   :                            15         $root
-  :                            16 
+  :                            16
 *EOF*
 define1=$03:003000
 define1:first=$03:003000,,,,000048
@@ -3328,7 +3329,7 @@ define2:first=$03:003000,,,,000044
 define2:first:flag=$03:003000,,,,00000C
 define2:first:goods=$03:003000,,,00000C,000038
 shuttle.msm=0<000003
-:$(03):003000:003003 
+:$(03):003000:003003
 
 </pre>
 
@@ -3352,169 +3353,150 @@ MASMX 7r3
 3/record.msm
 *EOF*
   :                            1 $(3:03000)
-  :                            2 
-  :                            3 outermost $record			<b>'o' 1 1 1 10</b>
-  :                            4 first_field	9
-  :                            5 ?	$do	3,field(?)	9
-  :                            6 inner	$record				<b>6 4 6 4</b>
-  :                            7 ?	$do	4,field(?)	3
-  :                            8 	$root
+  :                            2
+  :                            3 outermost $record                      <b>'o' 1 1 1 10</b>
+  :                            4 first_field    9
+  :                            5 ?      $do     3,field(?)      9
+  :                            6 inner  $record                         <b>6 4 6 4</b>
+  :                            7 ?      $do     4,field(?)      3
+  :                            8        $root
   :                            9 trailing 12
-03:003000 378040201D3400A000  +10 	$root
-  :                            11 	
-  :                            12 
+03:003000 378040201D3400A000  +10       $root
+  :                            11
+  :                            12
 *EOF*
-:$(03):003000:003003 
+:$(03):003000:003003
 
 </pre>
 
 <b>$record</b> does not have separate template and instance steps. Describing a
 <b>$record</b> layout is also describing an instance. For this reason <b>$record</b>
 may be found within a <b>$proc</b> macro
-<pre>
-
-$ masmx quickly -lnk
-MASMX 7r3
-3/quickly.msm
-*EOF*
-  :                            1 	$path		../
-  :                            2: 	$include	def/rta.def
-  :                            3 	$path
-  :                            4 
-  :                            5 p	$proc
-  :                            6 record1* $name
-  :                            7 *	$record	p()
-  :                            8 	0
-  :                            9 	0
-  :                            10 indicator 12
-  :                            11 ?	$do	21,symbol(?)	4
-  :                            12 parcel	24
-  :                            13 extra	8
-  :                            14 	$root
-  :                            15 	$end
-  :                            16 
-
-
-
-  :                            46 
-  :                            47 $(3:03000)
-  :                            48 	$plist		2
-03:003000 00E8679E54C9495460000000000000000000
-                              +49 r1	record1		14 8 6 7 9 14 21 20 28 9 4 9 5 4 6
-  :                            50 
-
-</pre>
-
 
 <p>
 <b>$proc</b> macros can assign actual arguments to any nested <b>$record</b> in their scope
-<pre>
 
-$ masmx catalog.msm -lnkx
-MASMX 7r3
-3/catalog.msm
-*EOF*
-  :                            1 	$byte	9
-  :                            2 	$octal
-  :                            3 
-  :                            4 p	$proc
-  :                            5 inventory* $name
-  :                            6 *	$record		p(1, 1)
-  :                            7 clawhammer $record	p(4, 1)	p(4, 2)
-  :                            8 clawhammer_6lb	9
-  :                            9 clawhammer_8lb	9
-  :                            10 	$root
-  :                            11 saw	$record
-  :                            12 handsaw	$record		p(2, 1) p(2, 2)
-  :                            13 handsaw_12in	9
-  :                            14 handsaw_10in	9
-  :                            15 	$root
-  :                            16 hacksaw	$record		p(3, 1)	p(3, 2)
-  :                            17 hacksaw_9in	9
-  :                            18 hacksaw_7in	9	
-  :                            19 	$root
-  :                            20 	$root
-  :                            21 catalogue	90
-  :                            22 	$root
-  :                            23 	$end
-  :                            24 
-  :                            25 $(4:040000)
-004:00040000 012013014020036023141165164165155156040163164157
-                              +26 list1	inventory	"autumn stocktake" 12,16 30,19 10,11
-  :                            27 
-*EOF*
-inventory=:N129:P:0:000000
-list1=$04:00004000,,,,00000090
-list1:clawhammer=$04:00004000,,,,00000012
-list1:clawhammer:clawhammer_6lb=$04:00004000,,,,00000009
-list1:clawhammer:clawhammer_8lb=$04:00004000,,,00000009,00000009
-list1:saw=$04:00004000,,,00000012,00000024
-list1:saw:handsaw=$04:00004000,,,00000012,00000012
-list1:saw:handsaw:handsaw_12in=$04:00004000,,,00000012,00000009
-list1:saw:handsaw:handsaw_10in=$04:00004001,,,00000003,00000009
-list1:saw:hacksaw=$04:00004001,,,0000000C,00000012
-list1:saw:hacksaw:hacksaw_9in=$04:00004001,,,0000000C,00000009
-list1:saw:hacksaw:hacksaw_7in=$04:00004001,,,00000015,00000009
-list1:catalogue=$04:00004002,,,00000006,0000005A
-catalog.msm=0<00000003
-:$(4):00040000:00040006 
-
-
-</pre>
-
+<p>
 Repeating field groups to any nesting depth are constructed with records inside <b>$proc</b> macros
 <pre>
 
+$ ~/masmx betaille -lnkx
+MASMX 7r3
+3/betaille.msm
+*EOF*
+  :                            1 p      $proc
+  :                            2 hameau*        $name
+  :                            3 *      $record p(1, 2), p(1, 3) p(1, 4)
+  :                            4 oies   20
+  :                            5 anes   12
+  :                            6 moutons        16
+  :                            7        $root
+  :                            8        $end
+  :                            9
+  :                            10 p     $proc
+  :                            11 commune* $name
+  :                            12 *     $record
+  :                            13 ?     $do     p(),"p(?, 1)"   hameau  p(?)
+  :                            14       $root
+  :                            15       $end
+  :                            16
+  :                            17
+  :                            18 communes $record
+                                Vaux_les_Pres   commune les_Cotards, 80, 5, 248 ;
+                                                        le_Charmelot, 660, 24, 79 ;
+  :                            21                       village, 28, 2, 5
+  :                            22
+                                Villers_Buzon   commune centre, 10, 1, 30       ;
+00:000000 0005000500F800294018004F0001C00200050000A001001E
+                              +24                       Combe_au_Loup, 15,,315
+00:000008 0000F000013B        +25       $root
+  :                            26
+*EOF*
+hameau=:N129:P:0:000000
+commune=:N129:P:0:000000
+communes=$00:000000,,,,0000F0
+communes:Vaux_les_Pres=$00:000000,,,,000090
+communes:Vaux_les_Pres:les_Cotards=$00:000000,,,,000030
+communes:Vaux_les_Pres:les_Cotards:oies=$00:000000,,,,000014
+communes:Vaux_les_Pres:les_Cotards:anes=$00:000000,,,000014,00000C
+communes:Vaux_les_Pres:les_Cotards:moutons=$00:000001,,,000008,000010
+communes:Vaux_les_Pres:le_Charmelot=$00:000002,,,,000030
+communes:Vaux_les_Pres:le_Charmelot:oies=$00:000002,,,,000014
+communes:Vaux_les_Pres:le_Charmelot:anes=$00:000002,,,000014,00000C
+communes:Vaux_les_Pres:le_Charmelot:moutons=$00:000003,,,000008,000010
+communes:Vaux_les_Pres:village=$00:000004,,,,000030
+communes:Vaux_les_Pres:village:oies=$00:000004,,,,000014
+communes:Vaux_les_Pres:village:anes=$00:000004,,,000014,00000C
+communes:Vaux_les_Pres:village:moutons=$00:000005,,,000008,000010
+communes:Villers_Buzon=$00:000006,,,,000060
+communes:Villers_Buzon:centre=$00:000006,,,,000030
+communes:Villers_Buzon:centre:oies=$00:000006,,,,000014
+communes:Villers_Buzon:centre:anes=$00:000006,,,000014,00000C
+communes:Villers_Buzon:centre:moutons=$00:000007,,,000008,000010
+communes:Villers_Buzon:Combe_au_Loup=$00:000008,,,,000030
+communes:Villers_Buzon:Combe_au_Loup:oies=$00:000008,,,,000014
+communes:Villers_Buzon:Combe_au_Loup:anes=$00:000008,,,000014,00000C
+communes:Villers_Buzon:Combe_au_Loup:moutons=$00:000009,,,000008,000010
+betaille.msm=0<000003
+:$(00):000000:00000A
+
 </pre>
 
-<b>$record</b> within a base + displacement section includes the base register in the <b>$record</b>
-and field labels. In this assembly, <b>channel_status</b> and its fields are part of
-a section based on the internal stack pointer
+
+                <h3>7.7.3: Structure Access</h3>
+
+The following assembly accesses fields of a <b>$record</b> with macro language.
+
+<p>
+The more complex the structure, the larger the advantage of <b>$record</b> data description
+
+<p>
+This assembly also shows a <b>$record</b> in a base + displacement section
 <pre>
 
 $ masmx base_d -lnkx
 MASMX 7r3
 3/base_d.msm
 *EOF*
-  :                            1 		$path		../
-  :                            2: 		$include	def/rta.def
-  :                            3 		$path
-  :                            4 
-  :                            5 p		$proc
-  :                            6 retrieve*	$name		.	load an unsigned field up to 24 bits
-  :                            7 	$if	p(1, 4)+p(1, 5)>$word
-  :                            8 		dl	p(1, 1), p(1, 2)
-  :                            9 		dsl	p(1, 4)
-  :                            10 	$else
-  :                            11 		la	p(1, 1), p(1, 2)
-  :                            12 	$do	p(1, 4)^=0,	sal	p(1, 4)
-  :                            13 	$endif
-  :                            14 	$do	p(1, 5)<$word,	sar	$word-p(1, 5)
-  :                            15 		$end
-  :                            16 
+  :                            1                $path           ../
+  :                            2:               $include        def/rta.def
+  :                            3                $path
+  :                            4
+  :                            5 p              $proc
+  :                            6 retrieve*      $name           .       load an unsigned field up to 24 bits
+  :                            7        $if     p(1, 4)+p(1, 5)>$word
+  :                            8                dl      p(1, 1), p(1, 2)
+  :                            9                dsl     p(1, 4)
+  :                            10       $else
+  :                            11               la      p(1, 1), p(1, 2)
+  :                            12       $do     p(1, 4)^=0,     sal     p(1, 4)
+  :                            13       $endif
+  :                            14       $do     p(1, 5)<$word,  sar     $word-p(1, 5)
+  :                            15               $end
+  :                            16
   :                            17 $(71::,sp)
-  :                            18 channel_status	$record
-  :                            19 active		1
-  :                            20 sense		3
-  :                            21 input_status	3
-  :                            22 output_status	3
+  :                            18 channel_status        $record
+  :                            19 active                1
+  :                            20 sense         3
+  :                            21 input_status  3
+  :                            22 output_status 3
   :                            23 input_access_chain_head  16
   :                            24 output_access_chain_head 16
-  :                            25 		$root
-  :                            26 
+  :                            25               $root
+  :                            26
   :                            27 $(0:64)
-  :                            28 
-00:000040 60F000              +29 	retrieve	channel_status:input_status
-00:000041 260004              +29 
-00:000042 060015              +29 
-00:000043 C60047              +30 	jza		no_input_traffic
-00:000044 CFF000              +31 	retrieve	channel_status:input_access_chain_head
-00:000045 36000A              +31 
-00:000046 060008              +31 
-  :                            32 	.
-  :                            33 	.
+  :                            28
+00:000040 60F000              +29       retrieve        channel_status:input_status
+00:000041 260004              +29
+00:000042 060015              +29
+00:000043 C60047              +30       jza             no_input_traffic
+00:000044 CFF000              +31       retrieve        channel_status:input_access_chain_head
+00:000045 36000A              +31
+00:000046 060008              +31
+  :                            32       .
+  :                            33       .
   :                            34 no_input_traffic
-  :                            35 
+  :                            35
 *EOF*
 
 
@@ -3528,87 +3510,7 @@ channel_status:output_access_chain_head=$47:000001,00000F,,000002,000010
 no_input_traffic=$00:000047
 ..//def/rta.def=1<000005
 base_d.msm=0<000003
-:$(00):000040:000047 :$(47):000000:000002 
-
-</pre>
-
-
-This assembly is also a simple example of accessing fields of a <b>$record</b>
-with macro language. The more complex the structure, the larger the advantage
-of <b>$record</b> data description
-
-
-                        <h3>7.7.3: Structure Access</h3>
-
-<b>$record</b> makes bit fields adressable for macro language as demonstrated here. <b>$record</b>
-combined with macro language avoids difficult and error-prone calculations on the part of the
-developer
-
-
-<pre>
-
-
-  :                            17 p	$proc
-  :                            18 sum*	$name
-  :                            19 	$if	p(1, 5)>$word
-  :                            20 	$flag	you need a different macro for 48- or 72-bit results
-  :                            21 	$elseif	(p(1, 4)=0)**(p(1, 5)=$word)
-  :                            22 	ab	p(1, 1), p(1, 2)
-  :                            23 	$elseif	(p(1, 4)**7=0)**(p(1, 5)=8)
-  :                            24 	ab	p(1, 1), p(1, 2), p(1, 4)/8+t1
-  :                            25 	$elseif	p(1, 4)+p(1, 5)>24
-  :                            26 	push	b
-  :                            27 	dl	p(1, 1), p(1, 2)
-  :                            28 	dsl	p(1, 4)
-  :                            29 	dsa	$word*2-p(1, 5)
-  :                            30 	popA	b
-  :                            31 	$else
-  :                            32 	la	p(1, 1), p(1, 2)
-  :                            33 	$do	p(1, 4)^=0,	sal	p(1, 4)
-  :                            34 	saa	$word-p(1, 5)
-  :                            35 	ab	a
-  :                            36 	$endif
-  :                            37 	$end
-  :                            38 
-  :                            39 p	$proc
-  :                            40 addemup* $name
-  :                            41 	lb, xi	0
-  :                            42 addmore* $name
-  :                            43 ?	$do	p(),	sum	p(?)
-  :                            44 	$end
-  :                            45 
-  :                            46 
-  :                            47 $(3:03000)
-  :                            48 	$plist		2
-03:003000 00E8679E54C9495460000000000000000000
-                              +49 r1	record1		14 8 6 7 9 14 21 20 28 9 4 9 5 4 6
-  :                            50 
-  :                            51 $(0:64)
-  :                            52 
-00:000040 6D0000              +53 	addemup		r1:indicator	r1:parcel	r1:extra
-00:000041 603000              +53 
-00:000042 86000C              +53 
-00:000043 C80004              +53 
-00:000044 C83004              +53 
-00:000045 C93005              +53 
-  :                            54 
-00:000046 603000              +55 ?	$do	3,	sum	r1:symbol(?)
-00:000047 26000C              +55 
-00:000048 860014              +55 
-00:000049 C80004              +55 
-00:00004A 603000              +55 
-00:00004B 260010              +55 
-00:00004C 860014              +55 
-00:00004D C80004              +55 
-00:00004E 603000              +55 
-00:00004F 260014              +55 
-00:000050 860014              +55 
-00:000051 C80004              +55 
-  :                            56 
-*EOF*
-:$(00):000040:000052 :$(03):003000:003006 
-quickly.msm: object code 237 bytes: 0 errors: 0 undefined labels
-
+:$(00):000040:000047 :$(47):000000:000002
 
 </pre>
 
@@ -5199,6 +5101,7 @@ $quote		directive	|	$quote		<i>value</i>		. set the string delimiter, default "
 $r		function	|	+		$r		. program section program section $r or $r(label) 
 $range_check	directive	|	$info,$range_check	<i>text</i>	. final check value range at relocation stack top
 $range_check1	directive	|	$info,$range_check1	<i>text</i>	. always check value range at relocation stack top
+$record		directive	|label	$record	[<i>values</i>]		. bit-aligned data structure, see also $root
 $rel		function	|	+		$rel		. section relocation alignment $rel or $rel(locator)
 $res		directive	|[label] $res		<i>quanta</i>		. declare a buffer. option -Z initial zero
 $return		directive	|	$return		<i>expression</i>	. leave a macro. return value from $func macro
