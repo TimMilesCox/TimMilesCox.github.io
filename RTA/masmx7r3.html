@@ -197,7 +197,12 @@ code and data in all the executable space using the giant address
 <p>
 masmx default byte size is 8 bits and data code is ASCII.
 <b>$byte</b> and the data code can be changed during
-an assembly
+an assembly. These settings concern quoted strings. See Section
+4.1: Expressions and Numbers and Section 4.3: Character Strings.
+Language elements are strictly from ASCII code points 0..127.
+ASCII text may be variously Latin-1 or UTF-8 according to input
+text editor
+
 
 <p>
 masmx syntax element defaults are also
@@ -624,6 +629,9 @@ MASMX 7r3
 </pre>
 
 <p>
+ASCII text may be Latin-1 or UTF8, according mainly to input text editor
+
+<p>
 Tokens in an expression may be labels
 
 <p>
@@ -1013,6 +1021,9 @@ Note: strings.msm Line 12: trailing zero bits in last data word of string
 
 </pre>
 Padding to word fill is zero with option <b>-z</b> otherwise space
+
+<p>
+ASCII text may be Latin-1 or UTF8, according mainly to input text editor
 
 <p>
 Nondisplay byte values can be placed in strings
