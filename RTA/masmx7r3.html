@@ -2638,7 +2638,7 @@ kernel assigns load space and determines hardware physical locations
 <p>
 Load address absolute zero is not available for applications in a ROM image.
 
-For application code in a ROM load image,B0 absolute load address can be
+For application code in a ROM load image, B0 absolute load address may be
 preassigned at assembly or link with a breakpoint address in the location
 counter line
 
@@ -3796,10 +3796,15 @@ position. Parameters are referenced by the label on the <b>$proc</b> line which 
 example above <b>p</b>
 
 <p>
-Reference paraforms have the syntax
+Actual parameters have the syntax
 <pre>
 
-		<b>callname	haddock	  5   44    chips, peas, salt:vinegar</b>
+		<b><i>callname</i>	haddock	  5   44    chips, peas, salt:vinegar</b>
+
+</pre>
+Reference paraforms have the syntax <b><i>macroname</i>([field[, subfield[:substring]]])
+<pre>
+
 
 macroname	$proc
 
