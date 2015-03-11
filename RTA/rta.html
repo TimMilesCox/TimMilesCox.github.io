@@ -546,7 +546,7 @@ guard interrupt
 <p>
 Applications may call ISRs to place device banks in their address space and
 subsequently read and write each based bank without restriction.
-See Section 1.12: Interrupt Assignments
+See Section 1.11: Interrupt Assignments
 
 <p>
 The initial reason for allowing only ISRs to base device banks is to avoid accident
@@ -568,7 +568,9 @@ Typically &frac34; of relocation registers are part of task context, OS dependin
 
 
 <p>
-<h3>1.10 I/O Ports for Inter-Processor Signalling and for Memory Configuration</h3>
+<h3>1.10 I/O Ports for Inter-Processor Signalling / Memory and Peripheral Configuration / Timer Restart</h3>
+
+<h4>1.10.1: I/O Ports for Inter-Processor Signalling</h4>
 
 <p>
 I/O ports are written to multicast or unicast interrupts between Instruction Processors
@@ -589,6 +591,10 @@ Interrupts driven via I/O ports include
 	</blockquote>
 
 <p>
+
+<h4>1.10.2: I/O Ports for Memory and Peripheral Configuration</h4>
+
+
 I/O ports function as relocation registers and also read out memory configuration values
 <p>
 The emulated machine detects from Port 124 <b>ram$threshold</b> on system start how large its ROM is,
@@ -605,17 +611,32 @@ These values are primed by the emulator to help the emulated machine to run.
 Hardware implementations must wire the real memory and device information to I/O Ports 124, 128+ upwards
 
 
-<h3>1.11: I/O Port for Timer Interval Restart</h3>
+<h4>1.10.3: I/O Port for Timer Interval Restart</h4>
 
-An I/O port write restarts the timer interrupt interval
+A write to I/O Port 96 restarts the timer interrupt interval
 
 <p>
 One core is designated to interrupt at high-frequency incrementer overflow
-and to and to restart the incrementer
+and to and to restart the incrementer by writing Port 96
 
+<h4>1.10.4: I/O Port Assignments</h4>
+<pre>
 
+	0		instruction window relocation
+	1:63		data memory relocation windows
+	65		thread control block relocation
+	66:71		kernel data relocation windows
+	96		high-frequency timer incrementer restart write
+	97		dayclock update advertisement multicast
+	98		preemptive thread switch unicast
+	99		resource attention unicast/multicast
+	124		ROM/RAM threshold
+	128		system memory bank high index
+	129:191		devices 1:63 attributes / array size
 
-<h3>1.12: Interrupt Assignments</h3>
+</pre>
+
+<h3>1.11: Interrupt Assignments</h3>
 
 <p>
 The first 4K-word bank of storage or PAGE_0 contains the restart location and is
@@ -1749,7 +1770,7 @@ Instructions in File 7 take a one-word two-word or four-word operand in register
 
 <h3>2.5 Instructions</h3>
 
-<h5>Note on Instruction Layout vs Assembly Language Syntax</h5>
+<h4>Note on Instruction Layout vs Assembly Language Syntax</h4>
 
 <p>
 No instruction has both *indirection and indexing
@@ -1757,7 +1778,7 @@ No instruction has both *indirection and indexing
 File 1 and File 5A instructions, J=5, with sign extended immediate operand,,xi can have neither *indirection nor indexing
 
 
-<h5>Instruction File 1</h5>
+<h4>Instruction File 1</h4>
 <p>
 22 File 1 instructions read a one-word operand, a third or halfword, the effective address itself as an immediate operand, or a sign-extended immediate operand.
 
@@ -3612,7 +3633,7 @@ File 1 instructions can read or write thirdwords when PSR Flag <b>half$w</b> = 0
 </pre>
 
 
-<h5>Instruction File 4A</h5>
+<h4>Instruction File 4A</h4>
 <p>
 The eight instructions in Instruction File 4A use the effective address with or without indirection or indexing as an
 immediate operand
@@ -3878,7 +3899,7 @@ immediate operand
 
 
 </pre>
-<h5>Instruction File 5A</h5>
+<h4>Instruction File 5A</h4>
 <p>
 The eight instructions in Instruction File 5A have a sign extended immediate operand
 <pre>
@@ -4330,7 +4351,7 @@ The eight instructions in Instruction File 5A have a sign extended immediate ope
 
 </pre>
 
-<h5>Instruction File 6</h5>
+<h4>Instruction File 6</h4>
 
 <p>
 The 32 instructions in Instruction File 6 use the effective address with or without indirection or indexing as an
@@ -5021,7 +5042,7 @@ immediate operand
 
 
 </pre>
-<h5>Instruction File 7</h5>
+<h4>Instruction File 7</h4>
 
 <p>
 The 31 instructions in Instruction File 7 have an operand of one, two or four words
