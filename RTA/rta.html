@@ -270,11 +270,13 @@ but can produce a very large performance advantage
 
 <p>
 The part of the register stack available to an application is 128 words, and the part
-of it organised in an internal stack is 104 words. The working of the internal stack is
-somewhat inverse to an external stack.
+of it organised in an internal stack is 104 words
 
 <p>
-Pushes and pops generate an operand effective address like all other instructions.
+The working of the internal stack is somewhat inverse to an external stack.
+
+<p>
+Push and pop operands have an effective address in memory space
 
 A push is a load into CPU registers in RTA1, and a pop is a store
 <pre>
@@ -289,7 +291,7 @@ A push is a load into CPU registers in RTA1, and a pop is a store
 	|		|		|		|					|
 	|		|		|		|					|
 	|	CPU	|	scalar	|		|	total operand space
-	|		|    registers	|		|	registers + storage
+	|		|    registers	|		|	registers + storage + immediate values
 	|		|		|		|
 	|		|_______________|		|
 	|		|	--sp	|		|
@@ -569,16 +571,17 @@ Typically &frac34; of relocation registers are part of task context, OS dependin
 
 <p>
 I/O ports are written to multicast or unicast interrupts between Instruction Processors
-in order to obtain true synchronisation and exact realtime response
+in order to obtain true synchronisation and exact realtime response. The bit positions
+in the output value drive interrupt lines to individual cores
 
 <p>
 Interrupts driven via I/O ports include
 
 	<blockquote>
 
-	preemptive event notification unicast<br><br>
+	preemptive switch unicast<br><br>
 
-	timer interrupt interval<br><br>
+	attention request unicast/multicast<br><br>
 
 	dayclock update multicast advertisement
 
@@ -601,7 +604,16 @@ These values are primed by the emulator to help the emulated machine to run.
 Hardware implementations must wire the real memory and device information to I/O Ports 124, 128+ upwards
 
 
-<h3>1.11 Interrupt Assignments</h3>
+<h3>1.11: I/O Port for Timer Interval Restart</h3>
+
+An I/O port write restarts the timer interrupt interval
+
+One core is designated to interrupt at high-frequency incrementer overflow
+and to and to restart the incrementer
+
+
+
+<h3>1.12: Interrupt Assignments</h3>
 
 <p>
 The first 4K-word bank of storage or PAGE_0 contains the restart location and is
@@ -625,12 +637,17 @@ activity or processor contingency raises them
 				|______________________|________|	device bank base attempt from application
 									storage access outside address space
 									software diagnostic
+
 				_________________________________
-	ALERT$		1:61	| 000000 000000 000001 | 111101	|	preemtive event notify broadcast
+	ATTENTION$	1:60	| 000000 000000 000001 | 111100 |	resource service request unicast/multicast
 				|______________________|________|
 
 				_________________________________
-	TIME$POINT	1:62	| 000000 000000 000001 | 111110 |	dayclock broadcast
+	ALERT$		1:61	| 000000 000000 000001 | 111101	|	preemtive thread switch unicast
+				|______________________|________|
+
+				_________________________________
+	TIME$POINT	1:62	| 000000 000000 000001 | 111110 |	dayclock multicast
 				|______________________|________|
 
 				_________________________________
