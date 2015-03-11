@@ -278,6 +278,7 @@ The working of the internal stack is somewhat inverse to an external stack.
 <p>
 Push and pop operands have an effective address in memory space
 
+<p>
 A push is a load into CPU registers in RTA1, and a pop is a store
 <pre>
 
@@ -545,7 +546,7 @@ guard interrupt
 <p>
 Applications may call ISRs to place device banks in their address space and
 subsequently read and write each based bank without restriction.
-See Section 1.11: Interrupt Assignments
+See Section 1.12: Interrupt Assignments
 
 <p>
 The initial reason for allowing only ISRs to base device banks is to avoid accident
@@ -608,6 +609,7 @@ Hardware implementations must wire the real memory and device information to I/O
 
 An I/O port write restarts the timer interrupt interval
 
+<p>
 One core is designated to interrupt at high-frequency incrementer overflow
 and to and to restart the incrementer
 
