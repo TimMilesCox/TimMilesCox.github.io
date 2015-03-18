@@ -523,13 +523,13 @@ Only	+	PLUS
 
 	The token left of ** AND may be relocatable, not the mask. Linker range check is suppressed
 
-	/* SHIFT RIGHT */- SHIFT RIGHT ALGEBRAIC cause the linker to shift the value after relocation
+	/* SHIFT RIGHT */- SHIFT RIGHT ALGEBRAIC shift the final relocated value
 
-	/* SHIFT RIGHT requests the linker to shift right and range check unsigned
+	/* SHIFT RIGHT shifts the relocated value logically right and range-checks unsigned
 
 	shift left operator */ with negative shift count is SHIFT RIGHT ALGEBRAIC.
 	Range check at link is signed. The target field contains at least one sign bit.
-	The link step shifts a relocatable value algebraically after relocation
+	The relocated value is shifted right algebraically
 
 
 $ masmx relarith -lnk
