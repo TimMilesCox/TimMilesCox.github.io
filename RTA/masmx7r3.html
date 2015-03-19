@@ -543,33 +543,33 @@ MASMX 7r3
   :                            5 $(6:06000)
   :                            6 
 (+05:000000/*10)18+
-06:006000 000000              +7 	+	relocatable*/-16	. shift right algebraic 16 positions after relocation
-  :                            8 					. signed range check after relocation and shift
+06:006000 000000              +7 	+	relocatable*/-16	. signed range check after relocation
+  :                            8 					. shift right algebraic 16 positions
   :                            9 
 (+05)18+
-06:006001 000000              +10 	+	relocatable*/-0		. shift no positions
-  :                            11 					. signed range check after relocation
+06:006001 000000              +10 	+	relocatable*/-0		. signed range check after relocation
+  :                            11 					. shift no positions
   :                            12 
 (+05:000000/*10)18+
-06:006002 000000              +13 	+	relocatable*/(-16)	. shift right algebraic 16 positons after relocation
-  :                            14 					. signed range check after relocation and shift
+06:006002 000000              +13 	+	relocatable*/(-16)	. signed range check after relocation
+  :                            14 					. shift right algebraic 16 positions
   :                            15 
 06:006003 FFFFF0              +16 	+	ABSOLUTE*/MINUS8	. shift right algebraic at assembly time
 06:006004 FFFFF0              +17 	+	ABSOLUTE*/-8		. shift right algebraic at assembly time
 06:006005 00FFF0              +18 	+	0FFF000/*8		. shift right logical at assembly time	
   :                            19 
 (+05:000000/*08)18
-06:006006 000000              +20 	+	relocatable/*8		. shift right logical 8 positions after relocation
-  :                            21 					. unsigned range check after relocation and shift
+06:006006 000000              +20 	+	relocatable/*8		. unsigned range check after relocation
+  :                            21 					. shift right logical 8 positions
   :                            22 
 (+05:000000/*0c)18+
 [+0000:000000/*0c]18+
-06:006007 000000              +23 	+	relocatable+EXTERNAL*/-12 . shift right algebraic 12 positions after relocation
-  :                            24 					. signed range check after relocation and shift
+06:006007 000000              +23 	+	relocatable+EXTERNAL*/-12 . signed range check after relocation
+  :                            24 					. shift right algebraic 12 positions
   :                            25 
 (+05:000000/*08)18+
-06:006008 000000              +26 	+	relocatable*/MINUS8	. shift right algebraic 8 positions after relocation
-  :                            27 					. signed range check after relocation and shift
+06:006008 000000              +26 	+	relocatable*/MINUS8	. signed range check after relocation
+  :                            27 					. shift right algebraic 8 positions
   :                            28 
 *EOF*
 :$(05):000000:000001 :$(06):006000:006009 
