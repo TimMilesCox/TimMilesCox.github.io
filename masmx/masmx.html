@@ -4170,20 +4170,19 @@ the current location value. That would render "." an unusable function
 
 <h4>4.7.10.8: Label Type $PROC</h4>
 
-
-The label on column 1 of the $PROC card is the name of the
-macro. Its meaning is all the images from $PROC to $END, and
-it has the label type of $PROC.
-
-<p>
-If a $PROC name is encountered on the command field of a
-line, the macro is expanded, if the label is made visible*
-outside the $PROC with a trailing asterisk.
+The label on column 1 of the $proc directive line has the label type of $proc.
+The following images until a mirroring $end are a $proc command macro.
+Embedded $procs mat be nested inside a $proc description. 
 
 <p>
-If the name of the macro currently being expanded
-is encountered when evaluating an operand expression, 
-then a parameter reference is resolved:
+A $proc macro may be identified in the command position of an assembly
+source line by its $proc label or by a $name label, whichever is exported
+with trailing asterisk
+
+<p>
+Inside a $proc an reference to its own label is a parameter reference or
+paraform
+
 <pre>
 
 this_macro*      $proc
@@ -4196,13 +4195,13 @@ this_macro*      $proc
 has the effect "jump away"
 
 <p>
-this_macro* has to be unique to the subassembly calling it.
-$PROC labels often aren't unique, and aren't exported with
-the trailing asterisk* Then the macro must contain an exported
-$NAME which has a asterisked_label*
+this_macro* must be unique in the subassembly calling it.
+$proc labels often are not unique, and then may not be exported with
+the trailing asterisk* These $procs contain one or more  exported
+$names which may also have a latent value
 
 <p>
-$PROC macros also have a unique numeric identity attached
+$proc macros also have a unique numeric identity attached
 to their name, if their name is unique*
 
 <p>
