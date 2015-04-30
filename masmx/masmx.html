@@ -4208,17 +4208,19 @@ identify value unique in the calling subassembly
 <h4>4.7.10.9: Label Type $NAME</h4>
 
 
-$NAME is used within macro text $PROC..$END or $FUNC..$END
+$name is used within macro text $proc..$end or $func..$end
 to give alternative call names with latent values
-to the macro.<br>
-$NAME labels have the type $NAME.
+to the macro
 
 <p>
-Macro labels do not need to be unique, so long as they have
-unique $NAME entry points.
+$name labels have the type $name
+
+<p>
+$func and $proc macro labels need only be unique if they are exported.<br>
+They are otherwise made callable by having unique $name labels
 	
 <p>
-Therefore it's possible to have identical and cryptic
+It is therefore possible to have identical and cryptic
 labels for many macros, for example p
 <pre>
 
@@ -4233,8 +4235,8 @@ dropit* $name   2
 </pre>
 The developer may have many procedural macros p. This makes the
 argument reference paraforms p(1, 1) p(1, 2) similar in syntax
-and easy to read in many different macros. p is not used as a
-call name, but the $name names are. p with no asterisk is only
+and easy to read in many different macros.<br>p is not used as a
+call name, but the $name labels are.<br>p with no asterisk is only
 a visible name within macro p, and this is why multiple macros
 may have the same name
 <pre>
