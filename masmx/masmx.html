@@ -4232,6 +4232,10 @@ dropit* $name   2
 	instruction_form   $n, p(1, 1), p(1, 2)
 	$end
 
+
+        grabit  r12, input_port
+        dropit  r12, output_port
+
 </pre>
 The developer may have many procedural macros p. This makes the
 argument reference paraforms p(1, 1) p(1, 2) similar in syntax
@@ -4239,12 +4243,6 @@ and easy to read in many different macros.<br>p is not used as a
 call name, but the $name labels are.<br>p with no asterisk is only
 a visible name within macro p, and this is why multiple macros
 may have the same name
-<pre>
-
-	grabit  r12, input_port
-	dropit  r12, output_port
-
-</pre>
 
 <p>
 If the macro is instead called "pqrpqr" then its parameters are
@@ -4271,26 +4269,19 @@ line. This is a user written value-generating macro and
 its meaning is the expression on the first $RETURN line 
 actioned in the macro text $FUNC..$END
 
-<p>
-$FUNC macros are expanded when encountered during evaluation
-of an operand expression, for example
 <pre>
 
-$(1:START_OF_VARIABLES)
+	$word	8
 
-
-@*      $func
-	$return $(1)
+hi*	$func
+	$return	hi(1, 1)/*8
 	$end
 
-length_of_variables     $set    @-START_OF_VARIABLES
+	+	value, hi(value):L	; 16-bits little-endian
+
 
 </pre>
-The developer uses location counter $(1)
-to map external RAM and wishes $(1) to be known as @. 
 	
-<p>
-@ returns the next available address in variable space.
 
 
 <h4>4.7.10.11: Label Type $FORM</h4>
@@ -4304,9 +4295,10 @@ bit-structure.
 When a $FORM label is encountered in the command position
 the corresponding storage structure is generated inline.
 
-<p>
-powerpc_load_store_instruction  $form   6, 5, 5, 16
 <pre>
+
+powerpc_load_store_instruction  $form   6, 5, 5, 16
+
 
 p       $proc
 lwz*    $name   LWZ
