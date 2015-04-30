@@ -4210,15 +4210,16 @@ identify value unique in the calling subassembly
 
 $NAME is used within macro text $PROC..$END or $FUNC..$END
 to give alternative call names with latent values
-to the macro. $NAME labels return a type of $NAME.
+to the macro.<br>
+$NAME labels have the type $NAME.
 
 <p>
 Macro labels do not need to be unique, so long as they have
 unique $NAME entry points.
 	
 <p>
-Therefore it's possible to have similar or identical cryptic
-labels for all $PROC declarations. For example:
+Therefore it's possible to have identical and cryptic
+labels for many macros, for example p
 <pre>
 
 instruction_form $form 8, 8, 16
@@ -4233,7 +4234,7 @@ dropit* $name   2
 The developer may have many procedural macros p. This makes the
 argument reference paraforms p(1, 1) p(1, 2) similar in syntax
 and easy to read in many different macros. p is not used as a
-call name, but the $NAME names are. p with no asterisk is only
+call name, but the $name names are. p with no asterisk is only
 a visible name within macro p, and this is why multiple macros
 may have the same name
 <pre>
@@ -4248,10 +4249,9 @@ If the macro is instead called "pqrpqr" then its parameters are
 referenced by macro code within pqrpqr as pqrpqr(1, 1), pqrpqr(1, 2) etc.
 
 <p>
-Whether you want to call a macro by its $PROC label or a $NAME label,
-that label must be exported by having a trailing asterisk* Any label
-so exported from a $PROC must be unique to the next subassembly level
-upwards.
+A macro is callable by its $proc or $func label or or by a  $name label,
+whichever is exported with trailing asterisk*<br>Labels exported from macros
+must be unique in the containing subassembly
 
 
 <h4>4.7.10.10: Label Type $FUNC</h4> 
