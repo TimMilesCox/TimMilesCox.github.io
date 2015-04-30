@@ -4245,8 +4245,8 @@ a visible name within macro p, and this is why multiple macros
 may have the same name
 
 <p>
-If the macro is instead called "pqrpqr" then its parameters are
-referenced by macro code within pqrpqr as pqrpqr(1, 1), pqrpqr(1, 2) etc.
+If the label on the $proc or $func line  is instead <i>pqrpqr</i> then<br>
+actual parameters are referenced <i>pqrpqr(1, 1) pqrpqr(1, 2)</i>...
 
 <p>
 A macro is callable by its $proc or $func label or or by a  $name label,
@@ -4257,17 +4257,10 @@ must be unique in the containing subassembly
 <h4>4.7.10.10: Label Type $FUNC</h4> 
 
 
-Developer-written function labels return a type of $FUNC.
-Developer-written functions are all functions which are 
-not internal to masmx, including functions in header files 
-supplied with this package. They are macros which return
-values which may be referenced in expressions.
-
 <p>
-A $FUNC type label is the label on column 1 of a $FUNC 
-line. This is a user written value-generating macro and 
-its meaning is the expression on the first $RETURN line 
-actioned in the macro text $FUNC..$END
+A $func label is the label on column 1 of a $func line.<br> 
+$func..$end contains a user written value-generating macro and 
+its value is the expression on the first $return line to be actioned 
 
 <pre>
 
