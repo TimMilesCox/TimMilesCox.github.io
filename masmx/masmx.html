@@ -132,10 +132,14 @@ masmx gives minute control of the construction and location of code and data.
 Typical masmx targets are low-power targets where as few instructions
 as possible are executed.
 
-<p>
-masmx saves electronics and energy, and may be used as the substance
-of thin-layer compilers.<br>masmx makes the miniature more possible,
-and can multiply the performance of giant servers by ten- and twentyfold
+<div    style="color:A0A0A0">
+<blockquote>
+
+masmx saves electronics and energy, and may be used as the substance of thin-layer compilers.<br>
+masmx makes the miniature more possible, and can multiply the performance of giant servers by ten- and twentyfold.<br>
+Language compilers can be reinvented to generate a common macro-assembly language for all targets
+</blockquote>
+</div>
 
 <p>
 Complex EPROM and Flash structures may be described in a few cryptic lines of source code.
@@ -905,7 +909,7 @@ See 4.2.2.2.2.5: Macro Parameters
 
 <h2>4.1: Labels</h2>
 
-A label starts in column 1 and ends in whitespace. A label may contain
+A label starts in column one and ends in whitespace. A label may contain
 <pre>
 
 	letters digits $ _ ? ! @ :
@@ -942,8 +946,14 @@ A label may also start with $ and is then declared in quotes
 "$mylabel"
 
 </pre>
-$ in column one is a program section control called a location counter with syntax <b>$(number[:attributes])</b><br>
+
+<div    style="color:A0A0A0">
+<blockquote>
+$ in column one is a location counter switch.<br>
+A location counter switch is a program section control with syntax <b>$(number[:attributes])</b><br>
 See section 7: Constructing Program Sections
+</blockquote>
+</div>
 
 <p>
 A label declared in quotes starts with anything and contains anything
@@ -962,12 +972,11 @@ Each subscripted instance is a different label
 
 <p>
 Reference to a subscripted label which does not exist
-counts instances of labels identical except for one more
-subscript
+retrieves the count of similar labels with one subscript more 
 
 <p>
-A label <i>label_stem(<b>4,1,20</b>)</i> is the count of labels
-<i>label_stem(<b>4,1,20</b>,&xi;)</i>
+A label <i>label_stem(<b>4,1,20</b>)</i> is for example the
+count of labels <i>label_stem(<b>4,1,20</b>,&xi;)</i>
 
 <pre>
         <i>
@@ -1685,7 +1694,7 @@ The first subfield of the second argument field is referenced macro_name(2, 1)
 
 <p>
 Fields are separated by spaces. Subfields in a field are 
-separated by a comma [and spaces]
+separated by a comma,[ and spaces]
 
 <p>
 There may also be substrings of subfields, separated by the 
@@ -2663,7 +2672,7 @@ addend	$do	p(),	add	p(addend, 1), That
 
 </pre>	
 The $proc name may be any name and it is the handle for reference 
-to actual arguments. For the $proc name p the referencing rules are
+to actual arguments. Inside the $proc name p the referencing rules are
 <pre>
 
 p       $proc
@@ -3120,22 +3129,25 @@ This is next example does not generate a nested literal. It contains an
 expression within a literal:
 <pre>
 
-$ masmx -ln
-MASMX 7r2
+$ masmx -lnk
+MASMX 7r3
 0/-INPUT>>
-	$word	32
-	$set_option	"a"
+	$word	        32
+	$set_option	"a"   
 
+$(4:16384)
 	+	((99)+2)
+$(0:65536)
 	$end
-  :                            1  $word       32
-  :                            2  $set_option "a"
+  :                            1  $word         32
+  :                            2  $set_option "a"   
   :                            3 
-00:00000000 00000001          +4  + ((99)+2)
-  :                            5  $end
-00:00000001+00000065
-:$(00):00000000:00000002 
--INPUT>>: object code 77 bytes: 0 errors: 0 undefined labels
+  :                            4 $(4:16384)
+04:00004000 00010000          +5  + ((99)+2)
+  :                            6 $(0:65536)
+  :                            7  $end
+00:00010000+00000065
+:$(00):00010000:00010001 :$(04):00004000:00004001 
 
 
 </pre>
@@ -3203,6 +3215,12 @@ value is not required on the first pass.<br> Another reason
 may be that two passes of the same function have a
 cumulative effect which is undesirable 
 
+<p>
+It may to the contrary be necessary to expand a function macro on both
+assembly passes, because the function has determining effect how much
+code is generated. See 4.6.2.1.3: Functions affecting Program Displacements
+
+
 <h4>4.6.2.1.2: Non-Idempotent Functions</h4>
 <p>
 Second-pass-only functions are used to generate a data item
@@ -3247,6 +3265,17 @@ f*      $func	*
 
 
 </pre>
+
+<h4>4.6.2.1.3: Functions affecting Program Displacements</h4>
+
+If a function macro returns a value which determines the length
+of code generated, it must be called on both assembly passes,
+unless there are no labels and no literal table subsequent to
+the point where the function macro has its effect
+
+
+
+
 <h4>4.6.2.2: $NAME -entry point and invocation tag</h4>
 
 It's easier to code functions (like $PROCs) if
@@ -10485,7 +10514,7 @@ descriptor $form        16, 48
 
 </pre>
 <p>
-If quote character appears in column 1, or in an expression, it bounds a
+If quote character appears in column one, or in an expression, it bounds a
 label. This allows labels beginning $ to be declared.
 <pre>
 
