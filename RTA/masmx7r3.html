@@ -2870,8 +2870,8 @@ $(2) contains the vector bank. smaragd7 constructs the 4096-word vector-bank on
 process launch at program-visible address 8192 = 02000 hex, based as bank B2
 
 <p>
-$(2) is declared by including vector.def. It is common to the whole process and
-contains elements which are shared between all threads. These include all handle
+$(2) is declared by including vector.def. It is common to all threads of the process
+and contains elements which are shared between all threads. These include all handle
 descriptors and pointers to all initial banks and entry points of this process.
 
 <p>
