@@ -2861,8 +2861,9 @@ $(1:01000)
 </pre>
 
 smaragd7 kernel assigns at least one 4096-word B1 bank at process start, but does not 
-place any values in it. The application may assemble B1 at a read-only load-address
-in the ROM system image, and copy the initial values on startup.
+place any values in it. The application may initialise B1 on startup. Initial values may
+be built into ROM-resident file systems and retrieved for all variable sections with one
+call to library routine <b>seg$load</b>
 
 <p>
 $(2) contains the vector bank. smaragd7 constructs the 4096-word vector-bank on
@@ -2878,7 +2879,7 @@ $(3) is assigned by the kernel to contain the program data in address windows
 B3..B31
 
 <p>
-However at process start B3 is not based and the program's RAM initial data is not loaded
+However at process start B3 is not based and the application RAM initial data is not loaded
 
 <p>
 A typical ROM application memory configuration is
