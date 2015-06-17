@@ -5503,6 +5503,18 @@ plus optionally base-displacement pointer register.<br>The attributes of each fi
 are held in one label of type <b>$equf</b>
 
 <p>
+$record does not have separate template and instance steps. Describing a $record layout is also describing an instance
+
+<p>
+For this reason $record may be found within a $proc macro
+
+<p>
+$proc macros can assign actual arguments to any nested $record in their scope
+
+
+
+
+<p>
 masmx labelling allows macro language specific to the target to read and
 write bit-aligned fields
 
@@ -5576,24 +5588,26 @@ betaille.msm: object code 256 bytes: 0 errors: 0 undefined labels
 
 </pre>
 
-$record does not have separate template and instance steps. Describing a $record layout is also describing an instance
-
-<p>
-For this reason $record may be found within a $proc macro
-
-<p>
-$proc macros can assign actual arguments to any nested $record in their scope
-
-Repeating field groups to any nesting depth are constructed with records inside $proc macros
 
 
 
 <h4>5.2.2.3: Macro Code Access to Bit-Aligned Structures</h4>
 
 
-<h4>5.2.2.1: Simple Structures $RECORD..$ROOT</h4>
-<h4>5.2.2.2: Overlaid Structures $RECORD,$BRANCH..$ROOT</h4>
-<h4>5.2.2.3: Macro Code Access to Bit-Aligned Structures</h4>
+<h4>5.2.2.2: Bit-Aligned Structure Overlay and Overload: $RECORD,$BRANCH..$ROOT</h4>
+
+<b>$record</b> structures can may be overlaid or redifined with the addition of
+<b>,$branch</b> subfunction. The resulting unions are at bit-position precision.
+
+<p>
+Initial values may be overloaded. However masmx load code is in words. Overloads
+on a storage word are not merged
+
+<pre>
+
+
+
+</pre>
 
 <h1>6: Run-Time Algorithm Plotter</h1>
 
@@ -5693,7 +5707,7 @@ The floated <b>#</b> yields in the two illustrated cases these two immediate ope
 
 </pre>
 Target specific macros required for $xqt_i and $xqt_fp have the names called from this target-independent
-ouline scheme
+outline scheme
 
 <pre>
 
