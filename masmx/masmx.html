@@ -5423,7 +5423,9 @@ complex.msm=0<00000003
 
 <h4>5.2.1.4: Structured Code Name Spaces</h4>
 
-<h3>5.2.2: Bit-Aligned Structures $RECORD..$ROOT</h3>
+<h3>5.2.2: Bit-Aligned Structures</h3>
+
+<h4>5.2.2.1: Bit-Aligned Data $record..$root</h4>
 
 <b>$record</b>..<b>$root</b> structures are bit aligned
 
@@ -5513,6 +5515,8 @@ $proc macros can assign actual arguments to any nested $record in their scope
 
 
 
+<h4>5.2.2.2: Macro Code Access to Bit-Aligned Fields and Groups</h4>
+
 
 <p>
 masmx labelling allows macro language specific to the target to read and
@@ -5589,12 +5593,7 @@ betaille.msm: object code 256 bytes: 0 errors: 0 undefined labels
 </pre>
 
 
-
-
-<h4>5.2.2.3: Macro Code Access to Bit-Aligned Structures</h4>
-
-
-<h4>5.2.2.2: Bit-Aligned Structure Overlay and Overload: $RECORD,$BRANCH..$ROOT</h4>
+<h4>5.2.2.3: Bit-Aligned Structure Overlay and Overload: $RECORD,$BRANCH</h4>
 
 <b>$record</b> structures can may be overlaid or redifined with the addition of
 <b>,$branch</b> subfunction. The resulting unions are at bit-position precision.
@@ -5605,6 +5604,116 @@ on a storage word are not merged
 
 <pre>
 
+$ masmx -lnkx moreover.msm 
+MASMX 7r3
+3/moreover.msm
+CONT_CHAR=|
+LTERM=;
+STERM=.
+*EOF*
+  :                            1 	$path		../smaragd.68k
+  :                            5 	$list
+  :                            6 	$path
+  :                            7 
+  :                            8 
+  :                            9 $(3:03000)
+  :                            10 first	$record,$branch	1 2 3
+  :                            11 one	4
+  :                            12 two	4
+  :                            13 three	4
+  :                            14 "O'Leary" 20
+03:00000600 12300000          +15 	$root
+  :                            16 second	$record,$branch
+  :                            17 fill	4
+  :                            18 second1	$record,$branch	4 5 6
+  :                            19 one	4s
+  :                            20 two	4
+  :                            21 three	4
+03:00000600 0456              +22 	$root
+  :                            23 second2	$record,$branch	7 8
+  :                            24 one	4
+  :                            25 two	4
+03:00000600 0780              +26 	$root
+  :                            27 	$root
+  :                            28 third	$record,$branch	63
+  :                            29 longways 18
+03:00000600 000FC000          +30 	$root
+  :                            31 
+  :                            32 new	$record	10 6
+  :                            33 discriminator 4
+  :                            34 first	$record,$branch	"carpets"
+  :                            35 text	48
+03:00000604 A636172706574000  +36 	$root
+  :                            37 second	$record,$branch	10 11 12 13 14 15
+  :                            38 ?	$do	9,quartet(?)	4
+03:00000604 0ABCDEF00000      +39 	$root
+  :                            40 marker	4
+03:0000060A 0600              +41 	$root
+  :                            42 
+03:0000060C 400001E00000000000000000
+                              +43 sum	1.75
+  :                            44 	
+  :                            45 $(0:64)
+00:00000040 10380601          +46 	retrieve	first.three
+00:00000044 E888              +46 
+00:00000046 02800000000F      +46 
+00:0000004C 12380600          +47 	retrieve	second.fill		d1
+00:00000050 E889              +47 
+00:00000052 02810000000F      +47 
+00:00000058 34380600          +48 	retrieve	second.second1.one	d2
+00:0000005C 4842              +48 
+00:0000005E E98A              +48 
+00:00000060 343C001C          +48 
+00:00000064 E4A2              +48 
+00:00000066 16380601          +49 	retrieve	second.second1.three	d3
+00:0000006A 02830000000F      +49 
+00:00000070 38380600          +50 	retrieve	second.second2		d4
+00:00000074 E88C              +50 
+00:00000076 0284000000FF      +50 
+00:0000007C 3A380606          +51 	retrieves	new.second.quartet(5)	d5
+00:00000080 4845              +51 
+00:00000082 E98D              +51 
+00:00000084 3A3C001C          +51 
+00:00000088 EAA5              +51 
+  :                            52 
+*EOF*
+first=$03:00000600,,,,00000020
+first:one=$03:00000600,,,,00000004
+first:two=$03:00000600,,,00000004,00000004
+first:three=$03:00000600,,,00000008,00000004
+first:O'Leary=$03:00000600,,,0000000C,00000014
+second=$03:00000600,,,,00000010
+second:fill=$03:00000600,,,,00000004
+second:second1=$03:00000600,,,00000004,0000000C
+second:second1:one=$03:00000600,,,00000004,80000004
+second:second1:two=$03:00000600,,,00000008,00000004
+second:second1:three=$03:00000600,,,0000000C,00000004
+second:second2=$03:00000600,,,00000004,00000008
+second:second2:one=$03:00000600,,,00000004,00000004
+second:second2:two=$03:00000600,,,00000008,00000004
+third=$03:00000600,,,,00000012
+third:longways=$03:00000600,,,,00000012
+new=$03:00000604,,,,00000038
+new:discriminator=$03:00000604,,,,00000004
+new:first=$03:00000604,,,00000004,00000030
+new:first:text=$03:00000604,,,00000004,00000030
+new:second=$03:00000604,,,00000004,00000024
+new:second:quartet(1)=$03:00000604,,,00000004,00000004
+new:second:quartet(2)=$03:00000604,,,00000008,00000004
+new:second:quartet(3)=$03:00000604,,,0000000C,00000004
+new:second:quartet(4)=$03:00000606,,,,00000004
+new:second:quartet(5)=$03:00000606,,,00000004,00000004
+new:second:quartet(6)=$03:00000606,,,00000008,00000004
+new:second:quartet(7)=$03:00000606,,,0000000C,00000004
+new:second:quartet(8)=$03:00000608,,,,00000004
+new:second:quartet(9)=$03:00000608,,,00000004,00000004
+new:marker=$03:0000060A,,,00000004,00000004
+?=0009
+sum=$03:060C
+../smaragd.68k/record_x.def=1<00000005
+../smaragd.68k/coldfire.def=1<00000005
+moreover.msm=0<00000003
+:$(00):00000040:0000008A :$(03):00000600:00000618 
 
 
 </pre>
