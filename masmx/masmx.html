@@ -12278,37 +12278,14 @@ the macro call line, for example
 p       $proc
 species $name
 *       $tree
-branches +      p(1,1)
-many    $do     p(1,1),branch(many)   $res    4
+many    $do     p(),branch(many)   $res    4
 	$root
 	$end
 
 </pre>
 <p>
-For reference the components of the resulting structured
-labels are separated with the $STERM symbol, default : colon.
-Therefore if the above macro is expanded with label "aspen":
-
-aspen   species 3
-
-<p>
-labels exist called
-<ul>
-		     	aspen:branches, 
-<pre></pre>
-			aspen:branch(1), 
-<pre></pre>
-			aspen:branch(2), 
-<pre></pre>
-			aspen:branch(3)
-
-</ul>
-<p>
-and ASPEN:BRANCHES has 3 assembled into it. 
-
-<p>
 In the following assembly, an 8051 system has four UARTs each
-with their eight register files locationed nearly adjacent at
+with their eight register files located nearly adjacent at
 XRAM addresses 128..135, 144..151, 160..167, 176..191:
 
 <p>
@@ -12321,38 +12298,37 @@ of structured names:
 <pre>
 
 
-MASMX 7r2
+$ masmx uart -lnx
+MASMX 7r3
 3/uart.msm
 CONT_CHAR=
 LTERM=;
 QDELIM='
 STERM=.
 *EOF*
-  :                            1:         $include   "8051_7r2.def"
-  :                            2 
-  :                            3 LSR_RDR EQU     0       ; Data In Receive FIFO
+  :                            3 	$list
   :                            4 
-  :                            5 serial*  $proc     
-  :                            6         $res    (($+15)**-16)-$
-  :                            7 *       $tree          
-  :                            8 rhr
-  :                            9 thr     $res    1
-  :                            10 ier     $res    1
-  :                            11 isr     $res    1
-  :                            12 lcr     $res    1
-  :                            13 mcr     $res    1
-  :                            14 lsr     $res    1
-  :                            15 msr     $res    1
-  :                            16 spr     $res    1
-  :                            17         $root
-  :                            18         $end
-  :                            19 
-  :                            20 '$bit'*       $func
-  :                            21       $if     $bit(1,1:1)<128
-  :                            22       $return (($bit(1,1:1)**31)*/3)++$bit(1,1:2)
-  :                            23       $else
-  :                            24       $return $bit(1,1:1)++$bit(1,1:2)
-  :                            25       $end
+  :                            5 LSR_RDR EQU     0       ; Data In Receive FIFO
+  :                            6 
+  :                            7 serial*  $proc  	$(2)
+  :                            8         $res    (($+15)**-16)-$
+  :                            9 *       $tree          
+  :                            10 rhr
+  :                            11 thr     $res    1
+  :                            12 ier     $res    1
+  :                            13 isr     $res    1
+  :                            14 lcr     $res    1
+  :                            15 mcr     $res    1
+  :                            16 lsr     $res    1
+  :                            17 msr     $res    1
+  :                            18 spr     $res    1
+  :                            19         $root
+  :                            20         $end
+  :                            21 
+  :                            22 '$bit'*	$func
+  :                            23 	$do	$bit(1,1:1)<128,	$return (($bit(1,1:1)**31)*/3)++$bit(1,1:2)
+  :                            24 	$return	$bit(1,1:1)++$bit(1,1:2)
+  :                            25 	$end
   :                            26 
   :                            27 generate* $proc *
   :                            28 Sample:
@@ -12377,7 +12353,7 @@ STERM=.
   :                            47 DATA    equ     1024
   :                            48 TOTAL   equ     4
   :                            49 RTVARS  equ     64
-  :                            50 Full    equ     32
+  :                            50 FULL    equ     32
   :                            51 
   :                            52 $(3:RTVARS)
   :                            53 device  $do     TOTAL,write_cursor(device)      $res    1
@@ -12389,7 +12365,7 @@ STERM=.
   :                            59 
   :                            60 
   :                            61 $(0:64)
-00:0040 20011B                +62 device        $do     TOTAL,  generate
+00:0040 20011B                +62 device	$do	TOTAL,	generate
 00:0043 900085                +62 
 00:0046 E0                    +62 
 00:0047 30E014                +62 
@@ -12443,26 +12419,24 @@ STERM=.
 00:00B6 D204                  +62 
   :                            63 
 *EOF*
-
-....
-
-BUFFER(1)=$01:0400
-BUFFER(2)=$01:0500
-BUFFER(3)=$01:0600
-BUFFER(4)=$01:0700
-
-....
-
+LSR_RDR=00
+SERIAL=:P1:(2)0:22
+$BIT=:F1:23
+GENERATE=:P3:0:24
+DEVICES=0080
+DATA=0400
+TOTAL=04
+RTVARS=40
+FULL=20
+DEVICE=04
+WRITE_CURSOR(1)=$03:40
+WRITE_CURSOR(2)=$03:41
+WRITE_CURSOR(3)=$03:42
+WRITE_CURSOR(4)=$03:43
 READ_CURSOR(1)=$03:44
 READ_CURSOR(2)=$03:45
 READ_CURSOR(3)=$03:46
 READ_CURSOR(4)=$03:47
-
-....
-
-TCON=0088
-TMOD=0089
-TOTAL=04
 UART(1)=$02:0080
 UART(1):RHR=$02:0080
 UART(1):THR=$02:0080
@@ -12503,18 +12477,13 @@ UART(4):MCR=$02:00B4
 UART(4):LSR=$02:00B5
 UART(4):MSR=$02:00B6
 UART(4):SPR=$02:00B7
-VAR=:P1:(1)0:07
-WRITE_CURSOR(1)=$03:40
-WRITE_CURSOR(2)=$03:41
-WRITE_CURSOR(3)=$03:42
-WRITE_CURSOR(4)=$03:43
-XCH=:N1:P:0:0C
-XCHD=:P1:0:1C
-XRL=:N1:P:0:06
-8051_7r2.def=1<0005
+BUFFER(1)=$01:0400
+BUFFER(2)=$01:0500
+BUFFER(3)=$01:0600
+BUFFER(4)=$01:0700
+8051.def=1<0005
 uart.msm=0<0003
 :$(00):0000:00B8 :$(01):0400:0800 :$(02):0080:00B8 :$(03):0040:0048 
-uart.msm: object code 381 bytes: 0 errors: 0 undefined labels
 
 
 </pre>
@@ -12523,10 +12492,8 @@ In the following assembly, a structure is
 constructed at address 0x00037300 in PowerPC system memory. 
 
 <p>
-Components of the structure are accessed with labels containing 
-period . which is conventionally the value given to $STERM in 
-PowerPC definition header files.
-
+PowerPC definition header has <b>term '.'</b>, so the structure
+joins are period
 <p>
 Some of the components are repeated and subscripted. The
 repeat directive is $DO, and the $DO tag value is used
