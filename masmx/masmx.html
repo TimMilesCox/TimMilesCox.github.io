@@ -584,10 +584,8 @@ Appendix F: Target Descriptions
 	 F.1:	8051
 	 F.2:	PowerPC
 
-	 F.3:	Fragment Samples - ColdFire/68000, MIPS, ARM
-	 F.3.1:	68000 and ColdFire
-	 F.3.2:	MIPS
-	 F.3.3:	ARM
+	 F.3:	Definition Examples
+	 F.3.1:	ColdFire
 	 F.4:	Byte-Addressing Machines with 32 and 64 Bit Bus
 		Managing Alignments
 
@@ -16980,29 +16978,10 @@ masmx@gmx.ch
 
 
 
-<h2>F.3: Fragment Samples - ColdFire/68000, MIPS, ARM</h2>
-
-<p>
-Legacy code can be assembled unchanged.
-
-<p>
-In these fragment examples, masmx assembles code in some very individual
-syntaxes which were developed independently for different targets.
-
-<p>
-Keeping pace with architectural extensions is a matter of adding more
-macro language. This can be done anywhere that the target architecture
-is understood.
-
-<p>
-Fragments of definition for ColdFire/68K, MIPS, and ARM are shown here.
-
-<p>
-If you want a whole definition header for these or any machines and
-do not wish to build it from this manual, contact masmx@gmx.ch
+<h2>F.3: Definition Examples</h2>
 
   
-<h2>F.3.1: ColdFire and 68000</h2>
+<h2>F.3.1: ColdFire</h2>
 
 ColdFire instruction encoding appears formidably intricate, but operand
 space may be viewed simply as a set of spaces tagged by the instruction
@@ -17353,7 +17332,7 @@ STERM=.
 The following kernel assembly lists header file excerpts to show
 
 	<blockquote>
-	tokens like -(a7) and w*4 may be labels, and labels may have a class or type.
+	tokens like <b>-(a7)</b> and <b>w*4</b> may be labels, and labels may have a class or type.
 	Different instructions may share one mnemonic name, and label types enable the
 	assembly to pick the correct instruction code for storage operands and registers
 	of multiple categories
@@ -17370,15 +17349,15 @@ The following kernel assembly lists header file excerpts to show
 
 </pre>
 <p>
-	This prevents -(a7) from meaning minus (a7), and for example l*8 from meaning eight times l
+	This prevents <b>-(a7)</b> from meaning minus <b>(a7)</b>, and for example <b>l*8</b> from meaning eight times <b>l</b>
 
 <p>
-	When a macro actual parameter is inserted in a $form as an instruction field, unsigned
-	quotes would produce a character string. The addition of a unary sign, as +"p(1, 1)"
+	When a macro actual parameter is inserted in a <b>$form</b> as an instruction field, unsigned
+	quotes would produce a character string. The addition of a unary sign <b>+"p(1, 1)"</b>
 	produces a label value instead
 
 <p>
-	Application source code references labels like "l*8" and "-(a4)" without quotes 
+	Application source code references labels like <b>l*8</b> and <b>-(a4)</b> without quotes 
 <pre>
 
 		move.w	(displacement, a0, d3.l*8), -(a4)
@@ -17744,23 +17723,23 @@ Managing Alignments</h1>
 
 
 <p>
-Word size set with the $WORD directive cannot always mean the
-architectural word size of the target.
-
-<p>
 If the address quantum of the target is also its word size, then
 then the real architectural word size is the only possible $WORD value.
 
+
 <p>
-This discussion concerns byte-addressing machines.
+Word size set with the $WORD directive may otherwise not always mean the
+architectural word size of the target.
+
 
 <p>
 In masmx $WORD sets the quantum of data which a line of assembly
 can generate. A line may generate no code, a word or some words.
 
 <p>
-Targets which can fetch instructions from any byte address and can have
-instructions one byte long must be described as having the geometry
+A target which can fetch instructions from any octet address and can have
+instructions one or three or five bytes long must be described as having word
+size one octet although its integer registers may be 32 or 64 bits in size
 <pre>
 
 	$cont_char	'|'
@@ -17847,7 +17826,7 @@ granule $set    1*/.align(1,1)
 <p>
 The executables in this package should not harm any
 systems on which you run them. No responsibility is
-accepted for them. They carry no garauntee.
+accepted for them. They carry no guarantee.
 
 <p>
 These are free products.
@@ -17874,7 +17853,7 @@ LICENCE NOTE
 
     This document describes the masmx.7r2 target-independent meta-assembler.
 
-    masmx.7r2 is free software. It is licensed
+    masmx.7r3 is free software. It is licensed
     under the GNU General Public Licence Version 3
 
     You can redistribute it and/or modify masmx.7r2
@@ -17882,7 +17861,7 @@ LICENCE NOTE
     the Free Software Foundation, either version 3 of the License, or
     (at your option) any later version.
 
-    masmx.7r2 is distributed in the hope that it will be useful,
+    masmx.7r3 is distributed in the hope that it will be useful,
     but WITHOUT ANY WARRANTY; without even the implied warranty of
     MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
     GNU General Public License for more details.
