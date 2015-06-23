@@ -17358,8 +17358,8 @@ The following kernel assembly lists header file excerpts to show
 	assembly to pick the correct instruction code for storage operands and registers
 	of multiple categories
 <p>
-	Macro language declares, references and tests labels which are otherwise not
-	recognisable as labels in quotes
+	Macro language declares, references and tests in quotes labels which are otherwise not
+	recognisable as labels
 <pre>
 
 	"-(a7)"		$equ,"$a_reg_@-" 	7
@@ -17370,11 +17370,11 @@ The following kernel assembly lists header file excerpts to show
 
 </pre>
 <p>
-	This prevents -(a7) meaning minus (a7), l*8 meaning eight times l etc.
+	This prevents -(a7) from meaning minus (a7), and for example l*8 from meaning eight times l
 
 <p>
-	When macro actual parameter is inserted in a $form as an instruction field, unsigned
-	quotes produce a character string. The addition of a unary sign, as +"p(1, 1)"
+	When a macro actual parameter is inserted in a $form as an instruction field, unsigned
+	quotes would produce a character string. The addition of a unary sign, as +"p(1, 1)"
 	produces a label value instead
 
 <p>
