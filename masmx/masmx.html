@@ -4570,24 +4570,21 @@ Example
 
 <h2>5.1: $do Directive and $proc Macros</h2>
 
-A 32-bit computer has an integer-to-ASCII routine which translates
-to eight columns with the help of a 10,000 word table
+<b>$do</b> directive repeats a line of code which may be a macro. An optional label is a count value ascending from 1. See also section <b>8.9: $do Directive</b>
 
+<p>
+It this example a routine generating floating constants with 11-bit exponent field uses a table to scale the floating number according to its decimally expressed exponent in the range &plusmin;307
 <pre>
 
-	"0000"
-	"0001"
-	.
-	.
-	.
-	"9999"
+scale	$do	615,	1*+scale-308	. 1.0e[-307..+307]
 
 </pre>
 
-The conversion takes four instructions and a store 
-<p>
-masmx codes this 10,000-word constant under loop control
-<pre>
+A more complex example cascades four <b>$do</b> directives to construct a list of four-digit character numbers in the range "0000" to "9999". This table is used for the rapid conversion of an integer to
+a character string 
+
+A 32-bit computer has an integer-to-ASCII routine which translates
+to eight columns with the help of a 10,000 word table
 
 
 values_table
