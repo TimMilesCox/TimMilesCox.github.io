@@ -4671,16 +4671,21 @@ MASMX 7r3
 
 $(.text:524288,pc)
 
+;	translate a 32-bit unsigned integer in d0 to 12 decimal digits in d0:d1:d2 quickly
+;	three * 4-byte blocks are returned in registers without editing or truncation
+;	this routine may be called from others which action sign / edit / store
+;	the high order two digits of the 12 are guaranteed "00"
+
 i2string
 	divu.w	#10000, d0
-	moveq	#0, d1
-	move.w	d0, d1
+	moveq	#0, d1				; high-order half must be zero
+	move.w	d0, d1				; quotient of first divide may be > 10000
 	divu.w	#10000, d1
-	move.l	(table, pc, d1.w*4), (a0)+
-	swap	d1
-	move.l	(table, pc, d1.w*4), (a0)+
-	swap	d0
-	move.l	(table, pc, d0.w*4), (a0)+
+	swap	d0				; remainder to ls half d0
+	move.l	(table, pc, d0.w*4), d2		; low-order 4 digits
+	move.l	(table, pc, d1.w*4), d0 	; high-order 4 digits
+	swap	d1				; remainder to ls half d1
+	move.l	(table, pc, d1.w*4), d1		; 5th..8th digits
 	rts
 
 table
@@ -17354,7 +17359,7 @@ STERM=.
 00:000000BE 427A0060          +128 	pea		table_u		; the table start is the minimum address
 00:000000C2 B1DF              +129 	cmpa		(a7)+, a0	; are you lower than that?
 00:000000C4 6B0E              +130 	bmi.b		outrange	; yes you are. NAN
-00:000000C6 427A1390          +131 	pea		table_u+615*8	; the table end is the maximum address + 1 instance
+00:000000C6 427A1390          +131 	pea		table_u+615*8	; the table ends after the last instance
 00:000000CA B1DF              +132 	cmpa		(a7)+, a0	; are you lower than that?
 00:000000CC 6A06              +133 	bpl.b		outrange	; no you're not. NAN
 00:000000CE F21054A3          +134 	fmul.d		(a0), fp1	; the exponent is in range
