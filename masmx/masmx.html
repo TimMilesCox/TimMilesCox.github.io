@@ -11922,10 +11922,55 @@ A suitable parameter set for 8-bit microcontrollers is
 </pre>
 
 <h2>8.57: $xqt_i		run-time integer algorithm plotter</h2>
+
+<b>$xqt_i</b> directive generates a runtime integer algorithm instruction stream
+<pre>
+
+	$xqt_i	<i>expression</i>
+	
+</pre>
+See section <b>6.1: Run-Time Integer Algorithm Plotter $xqt_i
+
 <h2>8.58: $xqt_fp		run-time floating algorithm plotter</h2>
+
+<b>$xqt_fp</b> directive generates a runtime floating algorithm instruction stream
+
+<pre>
+
+	$xqt_i	<i>expression</i>
+	
+</pre>
+See section <b>6.2: Run-Time Floating Algorithm Plotter</b>
+
 <h2>8.59: $zero_code_point  character string escaped zero value</h2>
 
+<b>$zero_code_point</b> directive sets the value which represents embedded zero in a quoted string
+to distinguish data byte value zero from end of string or line. default 2700 hex
 
+<pre>
+
+	$zero_code_point	<i>expression</b>
+
+</pre>
+The default value of zero code point is 2700 hex.
+Zero code point is changed from its current value if that clashes with a data value required in the string 
+<pre>
+
+$ masmx zcp -lnk
+MASMX 7r3
+3/zcp.msm
+*EOF*
+  :                            1 	$set_option	"c"
+  :                            2 	$word	32
+  :                            3 	$byte	16
+  :                            4 
+  :                            5 	$zero_code_point	0x40000000
+00:00000000 27000000          +6 	"\x2700\x0000"
+  :                            7 
+*EOF*
+:$(00):00000000:00000001 
+
+</pre>
 
 <h1>9: Output File Formats, Relocation, Linking, Giant Address Spaces
    Interfacing with GNU Tools</h1>
