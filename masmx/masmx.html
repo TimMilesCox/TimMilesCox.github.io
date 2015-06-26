@@ -5277,23 +5277,8 @@ moreover.msm=0<00000003
 
 </pre>
 
-<h1>6: Run-Time Algorithm Plotter</h1>
-
-<p>
-Assemblers mostly resolve expressions whose tokens are all known at assembly time
-
-<p>
-<b>$xqt_fp</b> and <b>$xqt_i</b> directives code an instruction plan in a<br>
-compiler-like fashion however, to solve expressions involving run-time variables<br>
-first resolving subexpressions whose tokens are known at assembly time
-
-<p>
-These instruction steps are planned with the support of target-specific macros with<br>
-fixed call-names known to masmx 
 
 <h4>5.2.2.4</h4>
-
-	<h3>7.7.5: Signed Bit Field and Macro Language</h3>
 
 Option <b>-Y</b> causes bit fields to be flagged as signed unless the length is marked
 with trailing <b>u</b>
@@ -5383,6 +5368,21 @@ SIGNED  $set    p(2, *5)+p(0, 0)/*1
 
 </pre>
 
+
+
+<h1>6: Run-Time Algorithm Plotter</h1>
+
+<p>
+Assemblers mostly resolve expressions whose tokens are all known at assembly time
+
+<p>
+<b>$xqt_fp</b> and <b>$xqt_i</b> directives code an instruction plan in a<br>
+compiler-like fashion however, to solve expressions involving run-time variables<br>
+first resolving subexpressions whose tokens are known at assembly time
+
+<p>
+These instruction steps are planned with the support of target-specific macros with<br>
+fixed call-names known to masmx 
 
 
 <h2>6.1: Run-Time Integer Algorithm Plotter $xqt_i</h2>
