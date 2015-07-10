@@ -17118,10 +17118,10 @@ This group of problems all stem from code changing in size between the first
 and second assembly passes
 
 <p>
-It is permissible for code to change in size unless in consequence
+It is permissible for code to change in size unless
 
 	<blockquote>
-	a storage address label changes<br><br>
+	a storage address label consequently changes in value<br><br>
 
 	the code is followed by a literal table
 	</blockquote>
@@ -17226,29 +17226,36 @@ pattern	$equ	0800000000000
 
 </pre>
 
-In this following example instruction formats have changed on
-the second pass as a result of function macros which were not
-expanded on the first path. There is then a conflict between
-the literal table load address and code preceding it
+The following example concerns a target architecture with
+more than one instruction size for operands in register or
+address space, with or without pointer offset
+
+Instruction formats have changed on the second pass as a result
+of function macros which were not expanded on the first path.
+There is then a conflict between the literal table start address
+and the code end address
 
 <pre>
 
 f       $func   *
-constant* $name
+constant_token* $name
+__FORMAT* $set	7*/3++2
         $do     f(1, 1:2)=s,    $return literal(ieee754_32 f(1, 1))
-        $return literal(iee754_64 f(1, 1))
+        $do	f(1, 1:2)=d,	$return literal(ieee754_64 f(1, 1))
         $end
 
 </pre>
 
 In this case the function  must be a two-pass function and then the
-literal table originates immediately after the code
+second assembly pass generates code matching the size estimated in
+the first assembly pass
 <pre>
 
 f       $func
-constant* $name
+constant_token* $name
+__FORMAT* $set
         $do     f(1, 1:2)=s,    $return literal(ieee754_32 f(1, 1))
-        $return literal(iee754_64 f(1, 1))
+	$do	f(1, 1:2)=d,	$return literal(ieee754_64 f(1, 1))
         $end
 
 </pre>
