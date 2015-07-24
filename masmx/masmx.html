@@ -4855,9 +4855,12 @@ Example
 See also section <b>8.9: $do Directive</b>
 
 <p>
-It this example a routine generating floating constants with 11-bit exponent field uses a table to scale the floating number according to its decimally expressed exponent in the range &plusmn;307
+This $do example generates 615 floating constants with 11-bit exponent field.<br>
+A scan routine uses this table to scale a floating number by its decimally
+expressed exponent in the range &plusmn;307
 <pre>
 
+powers10_table
 scale	$do	615,	1*+scale-308	. 1.0e[-307..+307]
 
 </pre>
