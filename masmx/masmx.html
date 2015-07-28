@@ -89,7 +89,7 @@ However very large address spaces are often partly populated,<br>
 with system memory at low-order addresses and boot or peripheral logic
 at the highest addresses.<br>No force of convention can prevent a a semiconductor supplier
 from devising, for example, a 72-bit address space<br> where the 8 high-order bits select
-memory and peripheral busses
+memory and peripheral buses
 
 </blockquote>
 </div>
@@ -1597,7 +1597,7 @@ See also <a href="#internalf">4.7: masmx Internal Functions in Detail</a>
 All labels internal to masmx, these internal function names and also
 <a href="#Directives">directives plus subcommand names</a>
 may always be referenced in lowercase.<br>
-With <a href="#option_k">option -k</a> masmx-supplied names may only be referenced in lowercase
+With <a href="#option_k">option -k</a> masmx-supplied names may <i>only</i> be referenced in lowercase
 
 <p>
 Internal functions are in summary
@@ -1649,7 +1649,7 @@ Internal functions are in summary
 			for relocatable sections
 
 	$rel(..)	relocation alignment of named program section
-			returns zero for absolute sections and nozero
+			returns zero for absolute sections and nonzero
 			for relocatable sections
 
 	$t(..)		label type
@@ -4311,7 +4311,7 @@ parentheses, and 1 is returned if the equivalent flag is on, for example:
 	$endif 
 
 </pre>
-Flags -<b>abcdefghjklmnopqrsuvwxyzDFGQYZ+</b> are set at any or several positions of
+Flags -<b>abcdefghjklmnopqrsuvwxyzDEFGQYZ+</b> are set at any or several positions of
 the <a href="#commandline">command line</a><br>
 or with the exception of flags -<b>ksy</b> with the <a href="#set_option">$set_option</a> directive
 
@@ -7171,6 +7171,10 @@ Load code and label references are in one linear space. Each breakpoint part may
 exact giant address reached in the previous part. This example is a linking assembly which
 catenates four relocatables each containing space of three gigabytes. Load code is distributed
 sparsely in this assembly
+
+<p>
+<a href="#option_d">Option -d</a> adds the giant step component to address summary information
+
 <pre>
 
 $ masmx globules -lnkydx
@@ -14538,6 +14542,10 @@ The displayed summary information only shows the non-giant parts of
 the addresses, but the label values and the text-encoded binary
 (and the generated code listed because of <b>$list 2</b>) show the
 whole addresses.
+
+<p>
+<a href="#option_d">Option -d</a> adds the giant step component to address summary information
+
 <pre>
 
 
@@ -14822,7 +14830,13 @@ index	$do	p(),	word	p(index, 1)
 
 <p>
 The eighth link increments relocatable gzactor.txo on the end of the giant
-address absolute from the seventh link. 
+address absolute from the seventh link.
+
+<p>
+<a href="#option_d">Option -d</a> at the linking assembly adds the giant step component to address summary information
+
+
+ 
 <pre>
 
 $ ../cat gzactor.msm
@@ -15013,7 +15027,8 @@ $01:000A00F4
 
 
 <p>
-The tenth link does a void include with giant addresses:
+The tenth link does a void include with giant addresses.
+<a href="#option_d">Option -d</a> adds the giant step component to address summary information
 
 <pre>
 
@@ -16767,6 +16782,11 @@ The full set of masmx command line options are
 		-see <a href="#breakpoint">7.1.2: Breakpointed Location Counters</a>
 
 		-see also <a href="#option_v">-v flag</a>
+
+		in <a href="#giantspace">7.1.6: Giant Address Spaces</a>, -d option adds
+		the giant step component to address summary information
+
+		See also <a href="#link7">9.2.3.7: Giant Address Space Linking</a>, <a href="#link8">9.2.3.8</a>, <a href="#link10">9.2.3.10</a>
 
 	-e      list generated code in one-word fields
 
