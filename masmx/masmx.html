@@ -8453,7 +8453,7 @@ is not assembled.
 
 <p>
 $do can only iterate one line of code, but that line can be a macro call.
-See section 5.1 <a href="#domac">>$do Directive and $proc Macros</a>
+See section 5.1 <a href="#domac">$do Directive and $proc Macros</a>
 
 
 <a      name="else"/>
@@ -9650,8 +9650,7 @@ exported.
 
 <p>
 In this example
-<b>yasimi</b> is listed  and exported and <b>yadont</b> is not.
-<b>yasimi</b> and <b>yadont</b> are both available in this assembly
+<b>yasimi</b> is listed and exported and <b>yadont</b> is not
 <pre>
 
 $ cat yasimi.msm
@@ -9692,8 +9691,8 @@ $04:00000400
 
 <p>
 Here is an extract from a cumulative link source. The
-names in reloca.txo must be passed on. But here it is not wished or
-needed to list the text encoded binary code from reloca.txo
+names in reloca.txo must be passed on. 
+The binary code from reloca.txo is not listed
 <pre>
 
 	$list		0
@@ -9706,41 +9705,13 @@ needed to list the text encoded binary code from reloca.txo
 
 </pre>
 <p>
-The names in reloca.txo are catalogued and exported because -1
-is not zero. In fact the default <b>$list</b> value of 1 would have the
-same effect here, because <b>$list 1</b> does not list any files
-which are included in other files.
+The exported names in reloca.txo are included in label lists re-exported
+because -1 is not zero. The default <b>$list</b> value of 1 would have the
+same effect here, because <b>$list 1</b> does not list included files
+
 
 <p>
-Whenever source is listed, so is any code generated from each 
-source line. The following assembled example generates 7500 
-labels which have the values name(1)..name(7500) and generates
-7500 constants with the value of each label.
-
-<p>
-Listing is turned off before name(3) and turned on again
-before name(7497)
-<pre>
-
-
-3/names.msm
-*EOF*
-  :                            1 
-  :                            2 this*  $proc
-  :                            3         $do     times=3,   $list 0
-  :                            4         $do     times=7497, $list 1
-  :                            5 name(times)*        +       name(times)
-  :                            6         $end
-  :                            7 
-00:000000 000000              +8 times  $do     7500,   this
-00:000001 000001              +8 
-00:001D48 001D48              +8 
-00:001D49 001D49              +8 
-00:001D4A 001D4A              +8 
-00:001D4B 001D4B              +8 
-*EOF*
-:$(00):000000:001D4C 
-names.msm: object code 52537 bytes: 0 errors: 0 undefined labels
+When source lines are listed, so is code generated from them.
 
 
 </pre>
