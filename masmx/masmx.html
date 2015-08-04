@@ -89,7 +89,7 @@ However very large address spaces are often partly populated,<br>
 with system memory at low-order addresses and boot or peripheral logic
 at the highest addresses.<br>No force of convention can prevent a a semiconductor supplier
 from devising, for example, a 72-bit address space<br> where the 8 high-order bits select
-memory and peripheral buses
+among memory and peripheral buses
 
 </blockquote>
 </div>
@@ -962,7 +962,7 @@ A label starts in column one and ends in whitespace. A label may contain
 	letters digits $ _ ? ! @ :
 
 </pre>
-and starts with a letter or [ _ ? ! @ : ]
+and a label starts with a letter or [ _ ? ! @ : ]
 
 <p>
 : in this list of legal label characters represents the substring separator which is
@@ -1167,8 +1167,7 @@ Operators by rank are
 	--<br>
 	++<br>
 	/*<br>
-	*/<br>
-	*/-<br>
+	*/ */-<br>
 	**<br>
 	*+ *-<br>
 	+ -<br>
@@ -1848,7 +1847,7 @@ address_B	$net_socket	172.29.6.8:23
 
 
 <a      name="command"/>
-<h3>4.3: The Command Field</h3>
+<h2>4.3: The Command Field</h2>
 
 
 The command field (the first field which is preceded by any
