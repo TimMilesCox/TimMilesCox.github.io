@@ -1,0 +1,131 @@
+Preliminary	masmx.7r3	Distribution 01 July 2015
+___________	_________	_________________________
+
+
+
+        _________________________________________________
+        |       Copyright Tim Cox, 2015			|
+        |                                               |
+        |       This document describes the masmx.7r3   |
+        |        target-independent meta-assembler      |
+        |                                               |
+        |       The masmx.7r3 meta-assembler is free    |
+        |       software licensed with the GNU General  |
+        |       Public Licence Version 3                |
+        |                                               |
+        |       The same licence encompasses all        |
+        |       accompanying software and documentation |
+        |                                               |
+        |       The full licence text is included with  |
+        |       these materials                         |
+        |                                               |
+        |       See also the licensing notice at the    |
+        |       foot of this document                   |
+        |_______________________________________________|
+
+
+
+
+Status of Delivered Documents
+_____________________________
+
+
+Documents in this directory masmx.7r3/doc are:
+
+	masmx.7r3/doc/masmx.html
+
+	this release note
+
+	GNU General Public Licence Version 3
+
+
+
+Status of Delivered Binaries
+____________________________
+
+
+	Proprietary Unix Platforms
+	__________________________
+
+	Mac OS X / PowerPC G4		DELIVERED IN THIS PACKAGE
+
+	Mac OS X / ix86			DELIVERED IN THIS PACKAGE
+
+	Sun Sparc Solaris		pending
+
+
+	Linux Platforms
+	_______________
+
+	UBUNTU Linux / ix86		DELIVERED IN THIS PACKAGE
+
+
+
+	Microsoft Platforms
+	___________________
+
+	extended memory MS DOS		pending
+
+	640K MS DOS			pending
+
+	MS Windows 32-bit		DELIVERED IN THIS PACKAGE
+
+	________________________________________________________
+
+	all the DOS binaries run on all 32-bit Windows platforms
+
+
+
+Product Components
+__________________
+
+All the binaries delivered are standalone programs.
+
+Delivered binary masmx contains all the features described in the
+manual.
+
+imx converts the output of masmx and masmz to 16-bit address I-Records.
+
+mmx converts the output of masmx and masmz to 32-bit address S-Records.
+
+The masmx features absent from masmz are hierarchical data structure
+and runtime algorithm plotter.
+
+The directives $TREE $BRANCH $ROOT $RECORD $XQT_I $XQT_FP
+are therefore absent from masmz.
+
+
+
+Assistance
+__________
+
+For assistance contact masmx@gmx.ch
+         Telephone +41 78 629 86 11
+
+_______________________________________________________________________________________
+
+
+LICENCE NOTE
+
+    Copyright Tim Cox, 2015
+    TimMilesCox@gmx.ch
+
+    This document describes the masmx.7r3 target-independent meta-assembler.
+
+    masmx.7r3 is free software. It is licensed
+    under the GNU General Public Licence Version 3
+
+    You can redistribute it and/or modify masmx.7r3
+    under the terms of the GNU General Public License as published by
+    the Free Software Foundation, either version 3 of the License, or
+    (at your option) any later version.
+
+    masmx.7r3 is distributed in the hope that it will be useful,
+    but WITHOUT ANY WARRANTY; without even the implied warranty of
+    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    GNU General Public License for more details.
+
+    You should have received a copy of the GNU General Public License
+    along with masm.7r3.  If not, see &lt;http://www.gnu.org/licenses/&gt;.
+
+

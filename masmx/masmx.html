@@ -186,7 +186,9 @@ For assistance building macro definition text for a new target, contact masmx@gm
 
 <p>
 masmx may be hosted on MAC OS X PowerPC G4, MAC OS X Intel ix86, Sun SPARC Solaris,<br>
-UBUNTU and DEBIAN Linux x86, MS DOS and MS Windows 32-bit.
+Ubuntu Linux x86, MS DOS and MS Windows 32-bit.
+Consult the <a href="http://TimMilesCox.github.io/masmx/rel_note.txt">release note</a>
+for actual delivered binaries
 
 
 <pre>
@@ -3823,21 +3825,21 @@ The data word at location CONSTANT to contains the value 4103
 <a      name="absolute"/>
 <h3>4.7.2: $a	absolute address</h3>
 
-$a is the absolute address relative to the program space
+$a retrieves an absolute address value of a
+<a href="#bdflat">base-displacement</a> identifier,
+where $ produces only a displacement
+<p>
 
 <p>
-Constants of base-displacement labels and location counters only contain
+Constants of base-displacement identifiers and location counters only contain
 the displacement. $a adds the section base whether it is already known or
 relocatable
 
 <a      name="absolute_here"/>
 <h4>4.7.2.1: $a	current absolute address</h4>
 
-$a retrieves an address constant within a base-displacement section, where $
-produces only a displacement
-<p>
 $a without parameter is the current absolute address. Here $ and $a
-can be compared
+are in the left and right halves of a quadword storage constant
 <pre>
 
 $ masmx -lnk
@@ -3846,12 +3848,12 @@ MASMX 7r3
         $word   16
 $(44:0FC00,5)
         $res    10
-	+	$, $a:q
+	+	$, $a:Q
         $end
   :                            1         $word   16
   :                            2 $(44:0FC00,5)
   :                            3         $res    10
-2C:000A 0000000A0000FC0A      +4         +       $, $a:q
+2C:000A 0000000A0000FC0A      +4         +       $, $a:Q
   :                            5         $end
 :$(2C):FC00:FC0E 
 
@@ -3878,8 +3880,8 @@ $(15:*8, 9)     . relocation alignment 8, base register 9
 :$(0F):000000:000008 
 
 </pre>
-A relocation request is attached to the $a reference. A storage constant or
-receiving field must be large enough to contain the linked absolute address
+A relocation request is attached to the $a value. The receiving field of a
+storage constant must be large enough to contain the linked absolute address
 
 <a      name="absolute_there"/>
 <h4>4.7.2.2: $a(..)     absolute value of expression</h4>
@@ -3928,14 +3930,18 @@ $a attached a relocation request to the reference to relocatable identifier loca
 Simple constants of base-displacement identifiers only retrieve the displacement
 
 <p>
-$a has no function for addresses in void sections, where the base
-pointer value is not available at either assembly or link
+$a has no function for addresses in <a href="#voidsection">void sections</a>,
+where the base pointer value is not available at either assembly or link
+
 
 <p>
 A breakpoint value in the locator declaration concerns hardware address translation
-and is a load address or handle known at assembly time<br>
-$a(<i>location</i>) includes the program-absolute base address 0C000.
-The load address 0FC0000 is not accessed
+and is a load address or handle known at assembly time
+
+<p>
+$a(<i>location</i>) in this assembly includes the program-absolute base address 0C000.
+The load address 0FC0000 is not part of the program-absolute address.<br>
+See <a href="#bdbreakpt">7.1.4: Base+Displacement in Translated Address Spaces</a>
 <pre>
 
 $ masmx -lnkyx
@@ -3960,7 +3966,11 @@ location=$0C:00000030,00000005
 :$(0C):0000C000:0000C030 
 
 </pre>
-A starred breakpoint is part of program-absolute addresses. $a retrieves the large absolute value
+A starred breakpoint is part of program-absolute addresses
+(<a href ="#bdgiant">7.1.6.2: Giant Address Base-Displacement</a>)
+
+<p>
+$a retrieves the large absolute value
 <pre>
 
 $ masmx -lnkx
@@ -6935,6 +6945,11 @@ Lines 12..13 place the section start address in r15 at runtime
 Lines 14..16 retrieve operands which r15 covers.
 Identifiers in section $(48) are base-displacement. r15 is referenced automatically
 
+<p>
+Function <b>.absolute</b> at lines 9, 12, 13 is an equate of masmx internal function
+<a href="#absolute">$a</a>,<br>
+which retrieves the absolute value of a base-displacement identifier 
+
 <pre>
 
 $ masmx qplain -lnkyd
@@ -6990,6 +7005,13 @@ Multi-bank images for relocating hardware can be generated in this way.
 <p>
 The displacements used in operand reference do not reflect either
 HARDWARE_LOADA or SEGMENT, but SEGMENT is in r15
+
+<p>
+Function <b>.absolute</b> at lines 11, 14, 15 is an equate of masmx internal function
+<a href="#absolute">$a</a>,<br>
+which retrieves the program-absolute value of a base-displacement identifier.<br>
+The breakpoint address HARDWARE_LOADA is not part of program-absolute addresses
+
 
 <p>
 The assembly is run with -d Flag to show absolute load addresses.
@@ -18016,10 +18038,10 @@ STERM=.
 The following kernel assembly lists header file excerpts to show
 
 	<blockquote>
-	tokens like <b>-(a7)</b> and <b>w*4</b> may be labels, and labels may have a class or type.
+	tokens like <b>-(a7)</b> and <b>w*4</b> may be labels. Labels have a class or type.
 	Different instructions may share one mnemonic name, and label types enable the
-	assembly to pick the correct instruction code for storage operands and registers
-	of multiple categories
+	assembly to pick the correct instruction code for storage operands and for multiple
+	categories of registers
 <p>
 	Macro language declares, references and tests in quotes labels which are otherwise not
 	recognisable as labels
