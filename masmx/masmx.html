@@ -4996,15 +4996,16 @@ $(.text:524288,pc)
 ;	the high order two digits of the 12 are guaranteed "00"
 
 i2string
-	divu.w	#10000, d0
-	moveq	#0, d1				; high-order half must be zero
-	move.w	d0, d1				; quotient of first divide may be > 10000
-	divu.w	#10000, d1
-	swap	d0				; remainder to ls half d0
-	move.l	(table, pc, d0.w*4), d2		; low-order 4 digits
-	move.l	(table, pc, d1.w*4), d0 	; high-order 4 digits
-	swap	d1				; remainder to ls half d1
-	move.l	(table, pc, d1.w*4), d1		; 5th..8th digits
+	move.l	#100000000, d2
+	move.l	d0, d1
+	divu.l	d2, d0				; separate the high-order 2 columns
+	remu.l	d2, d1				; separate the low-order 8 columns
+	divu.w	#10000, d1			; split to 4-column groups
+	swap	d1				; translate the low-order 4 columns
+	move.l	(table, pc, d1.w*4), d2
+	swap	d1				; translate the next 4 columns
+	move.l	(table, pc, d1.w*4), d1
+	move.l	(table, pc, d0.w*4), d0		; translate the high-order 2 columns
 	rts
 
 table
