@@ -4997,9 +4997,8 @@ $(.text:524288,pc)
 
 i2string
 	move.l	#100000000, d2
-	move.l	d0, d1
+	remu.l	d2, d1:d0			; separate the low-order 8 columns
 	divu.l	d2, d0				; separate the high-order 2 columns
-	remu.l	d2, d1				; separate the low-order 8 columns
 	divu.w	#10000, d1			; split to 4-column groups
 	swap	d1				; translate the low-order 4 columns
 	move.l	(table, pc, d1.w*4), d2
