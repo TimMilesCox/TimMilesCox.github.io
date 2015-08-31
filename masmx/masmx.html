@@ -10724,13 +10724,15 @@ value	$set	parameter_label
 
 </pre>
 
+
+<a	name="long_absolute"/>
 <p>
 When the absolute address space is between 33 and 192 bits, the
-large relocation value is retrieved with a second $pushrel and
-not from the label holding the parameter list:
+large relocation value is retrieved with a second $pushrel from
+the input binary superword
 <pre>
 
-value	$pushrel,$long_absolute		relocation_clause
+value	$pushrel,$long_absolute	superword
 
 </pre>
 
@@ -11588,29 +11590,34 @@ Paraform language in macros for retrieving subfields always has the separator :
 
 <pre>
 
-$ masmx -lnk
-MASMX 7r3
-0/-INPUT>>
-	$sterm	'.'
-STERM=.
-
-p	$proc
-extract* $name  
-	+	p(1, 1:2)
-	$end
-
-	extract	5.4.3
-	$end
-  :                            1  $sterm '.'
-  :                            2 
-  :                            3 p $proc
-  :                            4 extract* $name  
-  :                            5  + p(1, 1:2)
-  :                            6  $end
-  :                            7 
-00:000000 000004              +8  extract 5.4.3
-  :                            9  $end
-:$(00):000000:000001 
+  :                            1  $word 16
+  :                            2  $quantum 8
+  :                            3
+  :                            4 f       $func
+  :                            5 "$net_ipv4"* $name
+  :                            6
+  :                            7 net     $set    0
+  :                            8         $sterm  '.'
+  :                            9
+  :                            10 ?       $do     f(1, 1:),net     $set    net*/8++f(1, 1:?)
+  :                            11
+  :                            12         $sterm  ':'
+  :                            13
+  :                            14         $return net
+  :                            15         $end
+  :                            16
+  :                            17
+  :                            18 "$netp" $form   32, 16
+  :                            19
+  :                            20 p       $proc
+  :                            21 "$net_socket"* $name
+  :                            22         $netp   $net_ipv4(p(1, 1:1)), p(1, 1:2)
+  :                            23         $end
+  :                            24
+00:0000 AC1D07091F90          +25 address_A $net_socket 172.29.7.9:8080
+00:0006 AC1D06080017          +26 address_B $net_socket 172.29.6.8:23
+  :                            27  $end
+:$(00):0000:000C
 
 </pre>
 
@@ -11760,20 +11767,6 @@ Directive
 </pre>
 <p>
 Displays the value of its argument
-<pre>
-
-
-p       $proc
-add     $name   1
-subtract $name  2
-	aform   $n, p(1,1), p(1,2)
-	$trace  p(1, 1)
-	$end
-
-</pre>
-<p>
-That would show the left side operand of the add or subtract
-instruction.
 
 <p>
 To produce $trace on the first assembly pass, a subcommand
@@ -11824,17 +11817,13 @@ many    $do     p(),branch(many)   $res    4
 
 </pre>
 <p>
-In the following assembly, an 8051 system has four UARTs each
-with their eight register files located nearly adjacent at
-XRAM addresses 128..135, 144..151, 160..167, 176..191:
+In the following assembly, an 8051 controller drives four UARTs
+with register files in four address ranges
 
 <p>
-The input side of a device driver scans each receive channel.
-The code is generated using a structure with subscripted
-components. 30 bytes of code is generated to scan each UART
-for input. A developer might choose to do this with a variable
-pointer instead, but this sample shows how to do it with trees
-of structured names:
+30 bytes of code is generated to scan each UART
+for input. The unrolled routine controls four structures
+without varying a pointer or a counter
 <pre>
 
 
@@ -14090,11 +14079,6 @@ In order to see all over the large address space, the entry sequence
 to external-visible routines bases a literal pool, which contains
 64-bit pointers to 64K parts of storage.
 
-<p>
-It would be possible to base the assembly's own static along with its
-literal pool, if  components like zero-initial static, nonzero
-initial static and public data were placed in one section.
-
 <pre>
 
 MASMX 7r2
@@ -14553,11 +14537,7 @@ gfactor.msm: object code 847 bytes: 0 errors: 1 undefined labels
 
 
 <p>
-The seventh link places relocatables in giant absolute address space.
-The displayed summary information only shows the non-giant parts of
-the addresses, but the label values and the text-encoded binary
-(and the generated code listed because of <b>$list 2</b>) show the
-whole addresses.
+The seventh link places relocatables in giant absolute address space
 
 <p>
 <a href="#option_d">Option -d</a> adds the giant step component to address summary information
@@ -14756,30 +14736,31 @@ $24:00000020
 </pre>
 <p>
 Segments are always gathered by section with giant addresses. The
-giant addresses can come from the link source or from the input
-Text Encoded Binary
+giant addresses are retrieved from the link control source or the
+text encoded binary input
 
 <p>
-The <b>$map</b> macro used in giant space has this structure.
+The <b>$map</b> macro used in giant space has the structure illustrated
+below
 
 <p>
-Where operand fields can relocate out of their range and then
-relocate back into range again, because of multiple relocation
-clauses for relative address calculations, a value <b>sum</b> is
-maintained at 192-bits precision.
+Where operand fields may relocate out of their target field range
+and then relocate back into range again as multiple relocation
+clauses are applied, a value <b>sum</b> is maintained at 192-bits precision.
 
 <p>
-The $info subcommand $range_check requires only the last written
-value to be in field range.
+The <a href="#info_range">$info</a> subcommand <a href="#info_range">$range_check</a>
+requires only the final value to be in field range
 
 <p>
-The $pushrel subcommand $long_absolute allows a segment base value
-or external label value 192 bits in size to be retrieved
+The <a href="#pushrel">$pushrel</a> subcommand <a href="#long_absolute">$long_absolute</a>
+allows a segment base value or external label value 192 bits in size to be retrieved
 <pre>
 
 p	$proc
 "$map"*	$name
 
+<div	style="color:blue">
 p	$proc
 superword* $name
 parts	$set	p(1,1:)
@@ -14787,10 +14768,12 @@ parts	$set	p(1,1:)
 
 column	$set	$bits
 
-part	$do	parts-1,	relocate	p(1, 1:part)
+part	$do	parts-1,	<a style="color:red">relocate	p(1, 1:part)</a>
 	$load,$bits	$data
 	$end	. SUPERWORD
+</div>
 
+<a	style="color:red">
 p	$proc
 relocate* $name
 
@@ -14833,8 +14816,10 @@ field	$set	sum+(($data/*scale)**mask)
 "$data"* $set	(field*/scale)++($data**unmask)
 
 	$end	. RELOCATE
+</a>
 
-index	$do	p(),	word	p(index, 1)
+
+index	$do	p(),	<a style="color:blue">superword	p(index, 1)</a>
 	$end	. $map
 
 </pre>
@@ -14985,13 +14970,22 @@ $24:00000028
 <h4>9.2.3.9: Linking with Void Inclusion</h4>
 
 <p>
-The ninth and tenth links have void inclusions. A void inclusion integrates
-the new code onto the referenced absolute without including the referenced
-absolute. So the new Text Encoded Binary knows the addresses in the
-referenced absolute, but is a separate load.
+The ninth and tenth links have void inclusions
 
 <p>
-relocatable zactor.txo is integrated with absolute image2 = soso + factor:
+A void inclusion retrieves addresses from another binary without
+including its code. The new text-encoded binary is a separate load
+
+
+<p>
+relocatable zactor.txo is incremented onto the storage map of absolute
+image2 = soso + factor and imports its export labels, but does not include
+image2
+
+<p>
+A link with void inclusions may import labels but have an otherwise 
+independent storage map
+
 <pre>
 
 $ ../masmx map9 -l
@@ -15233,7 +15227,7 @@ For strings to be bounded by apostrophe
 
 </pre>
 <p>
-or maybe
+or
 <pre>
 
 	$quote  ''''
@@ -16236,7 +16230,7 @@ For default $characteristic assignments per floating number size see
 
 
 <a      name="fpdifferences"/>
-<h3>11.3.1: Differences between masmx Floating Format at IEEE754 Floating Formats</h3>
+<h3>11.3.1: Differences between masmx Floating Format and IEEE754 Floating Formats</h3>
 
 <p>
 This package contains macros for assembling 128-bit,  64- and 32-bit
@@ -18031,15 +18025,15 @@ The following kernel assembly lists header file excerpts to show
 	assembly to pick the correct instruction code for storage operands and for multiple
 	categories of registers
 <p>
-	Macro language declares, references and tests in quotes labels which are otherwise not
-	recognisable as labels
+	Macro language uses quotes to declare and reference labels which could not otherwise
+	be intentified
 <pre>
 
 	"-(a7)"		$equ,"$a_reg_@-" 	7
 
 	"w*4"		$equ,$special_reg	0*/2++2
 
-	$do		$t("p(1, 1)")="$a_reg_@+",	$formX	p(0, 0), p(1, 2), 3, +"p(1, 1)"
+			$do	$t("p(1, 1)")="$a_reg_@+",	$formX	p(0, 0), p(1, 2), 3, +"p(1, 1)"
 
 </pre>
 <p>
