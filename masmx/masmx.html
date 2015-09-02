@@ -11172,6 +11172,45 @@ quo3.msm: object code 68 bytes: 0 errors: 0 undefined labels
 
 
 </pre>
+
+A second example shows actual parameter substitution in a string
+whatever symbol is used for a quote mark, here apostrophe
+
+<pre>
+
+$ masmx -lnk
+MASMX 7r3
+0/-INPUT>>
+	$quote	''''
+
+p*	$proc
+QDELIM='
+	'p(1, 1)'
+	'"p(1, 1)"'
+	$end
+
+	p	abc
+	p	xyz
+
+	$end
+  :                            1  $quote ''''
+  :                            2 
+  :                            3 p* $proc
+  :                            4  'p(1, 1)'
+  :                            5  '"p(1, 1)"'
+  :                            6  $end
+  :                            7 
+00:000000 616263              +8  p abc
+00:000001 226162632220        +8 
+00:000003 78797A              +9  p xyz
+00:000004 2278797A2220        +9 
+  :                            10 
+  :                            11  $end
+:$(00):000000:000006 
+
+
+</pre>
+
 <p>
 A field of a $form all in quotes also means a string, and in a 
 macro expansion, parameter substitution takes place:
