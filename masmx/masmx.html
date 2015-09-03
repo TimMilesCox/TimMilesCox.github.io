@@ -7944,7 +7944,7 @@ qzuli.msm: object code 162 bytes: 0 errors: 0 undefined labels
 <b>$octal</b> directive shows the 30-bit words and adresses in octal.
 
 <p>
-In line 4, the assembler added three 7-bit space characters to fill the
+In line 5, the assembler added three 7-bit space characters to fill the
 last data word, but still needed to add two trailing zero bits.
 
 <p>
@@ -7952,13 +7952,12 @@ The first 30 characters had exactly filled seven data words, but the last
 character left 23 bits.
 
 <p>
-Space fill in the last word is added without comment. <b>-c</b> or
+Space fill in the last word is added. <b>-c</b> or
 <b>-z</b> flag causes zero fill instead of space.
 <b>-zc</b> flags combined fill with space
 
 <p>
 Slack bits remaining after the last character position are zeroed
-and a message is output
 
 <p>
 The constant in line 6 exactly fills 210 bits or seven data words.
@@ -8020,7 +8019,7 @@ ldes2.msm: object code 95 bytes: 0 errors: 0 undefined labels
 
 </pre>
 <p>
-A quoted string in a macro macro expansion may contain parameter
+A quoted string in a macro expansion may contain parameter
 references:
 <pre>
 
@@ -8079,7 +8078,7 @@ of floating constants. If $characteristic directive has a subcommand,
 for example
 <pre>
 
-$characteristic,64      <i>SIZE</i>
+	$characteristic,64      <i>SIZE</i>
 
 </pre>
 <p>
@@ -8233,7 +8232,7 @@ Floating point items are the default <a href="#floating_point">$floating_point</
 or a size words given immediately after the mantissa and before any scale
 <pre>
 
-+(MANTISSA)[s d l t q p h o][{*+|*-}SCALE]
+	+(MANTISSA)[<a style="color:red">s d l t q p h o</a>][{*+|*-}SCALE]
 
 S for single (one word)
 D or L for double 
@@ -15502,7 +15501,7 @@ language line.
 
 	       
 <p>
-No assumption that the machine has a word size like
+No assumption is made that the machine has a word size like
 8, 16, 32 or 64, or that its address quantum is an 8-bit byte.<br>
 That information is retrieved from macro text in header files
 
