@@ -2237,7 +2237,7 @@ Floating point items are not auto-sized like integers.
 
 <p>
 Floating point items are the default <a href="#floating_point">$floating_point</a> size,
-or a size words given immediately after the mantissa and before any scale
+or a size in words given immediately after the mantissa and before any scale
 <pre>
 
         +(MANTISSA)[<a style="color:red">s d l t q p h o</a>][{*+|*-}SCALE]
@@ -2326,8 +2326,8 @@ floating_value	$set	16384.0e+1000000
 
 </pre>
 A <a href="#set">$set,<i>subcommand</i></a> value can override the default
-floating number size and mantissa rounding position.
-See <a href="#fdemens">11.1.2: Floating Format Dimensions</a>
+floating number size and mantissa rounding position.<br>
+See also <a href="#fdemens">11.2: Floating Format Dimensions</a>
 
 <p>
 masmx internal floating precision is 192 bits with 168-bit simple fraction and 23-bit<br>
