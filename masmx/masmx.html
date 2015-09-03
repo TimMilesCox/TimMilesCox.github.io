@@ -10372,11 +10372,11 @@ A new layer or frame of the label table is constructed in
 subassembly, and removed at the end of subassembly.<br>Labels
 declared in the macro expansion are not visible to more 
 inclusive assembly layers except by design.<br>Labels are 
-unique in their subassembly layer (macro depth). 
+unique within their subassembly layer (macro depth). 
 
 <p>
-Where more than one assembly layer has declared a label with
-the same name,<br>references to the label resolve to the declaration
+Where more than one assembly layer has declared a label
+with the same name,<br>references resolve to the synonym
 at the most deeply nested macro level
 
 <p>
@@ -10441,8 +10441,8 @@ StackOk:
 </pre>
 <p>
 The label StackOK is not exported from the macro expansion. Therefore
-it stopped existing when the macro exited on the first assembly pass.
-So the macro needs a preliminary pass on the second main assembly pass.
+it stopped existing when the macro exited on the first assembly pass.<br>
+The macro needs a preliminary pass on the second main assembly pass.
 See also  <a href="#u2passproc">10.2.2.6: The Two-pass $proc</a>
 
 <p>
