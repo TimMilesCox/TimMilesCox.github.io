@@ -8154,9 +8154,14 @@ $word is programmable and each possible constant size in words up to 192
 bits has a separate $characteristic size
 
 <p>
-$characteristic directive changes characteristic size for one size only of constant
-and is separately applied to any number size where the default characteristic size
-is inappropriate
+$characteristic directive changes characteristic size for one word size, expressed
+in bits
+
+<p>
+The developer applies a characteristic size for each number size where
+the masmx default characteristic field is not the required size. See
+<a href="#fdemens2">11.2.2: Exponent Field Size></a>
+
 
 <p>
 In the following example, a default sized floating constant
