@@ -10369,24 +10369,24 @@ Object Code 89 Bytes: 0 Errors: 0 Undefined Labels
 </pre>
 <p>
 A new layer or frame of the label table is constructed in
-subassembly, and removed at the end of subassembly. Labels
+subassembly, and removed at the end of subassembly.<br>Labels
 declared in the macro expansion are not visible to more 
-inclusive assembly layers except by design. Labels are 
+inclusive assembly layers except by design.<br>Labels are 
 unique in their subassembly layer (macro depth). 
 
 <p>
 Where more than one assembly layer has declared a label with
-the same name, references to the label resolve to the declaration
+the same name,<br>references to the label resolve to the declaration
 at the most deeply nested macro level
 
 <p>
 The subassembly has in scope all the labels that currently exist,
-and cat set labels at less deep macro depth than itself, 
+and can set labels at less deep macro depth than itself,<br>
 but on reference only sees the synonym closest in depth to itself
 
 <p>
 To make a label more permanent than the macro expansion 
-which declares it, asterisk(s) are suffixed to the label, 
+which declares it, asterisk(s) are suffixed to the label,<br>
 one for each subassembly layer to which the label is promoted:
 <pre>
 
@@ -10419,12 +10419,12 @@ Actual parameters can be included in labels names in quotes.
 It has one more asterisk than the macro depth.
 
 <p>
-"labely" isn't visible outside the macro expansion.
+"labely" is not visible outside the macro expansion.
 
 
 <p>
 If a $proc macro has forward references to local labels, the macro must
-be scanned twice on the second assembly pass. These $procs are called
+be scanned twice on the second assembly pass.<br>These $procs are called
 two-pass $procs. They are marked by an asterisk argument of asterisk *
 on the $proc line:
 <pre>
