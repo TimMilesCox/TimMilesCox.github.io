@@ -1221,8 +1221,8 @@ The operators are
 	|_______________|_______________________|		
 	|	*+	|      +decimal exponent|
 	|_______________|_______________________|	decimal scale operators *+ *- exponentiate
-	|	*-	|      -decimal exponent|	one integer value decimally by another, or a
-	|_______________|_______________________|	fraction string by a decimally expressed scale
+	|	*-	|      -decimal exponent|	one integer value decimally by another, or
+	|_______________|_______________________|	a fraction string by a decimal scale
 	|	+	|	PLUS		|
 	|_______________|_______________________|
 	|	-	|	MINUS		|
@@ -2082,14 +2082,15 @@ number constant commands (often with names like DW and DD) as macros.
 Number constants may have trailing length overrides. Their meanings are
 <pre>
 
-	:s or S = 1 * word size 
-	:d or D = 2 * word size
-	:l or L = 2 * word size
-	:t or T = 3 * word size
-	:q or Q = 4 * word size
-	:p or P = 5 * word size
-	:h or H = 6 * word size
-	:o or O = 8 * word size
+
+<a style="color:red">s S</a> for single (one word)
+<a style="color:red">d D l L</a> for double
+<a style="color:red">t T</a> for triple
+<a style="color:red">q Q</a> for quadword
+<a style="color:red">p P</a> for pentaword
+<a style="color:red">h H</a> for hexaword
+<a style="color:red">o O</a> for octaword
+
 
 </pre>
 Integers occupy their containing number of words in the absence of a length suffix
@@ -2231,56 +2232,90 @@ LTERM=;
 
 
 </pre>
-Floating numbers do not self size. Their default size is determined with
-directive $floating_point
+<p>
+Floating point items are not auto-sized like integers.
 
 <p>
-A floating number length override follows the fraction, not the exponent
+Floating point items are the default <a href="#floating_point">$floating_point</a> size,
+or a size words given immediately after the mantissa and before any scale
+<pre>
+
+        +(MANTISSA)[<a style="color:red">s d l t q p h o</a>][{*+|*-}SCALE]
+
+<a style="color:red">s S</a> for single (one word)
+<a style="color:red">d D l L</a> for double
+<a style="color:red">t T</a> for triple
+<a style="color:red">q Q</a> for quadword
+<a style="color:red">p P</a> for pentaword
+<a style="color:red">h H</a> for hexaword
+<a style="color:red">o O</a> for octaword
+
+</pre>
+<p>
+These trailing letters may be upper or lower case and may have a
+colon before them or parenthesis or quote, to avoid catenation
+with label references
+<pre>
+
+67.5t
+
+        +MANTISSA:<a style="color:red">q</a>*+1200000
+
+        +(MANTISSA)<a style="color:red">p</a>*+800
+
+        20*"MANTISSA"<a style="color:red">d</a>*+307
+
+</pre>
+Period may only appear in a decimal digit string. Where period
+appears the scale notation [ e e+ e- E E+ E- ] can be typed in
+place of the masmx scale operator <b>*+</b> or <b>*-</b>
+
 <pre>
 
 $ masmx -lnk
 MASMX 7r3
 0/-INPUT>>
-	$word		16
-	$quantum	8
-	$awidth		32
-        $characteristic,64	16
+        $word           16
+        $quantum        8
+        $awidth         32
+        $characteristic,64      16
 
-expression	$equ	100
-downscale	$equ	2
+expression      $equ    100
+downscale       $equ    2
 
-	1.6384d*+4
-	+	expression:q*-downscale
-	+	1.000000006768:pe+1200000
-	$end
+        1.6384d*+4
+        +       expression:q*-downscale
+        +       1.000000006768:pe+1200000
+        $end
   :                            1  $word  16
   :                            2  $quantum 8
   :                            3  $awidth  32
   :                            4         $characteristic,64 16
-  :                            5 
+  :                            5
   :                            6 expression $equ 100
   :                            7 downscale $equ 2
-  :                            8 
+  :                            8
 00:00000000 40F80000          +9  1.6384d*+4
 00:00000004 4001800000000000  +10  + expression:q*-downscale
 00:0000000C 7CD38AD1F1D10E50078D
                               +11  + 1.000000006768:pe+1200000
   :                            12  $end
-:$(00):00000000:00000016 
+:$(00):00000000:00000016
 
 
 </pre>
-Floating numbers contain a digit string with decimal point 
-or the decimal scale operator, *+ *- or both
+<p>
+Where period does not appear, only <b>*+</b> or <b>*-</b> scale
+operator and not [ e e+ e- E E+ E- ] indicates a floating point number.
+
 <pre>
 
-	1.75
-	175*-2
+        1.75
+        175*-2
 
-	298.5e1262611
+        298.5e1262611
 
 </pre>
-The scale punctuation [e[+] | e-] is also recognised after a fraction string
 
 <p>
 Floating numbers can be cached as label values and manipulated bitwise
@@ -8223,53 +8258,6 @@ Note: hflo.msm Line 11: floating number is maximum words
 <p>
 The request to generate an octaword item only resulted in
 a hexaword, because 192 bits is the limit of a number size in masmx.
-
-<p>
-Floating point items are not auto-sized like integers.
-
-<p>
-Floating point items are the default <a href="#floating_point">$floating_point</a> size, 
-or a size words given immediately after the mantissa and before any scale
-<pre>
-
-	+(MANTISSA)[<a style="color:red">s d l t q p h o</a>][{*+|*-}SCALE]
-
-<a style="color:red">s S</a> for single (one word)
-<a style="color:red">d D l L</a> for double 
-<a style="color:red">t T</a> for triple
-<a style="color:red">q Q</a> for quadword
-<a style="color:red">p P</a> for pentaword
-<a style="color:red">h H</a> for hexaword
-<a style="color:red">o O</a> for octaword
-
-</pre>
-<p>
-These trailing letters may be upper or lower case and may have a
-colon before them or parenthesis or quote, to avoid catenation
-with label references
-<pre>
-
-67.5t
-
-	+MANTISSA:<a style="color:red">q</a>*+1200000
-
-	+(MANTISSA)<a style="color:red">p</a>*+800
-
-	20*"MANTISSA"<a style="color:red">d</a>*+307
-
-</pre>
-Period may only appear in a decimal digit string. Where period
-appears the scale notation [ e e+ e- E E+ E- ] can be typed in
-place of the masmx scale operator <b>*+</b> or <b>*-</b>
-
-<p>
-Where period does not appear, only <b>*+</b> or <b>*-</b> scale
-operator and not [ e e+ e- E E+ E- ] indicates a floating point number.
-
-<p>
-The decimal scale operator <a href="#operator">*+ *-</a> exponentiates
-one integer value decimally by another. Either value may be expressed
-using any integer tokens and operators
 
 
 <a      name="cont_char"/>
