@@ -10213,19 +10213,19 @@ A $proc line must be matched with a $end line:
 <pre>
 
 aname   $proc
-entry*  $name   value        
+visible_name*  $name   value        
 	.
 	.
 	$end
 
 </pre>
 <p>
-When a promoted* label of $proc or $name is in the instruction 
+When a promoted* label of $proc or $name is in the command
 field of a source line, the macro is subassembled.
 
 <p>
-This assembly is made more visible futher down. The ljmp/lcall macro
-and the nop/ret/reti macro are exposed.
+This sample program assembles instructions ljmp lcall reti nop ret
+ 
 <pre>
 
 $ masmx forjoy -ln
@@ -10253,91 +10253,62 @@ STERM=.
 
 </pre>
 <p>
-One macro defines LJMP and LCALL instructions. The other
-defines RET, RETI and NOP instructions.
+The two $proc macros which generate these five instructions are shown
+in a more expanded assembly below
 
 <p>
-Macros don't need unique $proc names unless they are invoked
-by their $proc names. Both macros in this sample are called 
-P. They can only be called by their $name entry points, and then
-only because the * asterisks make the names* visible.
-
-<p>
-Line 165 directs the assembler to start listing lines
-from the included 8051 definition header file.
+Both $proc macros shown are called p. The macros reference actual
+parameters as p(x, y), but are called by their exported $name
+labels ljmp* lcall* *reti *nop *ret
 
 <p>
 Line 166 is the bit layout template or $form for long jump instructions.
 
 <p>
-Line 168, not shown, directs the assembler to stop listing 
-the include file.
+Line 416 advertises the $name label lcall* with a latent value
+of 18. This value may be retrieved as parameter p(0, 0)
+or the masmx internal function <b>$n</b>
 
 <p>
-Line 414 directs the assembler to start listing the include file.
+Line 417 advertises the $name label ljmp* with a latent value 2,
+which can be retrieved as parameter p(0, 0) or <b>$n</b>
 
 <p>
-Line 415 starts declaring a procedural macro called P
-
-<p>
-Line 416 declares that if this macro is called by the name
-LCALL, it has an nominal value of 18. This value may be retrieved
-via the parameter reference p(0,1) or p(0, 0) or the masmx internal
-function <b>$n</b>
-
-<p>
-Line 417 declares that if this macro is called by the name
-LJMP, it has a nominal value of 2, and 2 will be returned
-for p(0, 1) or p(0, 0) or <b>$n</b>
-
-<p>
-Line 418 will generate a 24-bit structure with the nominal call
-value <b>$n</b> in the first 8 bits whenever the macro is expanded.
+Line 418 generates a 24-bit instruction with the callname latent
+<b>$n</b> or p(0, 0) in the first 8 bits
 
 <p>
 The second field of the i$long_jump form is given the value of the
-first actual argument subfield. That is macro name plus numbers: p(1, 1)
+first actual argument subfield,  p(1, 1)
 
 <p>
-Line 419 ends the macro.
+Line 419 ends the $proc macro
 
 <p>
-Line 421 is not listed because it directed the assembler
-to stop listing.
+Line 523 starts another $proc macro called p
 
 <p>
-Line 522 directs the assembler to list the include file.
+Line 524: callname nop has a latent value 0
 
 <p>
-Line 523 declares another procedural macro called P
+Line 525: callname ret has a latent value 34
 
 <p>
-Line 524 says that if P is called by the name NOP, $n is 0.
+Line 526: callname reti has a latent value 50.
 
 <p>
-Line 525 says that if P is called by the name RET, $n is 34.
-
-<p>
-Line 526 says that if P is called by the name RETI, $n is 50.
-
-<p>
-Line 527 generates one data word with the value $n.
-The data word is 8 bits in size.
+Line 527 generates one 8-bit data word with latent callname value
+$n or p(0, 0)
 
 <p>
 Line 528 ends of the macro.
 
 <p>
-Line 530 is not listed. It directed the assembler to stop
-listing the include file.
-
-<p>
 The line numbers step down because they are line numbers
-of the main file, not an include file.
+of the main file, not the include file which is longer
 
 <p>
-Line 3 is an LJMP (long jump, direct address) to location
-for.joy.
+Line 3 is a long jump to location for.joy
 
 <p>
 Line 4 is a buffer of 1000*address quantum, = 1000 bytes.
@@ -10347,14 +10318,13 @@ Line 6 is for.joy which is 1000+3 bytes beyond the start
 of the assembly. for.joy calls for.more
 
 <p>
-Line 9 is for.more
-<p>
-Line 10 is a 8051 hardware NOP instruction (not a $nop directive).
-<p>
-Line 11 is a RET (return) instruction.
+Line 10 is a 8051 hardware nop instruction (not a $nop directive)
 
 <p>
-Line 7 is a RETI (interrupt return instruction).
+Line 11 is a return instruction
+
+<p>
+Line 7 is an interrupt return instruction
 <pre>
 
 
@@ -10379,7 +10349,7 @@ STERM=.
   :                        524: nop*    $name   0        
   :                        525: ret*    $name   022
   :                        526: reti*   $name   032
-  :                        527:         +       $n
+  :                        527:         +       $n:s
   :                        528:         $end
   :                        529:         
   :                        2: 
@@ -10407,10 +10377,12 @@ unique in their subassembly layer (macro depth).
 <p>
 Where more than one assembly layer has declared a label with
 the same name, references to the label resolve to the declaration
-in the most deeply nested macro.
+at the most deeply nested macro level
 
 <p>
-The subassembly can access all the labels that currently exist.
+The subassembly has in scope all the labels that currently exist,
+and cat set labels at less deep macro depth than itself, 
+but on reference only sees the synonym closest in depth to itself
 
 <p>
 To make a label more permanent than the macro expansion 
