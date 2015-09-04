@@ -1929,7 +1929,8 @@ Others govern conditional assembly
 And other directives frame macros
 
 <p>
-All labels internal to masmx, <a href="#Directives">directives plus subfunction names</a> and
+All labels internal to masmx,
+<a href="#Directives">directives plus masmx-supplied subcommand names</a> and
 <a href="#ifunction">masmx internal functions</a> may <i>always</i> be referenced in lowercase.<br>
 With <a href="#option_k">option -k</a> masmx-supplied names may <i>only</i> be referenced in lowercase
 
@@ -3128,7 +3129,7 @@ See <a href="#plist">8.38: $plist Directive</a>,
 
 <p>
 An actual argument to a <b>$proc</b> macro may be placed in the command
-field of it is a command, for example a further macro name.
+field if it is a command, for example a further macro name.
 
 <p>
 This extract is from macro language illustrated at
@@ -3159,8 +3160,8 @@ $proc macros are also described in <a href="#proc">8.38 $proc Directive</a> and
 <a      name="xargument"/>
 <h3>4.4.1 Argument Expressions</h3>
 
-An argument expression generates a value which fits a target field,
-for example an operand field of an instruction
+An argument expression generates a value,
+for example an instruction operand
 <pre>
 
 		lwz	r6, STORAGE_WORD_ADDRESS	; r6 and STORAGE_WORD_ADDRESS are operand expressions
@@ -3169,7 +3170,7 @@ for example an operand field of an instruction
 
 <p>
 Argument field expressions may have any tokens and operators which
-constant expressions have, except for words-size tags
+constant expressions have
 
 <p>
 The size of the expression value is its target field size in the
