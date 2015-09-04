@@ -3173,8 +3173,11 @@ Argument field expressions may have any tokens and operators which
 constant expressions have
 
 <p>
-The size of the expression value is its target field size in the
-instruction or structure at the command field
+The size of the expression value is determined by the target field size
+within the instruction or structure named at the command field
+
+<p>
+Assembly macro text and link macro text may range-check the argument value
 
 
 <a      name="largument"/>
@@ -3188,8 +3191,15 @@ of a literal operand is placed in the address field of the instruction
 
 </pre>
 
-The instruction contains the <i>address</i> of the 64-bit constant 0FFFC0000A000C000.<br>
+The instruction contains the <i>address</i>
+of the 64-bit constant 0FFFC0000A000C000
+
+<p>
 The constant is generated at the end  of the program section where ".literal_pool_name" is declared.
+
+<p>
+Assembly macro text and link macro text may range-check the literal
+address against the size of the instruction operand address field
 
 <p>
 See <a href="#sections">7: Constructing Program Sections</a>,
