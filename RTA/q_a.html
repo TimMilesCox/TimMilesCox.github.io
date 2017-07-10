@@ -220,9 +220,13 @@ exponentiation for &plusmn;1262611 decimal places. That's right,
 &plusmn; one and one quarter million decimal places
 
 <p>
-RTA1 <i>could</i> eventually need more mantissa significands
-than 72, but not for many applications, because that is already
-a row of 21 decimal digits
+Some applications could need more mantissa bits than 72. If any does,
+192-bit floating arithmetic is available with an effective mantissa
+of 144 bits and the same 23-bit exponent as before
+
+<p>
+72 mantissa bits represent up to 21 decimal digits, and 144 mantissa
+bits represent up to 43 decimal digits
 
 <p>
 Additionally RTA1 96-bit floating format is simple to
