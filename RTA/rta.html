@@ -5723,14 +5723,14 @@ operate without lock in the register stack and with lock in storage.
 
 
 
-	operation sequence	ql	addend_left
+	operation sequence	ql	first_addend
 	192-bit values		on	fp$r
-				fa	addend_right
+				fa	second_addend
 				qs	sum
 				off	fp$r
-				ql	addend_left+4
+				ql	first_addend+4
 				fa	$residue
-				fa	addend_right+4
+				fa	second_addend+4
 				qs	sum+4
 
 
@@ -5845,7 +5845,7 @@ operate without lock in the register stack and with lock in storage.
 
 				If the multiplier is represented in more than 96 bits, then the
 				192-bit multiplicand is also multiplied by the minor multiplier
-				and and the two long products summed. Minor result <b>$residue</b> is
+				and the two long products summed. Minor result <b>$residue</b> is
 				needed during both multiplication sequences and during the final
 				long addition
 
