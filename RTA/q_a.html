@@ -397,7 +397,9 @@ driven upward to the major part in a:b:mantissa2:mantissa3. Only the minor part 
 
 </pre>
 
-Exponent size is 23 bits and the major result is stored in registers a:b:mantissa2:mantissa3
+Exponent size is 23 bits and the major result is stored in registers a:b:mantissa2:mantissa3. The
+exponent of the minor part is the major exponent minus 72 minus the normalising count of the minor
+mantissa
 
 
 <h2>2. Can RTA1 access Bytes Efficiently?</h2>
