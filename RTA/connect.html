@@ -224,8 +224,8 @@ BPF serves a separate filter program for each interface
 	|osserv receives|					| RTA1 IP stack	|
 ------->|IP/ARP from BPF|-------------------------------------->| receives	|
 	|_______________|					|_______________|
-	|osserv	xmits	|					| RTA1 IP stack	|
-<-------|on network	|<--------------------------------------| transmits	|
+	|osserv	xmits on|					| RTA1 IP stack	|
+<-------|network via BPF|<--------------------------------------| transmits	|
 	|_______________|					|_______________|
 
 	
