@@ -165,6 +165,9 @@ peripheral memories in RTA1 architecture
 The interface process uses Berkely Packet Filter (BPF) kernel calls
 to receive and send.<br>The materials for running this interface process
 are in directory <b>rta/portal</b>
+
+<p>
+BPF serves a separate filter program for each interface
 <pre>
 
 	osserv / RTA1 Network Interfaces Initialisation
@@ -177,9 +180,9 @@ are in directory <b>rta/portal</b>
 	|assembly source|
 	|from arguments	|
 	|_______________|	_________________
-	|launches	|	|   masmx.7R3A	|
+	|launches masmx	|	|   masmx.7R3A	|
 	|process script	|	|_______________|
-	|per real I/F	|------>|assembles BPF	|
+	|for each I/F	|------>|assembles BPF	|
 	|_______________|	|filter program |
 	|initialises	|<------|_______________|	
 	|buffer shared	|					_________________
@@ -190,7 +193,7 @@ are in directory <b>rta/portal</b>
 	|PDUs to RTA1	|-------------------------------------->|configures	|
 	|_______________|					|network I/Fs	|
 	|assigns filter	|					|_______________|
-	|to BPF		|
+	|program to BPF	|
 	|_______________|
 
 
@@ -202,8 +205,8 @@ are in directory <b>rta/portal</b>
 	_______________________________
 
 
-	[:280000000c000000]	. examine 16 bits at frame offset octet 12
-	[:1500040006080000]	. ARP protocol field reverse byte order jump to YES
+	[:280000000c000000]	. examine 16 bits at frame offset octet 12 = protocol discriminator
+	[:1500040006080000]	. ARP protocol field reverse byte order, if so jump to YES
 	[:1500000200080000]	. IP protocol field reverse byte order, if not jump to NO
 	[:200000001e000000]	. examine 32 bits at frame offset octet 30 = IP destination
 	[:1500010042071dac]	. acceptable destination in reverse byte order? Jump to YES
