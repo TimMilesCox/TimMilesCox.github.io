@@ -1216,7 +1216,7 @@ shared-memory network access over Telnet, HTTP, SNMP and UDP floating server
 
 <p>
 PC emulations emulate in software RTA1's view of bus behaviour. This adds overhead<br>
-even to the simplest insructions. It's a desirable aim to speed up these bus accesses<br>
+even to the simplest insructions. It is sought to speed up these bus accesses<br>
 with some electronic engineering, maybe by installing some different memory at fixed addresses.<br>
 The ambitious solution would be a bus that knows RTA1's address translation pointers and<br>
 associated attributes, because the overhead lies largely not in accessing different memories<br>
@@ -1247,8 +1247,8 @@ RTA1 storage byte order is big-endian. Emulations on X86 adjust on read and writ
 Currently emulations are either in GCC for any platform or in x86 assembly language
 
 <p>
-A small-scale emulation on x86 and a large emulation on 64-bit PowerPC are viewed as desirable,<br>
-both guested on low-cost SBCs. Emulated RTA instructions need fewer platform instructions<br>
+A small-scale emulation on x86 and a large emulation on 64-bit PowerPC are projected,<br>
+both guested on low-cost Linux SBCs. Emulated RTA instructions need fewer platform instructions<br>
 on PowerPC than on x86
 
 
@@ -1256,7 +1256,7 @@ on PowerPC than on x86
 <a      name="platformc"/>
 <h3>Obtaining a Hard-Edged Compiler for Emulators</h3>
 
-It is desirable to source an ANSI-C compiler generating efficient code for PowerPC and X86.<br>
+It is considered necessary to source an ANSI-C compiler generating efficient code for PowerPC and X86.<br>
 The existing gcc emulation is the functional yardstick and runs on PowerPC and X86. However<br>
 gcc generates over three times too many platform instructions
 
