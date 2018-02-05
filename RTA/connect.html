@@ -1366,12 +1366,13 @@ $RTA_MBANKS also sets the executable space size for <a href="#buildrta">emulator
 <pre>
 	tgenc	any_little_endian -DMETRIC
 </pre>
-A buils with -DMETRIC argument constructs an instrumented binary for any size you select
+A build with -DMETRIC argument constructs an instrumented binary for any size you select
 
 <p>
-But executable space does not effect MIP rate at all,  and anything built on High Sierra/LLVM/clang<b>
+But executable space does not effect MIP rate at all, and anything built on High Sierra/LLVM/clang<br>
 instruments itself as slower than the shipped emulators
 
+<p>
 That highlights the importance of sourcing a fast-code-generating ANSI-c multi-architecture compiler<br>
 for OSX and Linux:<br>especially for Linux, because Linux SBCs are the projected host for for<br>
 a value-added market product
