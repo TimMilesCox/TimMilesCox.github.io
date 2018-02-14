@@ -104,7 +104,7 @@ SNMP, HTTP, ICMP and floating point server interact with other computers
 				<li><a href="#bstream"><i>Bit Stream Read and Write Channels</i></a></li>
 				<li><a href="#lfiret"><i>Return Instructions and Internal Interrupt</i></a></li>
 				<li><a href="#shijo"><i>Shift and Jump Instructions</i></a></li>
-				<li><a href="#modify"><i>Modify Instructions</i></a></li>
+				<li><a href="#modify"><i>Target Modify Instructions</i></a></li>
 				<li><a href="#scala"><i>Double and Quadword Load and Store, Masked, Execute, and Scale Operations, Large Integer Arithmetic</i></a></li>
 				<li><a href="#fp"><i>96-Bit and 192-Bit Floating-Point, Floating 48-Bit Compression</i></a></li>
 				<li><a href="#gocall"><i>Far Go and Call</i></a></li>
@@ -1974,6 +1974,10 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 	<div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
 	<i>3.6.1	Integer Store Instructions</i>
 	</div>
+	instructions	<a href="#sr">sr</a>	<a href="#sk">sk</a>
+			<a href="#sx">sx</a>	<a href="#sy">sy</a>
+			<a href="#sa">sa</a>	<a href="#sb">sb</a>
+			<a href="#z">z</a>	<a href="#pop">pop</a>
 
 
 	Integer store instructions write a word, or a third or halfword
@@ -2351,6 +2355,10 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
         <div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
         <i>3.6.2	Integer Load Instructions</i>
         </div>
+	instructions	<a href="#lr">lr</a>		<a href="#lk">lk</a>
+			<a href="#lx">lx</a>		<a href="#ly">ly</a>
+			<a href="#la">la</a>		<a href="#lb">lb</a>
+			<a href="#push">push</a>
 
 
         Integer load instructions read a one-word operand, a third or halfword,
@@ -2815,6 +2823,7 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
         <div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
         <i>3.6.3        Integer Test Instructions</i>
         </div>
+	instructions	<a href="#tz">Test Zero</a>		<a href="#tp">Test Positive</a>
 
 
         Integer test instructions sample a word, or a third or halfword
@@ -2929,6 +2938,7 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
         <div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
         <i>3.6.4        Index Register Add Instructions</i>
         </div>
+	instructions	<a href="#ax">ax</a>	<a href="#ay">ay</a>
 
 
         Index register add instructions read a one-word operand, a third or halfword,
@@ -3092,6 +3102,9 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
         <div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
         <i>3.6.5        Boolean Instructions</i>
         </div>
+	instructions	<a href="#or">or</a>		<a href="#orb">orB</a>
+			<a href="#and">and</a>		<a href="#andb">andB</a>
+			<a href="#xor">xor</a>		<a href="#xorb">xorB</a>
 
 
         Boolean instructions read a one-word operand, a third or halfword,
@@ -3505,6 +3518,10 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
         <div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
         <i>3.6.6        Integer Arithmetic Instructions</i>
         </div>
+	instructions	<a href="#aa">aa</a>		<a href="#ana">ana</a>
+			<a href="#ab">ab</a>		<a href="#anb">anb</a>
+			<a href="#m">m</a>		<a href="#d">d</a>
+			<a href="#mf">mf</a>
 
 
         Integer arithmetic instructions read a one-word operand, a third or halfword,
@@ -3986,6 +4003,10 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 	<div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
 	<i>3.6.7	I/O Ports Input and Output Instructions</i>
 	</div>
+	instructions	<a href="#ina">inA</a>		<a href="#outa">outA</a>
+			<a href="#inb">inB</a>		<a href="#outb">outB</a>
+
+
 	Input and Output Instructions identify the target port by effective address
 	with or without indirection or indexing:
 
@@ -4240,7 +4261,7 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
         <i>3.6.9	PSR Flags Update Instructions</i>
         </div>
 	<a	name="on"/>
-	On and Off instructions switch PSR flags according to bits 15..0 of
+	<a href="#on">On</a> and <a href="#off">Off</a> instructions switch PSR flags according to bits 15..0 of
 	the sign-extended immediate operand
 
 
@@ -4298,6 +4319,10 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 	<div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
 	<i>3.6.10	Bit Stream Read and Write Channels</i>
 	</div>
+	instructions	<a href="#rsr">Read Staging Register</a>	<a href="#wsr">Write Staging Register</a>
+
+
+
         _________________________________________________________________________________________________________________________________
         |                                               The Bit Stream Read Channel                                                     |
         |_______________________________________________________________________________________________________________________________|
@@ -4554,14 +4579,15 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 	<div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
 	<i>3.6.11	Return Instructions and Internal Interrupt</i>
 	</div>
-	<a	name="lret"/>
-
+	instructions	<a href="#lret">Local Return</a>		<a href="#ii">Internal Interrupt</a>
+			<a href="#fret">Far Return</a>		<a href="#ir">Interrrupt return</a>
 
 	Return instructions increment the stacked return address with the sign extended immediate operand
  
 
 
 
+	<a	name="lret"/>
 	Local Return		lret
 	____________		____
 
@@ -4652,6 +4678,44 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 
 
 
+	_________________________________________________________________________________________________________________________________
+	|							   INTERRUPTS								|
+	|_______________________________________________________________________________________________________________________________|
+	|																|
+	|			on external or internal interrupt									|
+	|			_________________________________									|
+	|																|
+	|			absolute Program Counter minus B0 * 4096 is pushed onto the Interrupt Internal Stack			|
+	|																|
+	|			B0 is pushed onto the Interrupt Internal Stack								|
+	|																|
+	|			PSR is pushed onto the Interrupt Internal Stack								|
+	|																|
+	|			a latent parameter word is pushed onto the Interrupt Internal Stack					|
+	|			when instruction ii raises the interrupt, the latent parameter word = 0					|
+	|																|
+	|			if PSR Flag 23 = 0 then Interrupt Stack Pointer sp_x is copied to Interrupt Frame Pointer fp_x		|
+	|			this marks which Interrupt Stack Frame is the interrupted application					|
+	|			the absolute address of the application Interrupt Stack Frame should always be 252			|
+	|																|
+	|			1 is written to PSR Flag 23										|
+	|																|
+	|_______________________________________________________________________________________________________________________________|
+	|																|
+	|			The Interrupt Stack Frame at Interrupt Stack Pointer sp_x is						|
+	|			____________________________________________________________						|
+	|																|
+	|																|
+	|			 95			 71			 47			 23		       0	|
+	|			_________________________________________________________________________________________________	|
+	|			|    latent parameter	|	saved PSR	|	saved B0	|   saved relative PC	|	|
+	|			|_______________________|_______________________|_______________________|_______________________|	|
+	|																|
+	|_______________________________________________________________________________________________________________________________|
+
+
+
+
 	<a	name="ii"/>
 	Internal Interrupt	ii
 	__________________	__
@@ -4692,41 +4756,6 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 				|___________|_______|___________________________________|
 
 
-
-	_________________________________________________________________________________________________________________________________
-	|							   INTERRUPTS								|
-	|_______________________________________________________________________________________________________________________________|
-	|																|
-	|			on external or internal interrupt									|
-	|			_________________________________									|
-	|																|
-	|			absolute Program Counter minus B0 * 4096 is pushed onto the Interrupt Internal Stack			|
-	|																|
-	|			B0 is pushed onto the Interrupt Internal Stack								|
-	|																|
-	|			PSR is pushed onto the Interrupt Internal Stack								|
-	|																|
-	|			a latent parameter word is pushed onto the Interrupt Internal Stack					|
-	|			when instruction ii raises the interrupt, the latent parameter word = 0					|
-	|																|
-	|			if PSR Flag 23 = 0 then Interrupt Stack Pointer sp_x is copied to Interrupt Frame Pointer fp_x		|
-	|			this marks which Interrupt Stack Frame is the interrupted application					|
-	|			the absolute address of the application Interrupt Stack Frame should always be 252			|
-	|																|
-	|			1 is written to PSR Flag 23										|
-	|																|
-	|_______________________________________________________________________________________________________________________________|
-	|																|
-	|			The Interrupt Stack Frame at Interrupt Stack Pointer sp_x is						|
-	|			____________________________________________________________						|
-	|																|
-	|																|
-	|			 95			 71			 47			 23		       0	|
-	|			_________________________________________________________________________________________________	|
-	|			|    latent parameter	|	saved PSR	|	saved B0	|   saved relative PC	|	|
-	|			|_______________________|_______________________|_______________________|_______________________|	|
-	|																|
-	|_______________________________________________________________________________________________________________________________|
 
 
 
@@ -4776,13 +4805,34 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 
 	<a      name="shijo"/>
 	<div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
-	<i>3.6.11      Shift and Jump Instructions</i>
+	<i>3.6.12      Shift and Jump Instructions</i>
 	</div>
 	Shift instructions and jump instructions use the effective address
 	with or without indirection or indexing as an immediate operand
 
+	instructions	<a href="#sar">Shift a Right</a>			<a href="#j">Jump</a>
+			<a href="#sbr">Shift b Right</a>			<a href="#lcal">Local Call</a>
+			<a href="#dsr">Double Shift Right</a>		<a href="#jc">Jump Carry</a>
+			<a href="#sal">Shift a Left</a>			<a href="#jnc">Jump No Carry</a>
+			<a href="#sbl">Shift b Left</a>			<a href="#jza">Jump Zero a</a>
+			<a href="#dsl">Double Shift Left</a>		<a href="#jzb">Jump Zero b</a>
+			<a href="#rar">Rotate a Right</a>			<a href="#jnza">Jump NonZero a</a>
+			<a href="#rbr">Rotate b Right</a>			<a href="#jnzb">Jump NonZero b</a>
+			<a href="#drr">Double Rotate Right</a>		<a href="#jpa">Jump Positive a</a>
+			<a href="#ral">Rotate a Left</a>			<a href="#jpb">Jump Positive b</a>
+			<a href="#rbl">Rotate b Left</a>			<a href="#jna">Jump Negative a</a>
+			<a href="#drl">Double Rotate Left</a>		<a href="#jnb">Jump Negative b</a>
+			<a href="#saa">Shift a Algebraic</a>		<a href="#jao">Jump a Odd</a>
+			<a href="#sba">Shift b Algebraic</a>		<a href="#jpo">Jump Parity k**a Odd</a>
+			<a href="#dsa">Double Shift Algebraic</a>		<a href="#jdr">Jump Decrement Counter Register</a>
+							<a href="#jxge">Jump x NOT < r</a>
+							<a href="#jyge">Jump y NOT < r</a>
+							<a href="#jdz">Jump Double Zero</a>
 
 
+			see also	target modify instructions	<a href="#src">src</a> and <a href="#slc">slc</a>
+					scale instructions		<a href="#lsc">lsc</a> and <a href="#dlsc">dlsc</a>
+					far jump instructions		<a href="#go">go</a>  and <a href="#call">call</a>		
 
 
 	<a	name="sar"/>
@@ -5564,7 +5614,7 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 
 	<a      name="modify"/>
 	<div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
-	<i>3.6.13	Modify Instructions</i>
+	<i>3.6.13	Target Modify Instructions</i>
 	</div>
 	Eight instructions modify a single-word target operand
 
@@ -5836,6 +5886,14 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
 	Large integer operations have a source or target operand of one, two or four registers or storage words
 
 
+	instructions		<a href="#ds">Double Store</a>			<a href="#dl">Double Load</a>
+								<a href="#dpush">Double Push</a>
+				<a href="#da">Double Add</a>			<a href="#dan">Double Add Negative</a>
+				<a href="#lsc">Load Shift and Count</a>		<a href="#dlsc">Double Load Shift and Count</a>
+				<a href="#mta">Masked Test A</a>			<a href="#mlb">Masked Load B</a>
+				<a href="#sc">Store Carry</a>			<a href="#ex">Execute</a>
+				<a href="#qs">Quadruple Store</a>			<a href="#ql">Quadruple Load</a>
+				<a href="#qpop">Quadruple Pop</a>			<a href="#qpush">Quadruple Push</a>	
 
 
 	<a	name="qs"/>
@@ -6460,6 +6518,12 @@ See <a href="#iset">Lookup Pad</a> to find an instruction by name
         <div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
         <i>3.6.15       96-bit and 192-bit Floating Point, Floating 48-Bit Compression</i>
         </div>
+	instructions	<a href="#fa">Floating Add</a>			<a href="#fpp">Floating Pop and Pack</a>
+			<a href="#fan">Floating Add Negative</a>		<a href="#fpx">Floating Push and Expand</a>
+			<a href="#fm">Floating Multiply</a>
+			<a href="#fd">Floating Divide</a>
+
+
 	_________________________________________________________________________________________________________________________________
 	|						The 96-bit Floating Architecture						|
 	|_______________________________________________________________________________________________________________________________|
