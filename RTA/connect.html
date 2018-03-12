@@ -24,6 +24,7 @@ This acronym MIPS in this document means millions of instructions per second
 <ol>
 	<li><a href="#rungo">Running and Building Emulated RTA1</a></li>
 	<ol>
+		<li><a href="#star">Starting Out</a></li>
 		<li><a href="#readies">Ready Emulation Images</a></li>
 		<li><a href="#running">Running RTA1</a></li>
 		<ol>
@@ -78,6 +79,89 @@ This acronym MIPS in this document means millions of instructions per second
 <a	name="rungo"/a>
 <h2>Running and Building Emulated RTA1</h2>
 
+
+<a	name="star"/>
+<h3>Starting Out</h3>
+
+You have downloaded RTA1 materials <a href="https://TimMilesCox.github.io/RTA/">https://TimMilesCox.github.io/RTA/rta.zip</a> to <a style="color:0000FF">$HOME/somewhere</a>
+
+<p>
+Or cloned git repository <a href="https://www.github.com/TimMilesCox/RTA1">https://www.github.com/TimMilesCox/RTA1</a> to <a style="color:0000FF">$HOME/somewhere</a>
+
+<p>
+Start a terminal shell. Go to  directory <a style="color:0000FF">somewhere/RTA1/rta/portal</a> and key in <a style="color:0000FF">./runL</a>
+<pre>
+
+	cd somewhere/RTA1/rta/portal
+	./runL
+
+</pre>
+
+If you haven't done this before, <a style="color:0000FF">./runL</a> will ask to to copy a configuration file <a style="color:0000FF">.rta_net</a> to <a style="color:0000FF">$HOME</a> and possibly update it
+
+<p>
+A process starts which connects emulated RTA1 to your real networks
+
+<p>
+Start another terminal shell. Type <a style="color:0000FF">echo $RTA_MBANKS</a>. That will tell you what size emulated RTA1 you are about to run. Change it if you like
+
+<p>
+Go to directory <a style="color:0000FF">somewhere/RTA1/rta/altgen</a>. Key in <a style="color:0000FF">./r</a>
+<pre>
+
+	cd somewhere/RTA1/rta/altgen
+	./r
+
+</pre>
+
+Now two processes are running, emulated RTA and its network interfaces
+
+<p>
+
+start a third terminal shell. Go to directory <a style="color:0000FF">somewhere/RTA1/rta/client</a>. Start a script called <a style="color:0000FF">./prun</a>
+<pre>
+
+	cd somewhere/RTA1/rta/client
+	./prun
+
+</pre>
+
+That sets some addressing and pings RTA1 over platform loopback
+
+<p>
+Now you can go to a browser and call up http://172.29.7.6
+
+<p>
+or key in fp and do some floating point sums
+
+or key in fp -U and do some 192-bit floating point sums
+
+<p>
+or key in snmpwalk and see the MIB. If you do this from the emulator platform, you have to give snmpwalk a come-from address 
+<pre>
+
+	pushd $HOME
+	mkdir .snmp
+	vi .snmp/snmp.conf
+	i
+	clientaddr 172.29.7.6
+	<ESC>
+	wq
+	popd
+
+	snmpwalk -v 1 -c public -Ir -Os 172.29.7.7
+
+</pre>
+If you do snmpwalk from another computer you don't need the come-from address<br>
+But then RTA1's address isn't 172.29.7.7. It's an address in .rta_net
+
+<p>
+See <a href="#rta_active">RTA1 Active in your Real Network</a> to have the other computers talk to emulated RTA1
+
+<p>
+Then you can call up RTA1 webhost, floating point server, snmp agent and telnet server from other hosts
+
+
 <a	name="readies"/a>
 <h3>Ready Emulation Images</h3>
 
@@ -108,7 +192,7 @@ An emulator host process is run from a shell to provide network connectivity
 <pre>
 
 	cd	<a href="#osserv">rta/portal</a>
-	./runL	[ ipfw ]
+	./runL
 
 </pre>
 rta/portal/runL is a script which configures networks and runs binary osserv.<br>
