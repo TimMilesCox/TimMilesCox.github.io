@@ -128,17 +128,21 @@ Not much cost in architectural complexity, just using what's there in the 96-bit
 
 <p>
 To access these routines, obtain guidance on fixing up your
-network path to me from the document <a href="http://timmilescox.github.io/RTA/connect?connect.html=connect">Running and Talking to the Emulated RTA1</a>
+network path to me from the document <a href="connect.html">Running and Talking to the Emulated RTA1</a>
 
 <p>
 I reckon I'm the most scalable architecture there is. 
 
 I can do a dedicated embedded application with about 100 words of storage
 
+<a      name="takt"/>
 <p>
-Other end of the scale, I can run 5000000 TCP connections all at once
+A miniaturised configuration runs with IP stack, Telnet Server, SNMP Agent,<br>
+HTTP server and UDP fLoating point server in half as much memory as a DOS PC of 1982
 
-<a	name="takt"/>
+<p>
+At the other end of the scale, I can run 5000000 TCP connections all at once
+
 <p>
 And I'm mighty proud of my code density. I run IP, UDP and TCP in 3750 instructions.
 Uniformly simple instructions, each one a single storage location in size
