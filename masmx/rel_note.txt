@@ -1,20 +1,47 @@
-Preliminary	masmx.7r3A	Build 3	Distribution 15 June 2018
+Preliminary	masmx.7r3A	Build 4	Distribution 10 July 2018
 ___________	__________	_______	_________________________
 
 
 
 
-	masmx.7r3A revises and makes more consistent
+	masmx.7r3A
+	__________
+
+	revises and makes more consistent
 	the assembly of hierarchically structured and
 	named code and data
 
 	added -H option, allows unrounded floating constants<br><br>
 
-	addition of :z suffix on number constants for 7-word constants<br>
-	size-suffixes may be used to position floating exponent field in label-equated values<br>
-	in addition to overriding self-sizing in integers<br><br>
+	Build 4
+	_______
+
+	Addition of :z tag to construct integer and floating constants seven storage words in size
+	Size tags exist already for [1|2|3|4|5|6||8|]-word number constants and they override
+	integer self-sizing and floating selectable default size
+
+	Floating exponent underflow / overflow now marks the assembly in error.
+	Exponent underflow / overflow in an assembled storage expression was previously remarked
+	but is now error-flagged
 
 	Earlier application code needs no changes
+
+
+	Easy to Use Build Scripts
+	_________________________
+
+	Directory src now has scripts for constructing updated masmx and masmz
+	on and for platforms osx.x86 osx.ppc ubuntu.x86 win32
+
+		./bosx86
+		./ppcbosx
+		./bubuntu
+		./bw32
+
+	These builds are all for 32-bit targets. They also display guidance
+	for executing test suites
+
+
 
         _________________________________________________
         |       Copyright Tim Cox, 2015			|
@@ -113,17 +140,18 @@ masmx.7r3a manual describes masmx command line
 	symbol extracts exported names from assembled programs
 	so that the names may be captured as environmental variables
 
-		symbol	< file.txo [export|set] [all] > capture[.bat]
+		symbol	< file.txo [export|set] > capture[.bat]
 		source	capture
 
-	one word like export or set may be output in front of each
-	extracted label. The keyword
+        one word like export or set may be output in front of each
+        extracted label. The keyword
+                
+                all
+        
+        causes externalised names of storage locations to be extracted.
+        By default symbol only extracts symbols which are not addresses.
+        Values are output in decimal
 
-		all
-
-	causes externalised names of storage locations to be extracted.
-	By default symbol only extracts symbols which are not addresses.
-	Values are output in decimal
 
 masmx contains all the features described in the manual
 
@@ -132,6 +160,7 @@ and runtime algorithm plotter
 
 The directives $TREE $BRANCH $ROOT $RECORD $XQT_I $XQT_FP
 are therefore absent from masmz.
+
 
 
 Assistance

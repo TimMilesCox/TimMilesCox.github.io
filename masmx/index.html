@@ -54,24 +54,58 @@ There is a link to the licence text at the foot of this document
         </ul>
 
 	<div	style="color:FF0000">
-	masmx.7r3A [Build 3] binaries<br><br>
+	masmx.7r3A [Build 4] binaries<br><br>
 
 	<u>Changes from 7r3 to 7r3A Build 3</u><br>
         masmx.7r3A revises and makes more consistent the assembly<br>
         of hierarchically structured and named code and data. Earlier<br>
         application code needs no changes<br><br>
 
+	<p>
 	added -H option, allows unrounded floating constants<br><br>
 
-	addition of :z suffix on number constants for 7-word constant<br>
-	size-suffixes may be used to position floating exponent field in label-equated values<br>
-	in addition to overriding self-sizing in integers<br><br>
+	<p>
+	<u>Changes in Build 4</u><br>
 
-	addition of freestanding utility symbol<br>
-	extracts exported assembly labels<br>
+	<p>
+        Addition of :z tag to construct integer and floating constants seven storage words in size<br>
+        Size tags exist already for [1|2|3|4|5|6||8|]-word number constants and they override<br>
+        integer self-sizing and floating selectable default size<br>
+	size-suffixes also position floating exponent field in label-equated values
+
+	
+	<p>
+        Floating exponent underflow / overflow now marks the assembly in error<br>
+        Exponent underflow / overflow in an assembled storage expression was previously remarked<br>
+        but is now error-flagged
+
+	<p>
+        Earlier application code needs no changes<br>
+
+
+	<p>
+        <u>Easy to Use Build Scripts</u><br>
+        
+	<p>
+        Directory src now has scripts for constructing updated masmx and masmz<br>
+        on and for platforms osx.x86 osx.ppc ubuntu.x86 win32
+	<pre>
+
+                ./bosx86
+                ./ppcbosx
+                ./bubuntu
+                ./bw32
+	</pre>
+        These builds are all for 32-bit targets. They also display guidance
+        for executing test suites
+
+	<p>
+	<u>addition of freestanding utility symbol</u><br>
+
+	symbol extracts exported assembly labels<br>
 	and makes them available as environmental variables<br><br> 
 	
-	loaded in this .zip on 28 June 2018 at 21:00 Central European Time<br>
+	this .zip loaded on 10 July 2018 at 18:00 Central European Time<br>
 	</div>
 
 	<h2>masmx.7r3A for RTA1</h2>
@@ -105,7 +139,7 @@ There is a link to the licence text at the foot of this document
 	        <li>win32</li>
 	</ul>
         <div    style="color:FF0000">
-        masmx.7r3A [Build 3] binaries, source and test suites<br><br>
+        masmx.7r3A [Build 4] binaries, source and test suites<br><br>
 
 	<u>Changes from 7r3 to 7r3A Build 3</u><br>
         masmx.7r3A revises and makes more consistent the assembly<br>
@@ -114,15 +148,48 @@ There is a link to the licence text at the foot of this document
 
 	added -H option, allows unrounded floating constants<br><br>
 
-	addition of :z suffix on number constants for 7-word constants<br>
-	size-suffixes may be used to position floating exponent field in label-equated values<br>
-	in addition to overriding self-sizing in integers<br><br>
+        <p>
+        <u>Changes in Build 4</u><br>
 
-        addition of freestanding utility symbol<br>
-        extracts exported assembly labels<br>
-        and makes them available as environmental variables<br><br> 
+        <p>
+        Addition of :z tag to construct integer and floating constants seven storage words in size<br>
+        Size tags exist already for [1|2|3|4|5|6||8|]-word number constants and they override<br>
+        integer self-sizing and floating selectable default size<br>
+        size-suffixes also position floating exponent field in label-equated values
 
-        loaded in this .zip on 15 June 2018 at 21:00 Central European Time<br>
+
+        <p>
+        Floating exponent underflow / overflow now marks the assembly in error<br>
+        Exponent underflow / overflow in an assembled storage expression was previously remarked<br>
+        but is now error-flagged
+
+        <p>
+        Earlier application code needs no changes<br>
+
+
+        <p>
+        <u>Easy to Use Build Scripts</u><br>
+        
+        <p>
+        Directory src now has scripts for constructing updated masmx and masmz<br>
+        on and for platforms osx.x86 osx.ppc ubuntu.x86 win32
+        <pre>
+
+                ./bosx86
+                ./ppcbosx
+                ./bubuntu
+                ./bw32
+        </pre>
+        These builds are all for 32-bit targets. They also display guidance
+        for executing test suites
+
+        <p>
+        <u>addition of freestanding utility symbol</u><br>
+
+        symbol extracts exported assembly labels<br>
+        and makes them available as environmental variables<br><br>
+
+        this .zip loaded on 10 July 2018 at 18:00 Central European Time<br>
         </div>
 
 	<h2>GNU General Public Licence Version 3</h2>
