@@ -10,90 +10,189 @@ Text of the GPL v3 is supplied with this document under the filename gnu_gpl.txt
 These utilities are
 
         a number of simple utilities on osx.x86 osx.ppc ubuntu.x86 Windows32
-        of which the most important are usea seeif and data
-
-                usea =  another grep, importantly useable without much expertise
-                        in Windows command prompt as also in Unix shells
-
-                seeif = another diff, importantly useable in plain and basic
-                        Windows command prompt as also in Unix shells. Optionally
-                        recurses subdirectories
-
-                data =  another DOS line editor, importantly useable without much
-                        keyboarding in Windows command prompt as also in Unix shells
-
-                        data is 100% text-command driven, and can be used from 
-                        scripts for gang-updates. Used in bshell / MS prompt
-
-                fds =   a datafile hex / character viewer used in bshell / MS prompt
-
-                flo     displays IEEE754 64-bit floating values in hex notation
-                        for floating library developers, used in bshell / MS prompt
-
-                csum    generates and displays expected IP / TCP / UDP checksums
-                        for PDUs represented in text tokens of 4 hex symbols representing
-                        16-bit words. For network integrators checking implementations
-                        of protocol stacks. Used in bshell / MS prompt
-
-                stripcr reads a text file as stdin and writes it as stdout
-                        discarding CR. MS stdout will of course reintroduce CRs
-                        so stripcr is mostly for tidying textfiles which are
-                        being migrated from MS to Unix. ftp ASCII mode does the
-                        same thing when sending from MS to Unix. Used in bshell / MS prompt
-			There are dozens of other utilities which do the same thing
-
-                stuffcr reads a text file as stdin and writes it as stdout, adding
-                        CR before unaccompanied LF. ftp ASCII mode does the same
-                        thing when sending from Unix to MS. Used in bshell / MS prompt
-			There are dozens of other utilties which do the same thing
 
 
+                usea	another grep, for Windows plain command prompt and Unix shells
+			You can pipe lists of files to usea
+<div    style="font-size:11pt;color:blue">
+
+				dir /B /S [PATH] |  <a style="color:red">usea -z[a][i] string [string...]</a>
+
+				-z	no filenames follow after option -z
+				-a	display only lines with all the search strings in them
+				-i	search case-transparent
+				-f	display names only of files containing search strings
+				-nf	display names only of files with no search strings
+
+				<a style="color:red">usea file [file...] -z string [string...]</a>
+</div>
+                seeif	another diff, for Windows plain command prompt and Unix shells
+<div    style="font-size:11pt;color:blue">
+				paths are either two files or two directories
+
+				<a style="color:red">seeif [-avVWRs] path path</a>
+
+			        -a      text, ignore stuff like CR
+			        -v      display differences
+			        -V      keep comparing after the first difference
+			                try to resync text files
+
+			        -W      treat whitespace fields as one space
+			                ignore blank lines
+
+			        -R      recurse subdirectories
+			        -s      say if files are equal
+
+</div>
+                data	another DOS line editor, for Windows plain command prompt and Unix shells
+			text-command driven, but Windows stdin allows inline editing
+<div	style="font-size:11pt;color:blue">
+
+				<a style="color:red">data [-n][i] file</a>
+
+				-n	show line numbers
+				-i	open edit in input mode. Unconditionally replaces the file
+
+			for safest use and especially for scripts and gang update
+
+				<a style="color:red">data from_file to_file [ &lt; commands_file ] [ -options ]</a>
+
+				-g	colours (not MS command prompt)
+
+			commands during data operation
+
+				q		exit and don't write
+
+				.		exit and write
+
+				n		line number display on / off
+
+				l [<i>mask</i>]	locate next instance <i>mask</i> or earlier mask on lines from current line
+
+				lc [<i>mask</i>]	locate all instances on lines from current line
+
+				L [<i>mask</i>]	locate next instance mask or earlier mask case-transparent on lines from current line
+
+				LC [<i>mask</i>]	locate all instances on lines from current line
+
+				p[<i>lines</i>]	display <i>lines</i> from current line
+
+				p!		display all lines from current line
+
+				q[<i>lines</i>]	display <i>lines</i> from next line
+
+				q!		display all lines from next line
+
+				<i>return</i>		(command mode) advance one line
+
+				<i>return</i>		(input mode) change to command mode
+
+				-		move to previous line
+
+				+[<i>lines</i>] [save_file]	advance <i>lines</i> and optionally file scanned lines
+
+				+:<i>line</i> [save_file]	advance to <i>line</i> and optionally file scanned lines
+
+				i<i>return</i>		with no space change to input mode
+
+				i [text]	enter a line with optional text
+
+				b [text]	enter a line with optional text before the current line
+
+				r [text]	replace current line
+
+				c &deg;[<i>from</i>]&deg;[<i>to</i>]&deg;[-]		change all <i>from</i> to <i>to</i> in current line
+							&deg; is any character
+							void <i>from</i>: c&deg;&deg;<i>to</i>&deg; adds <i>to</i> at front of line
+		 					c&deg;&deg;<i>to</i>&deg;- adds <i>to</i> at back of line
+
+				t &deg;[<i>from</i>]&deg;[<i>to</i>]&deg;[<i>lines</i>][-]	translate all <i>from</i> to <i>to</i> for <i>lines</i> or for all lines from current position
+							&deg; is any character
+							void <i>from</i>: c&deg;&deg;<i>to</i>&deg; adds <i>to</i> at front of lines
+							c&deg;&deg;<i>to</i>&deg;- adds <i>to</i> at back of lines
+
+				C		c hit case-transparent
+
+				T		t hit case-transparent 
+
+				d		remove current line
+
+				d-		remove current line and go to previous line
+
+				<i>line</i>,<i>line</i> [save_file] remove from <i>line</i> to <i>line</i>  and optionally file removed lines
+
+				a <i>file</i>		add text from <i>file</i> at current position
+
+			data acts as a viewer until a change is made. temp0.txt and temp1.txt contain updated versions up to exit
 
 
-__________________________________________________
-It is important to acknowledge the contribution of
-__________________________________________________
+</div>
+                fds	dump format file viewer for Windows plain command prompt and Unix shells
+<div    style="font-size:11pt;color:blue">
+
+				<a style="color:red">fds file [-Ze]</a>
+
+				-Z	display all the file without waiting for keyins
+
+				-e	does not add LF to lines streamed with -Z option
+
+			dumps data in 16-octet lines, CR for next line
+
+			a new display offset may be entered, decimal or leading zero for hex
+			a search string can be entered with the new offset and may have embedded space 	
+
+				fds ~/dynamic.rta/pduimage
+				0000000000000000: 00000c00001200000100001400000300   "................"
+				0000000000000010: 000000000100001c0000030000000000   "................"05000 green beans
+				000000000000547a: 677265656e206265616e730000000000   "green beans....."
+</div>
+                csum    generates and displays expected IP / TCP / UDP checksums.
+                        Input is quartets of dump-format hex symbols
+<div    style="font-size:11pt;color:blue">
+				<a style="color:red">csum [ &lt; file_of_4symbol_hex_words ]</a>
+
+				<a style="color:red">csum</a>
+				4500
+				003c
+				.
+				.
+</div>
+		flo	displays IEEE754 64-bit floating values in hex notation
+<div    style="font-size:11pt;color:blue">
+				
+				<a style="color:red">flo</a>
+				1.9
+				.
+				.
+</div>
+                stripcr	writes stdin to stdout discarding CR
+
+				<a style="color:red">stripcr &lt; withCR &gt; without</a>
+
+		stuffcr	writes stdin to stdout insaerting CR before LF
+
+				<a style="color:red">stuffcr &lt; withoutCR &gt; with</a>
+
+
+
+		_________________________________________________
+		|						|
+		|						|
+		|	Acknowledgement				|
+		|						|
+		|_______________________________________________|
+
+
+Work by Kevlin Henney made seeif (another diff) possible for Windows
+which is the only platform that may need a routine like diff
 
 	Kevlin Henney
         kevlin@acm.org, kevlin@curbralan.com
 
-to seeif.exe, which is a another diff, chiefly for comparing
-Microsoft directories and files in Microsoft command prompt
-simplest version with no special environment
-
 Mr Henney's dirent routines allow applications like seeif
 to read Microsoft directories much as POSIX platforms allow
 
-seeif is also built for Linux and OSX. diff is already very
-good on any Unix platform, but seeif optionally recurses any
-depth of directories
-
-Directory operations in the Microsoft executable are
-carried out with Mr Henney's dirent subroutines
-
-seeif command line is
-
-	seeif [-avVWRs] path path
-
-All the options are single letter and can be in all
-positions of the line, all at once if desired
-
-paths are either two files or two directories
-
-	-a	text, ignore stuff like CR
-
-	-v	display differences
-
-	-V	keep comparing after the first difference
-		try to resync text files
-
-	-W	treat whitespace fields as one space
-		ignore blank lines
-
-	-R	recurse subdirectories
-
-	-s	say if files are equal
-
+seeif is also built for Linux and OSX because everything in this download is
 
 </pre>
 </div>
