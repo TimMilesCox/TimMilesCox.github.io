@@ -486,43 +486,63 @@ Input expressions may have some dozens of tokens but it is simpler for the calle
 
 <pre	style="font-size:10pt;color:0000FF">
 
-	$ fponline
+	~/rta/client> fponline 
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
-	4840.0e900000 - 50 * 3e900001
+	 (1 - 5 / 1000) * (80 * (4840.0e900000 - 50 * 3.0e900001) + (4840.0e900000 - 50 * 3.0e900001) + 5.0e900006)
 	~/dynamic.rta ~/RTA1/rta/client
 	started mpdu
 	~/RTA1/rta/client
+	send state 330
+	recv state 53/60 +5.244187300000000000000000000000000000000002e+900006
+	4840.0e900000 - 50 * 3.0e900001
+	~/dynamic.rta ~/rta/client
+	started mpdu
+	~/rta/client
 	send state 114
-	recv state 53/60 +4.840000000000000000000000000000000000000002e+900003
+	recv state 53/11 +3.340000000000000000000000000000000000000001e+900003
 	scrambled
 	.
-	$ fponline 172.29.7.75
+	~/rta/client> fponline 172.29.7.74
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
 	scrambled * 80
-	~/dynamic.rta ~/RTA1/rta/client
+	~/dynamic.rta ~/rta/client
 	started mpdu
-	~/RTA1/rta/client
+	~/rta/client
 	send state 72
-	recv state 53/60 +3.872000000000000000000000000000000000000003e+900005
+	recv state 53/11 +2.672000000000000000000000000000000000000001e+900005
 	egg
 	.
-	$ fponline 172.29.7.25
+	~/rta/client> fponline 172.29.7.24
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
 	scrambled + egg
-	~/dynamic.rta ~/RTA1/rta/client
+	~/dynamic.rta ~/rta/client
 	started mpdu
-	~/RTA1/rta/client
+	~/rta/client
 	send state 72
-	recv state 53/60 +3.920400000000000000000000000000000000000004e+900005
+	recv state 53/11 +2.705400000000000000000000000000000000000002e+900005
 	.
-	$ fponline 172.29.7.7
+	~/rta/client> fponline 172.29.7.7
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
 	+5.0e900006
+	~/dynamic.rta ~/rta/client
+	started mpdu
+	~/rta/client
+	send state 72
+	recv state 53/11 +5.270540000000000000000000000000000000000001e+900006
+	sofar
+	1 - 5 / 1000
 	~/dynamic.rta ~/RTA1/rta/client
 	started mpdu
-	~/RTA1/rta/client
+	~/rta/client
+	send state 114
+	recv state 9/11 +9.950e-1
+	ratio
+	* sofar
+	~/dynamic.rta ~/RTA1/rta/client
+	started mpdu
+	~/rta/client
 	send state 72
-	recv state 53/60 +5.392040000000000000000000000000000000000002e+900006
+	recv state 53/11 +5.244187300000000000000000000000000000000004e+900006
 
 </pre>
 netsnmp is used from any directory because it requires no client-local configuration
