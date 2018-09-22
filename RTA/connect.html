@@ -167,8 +167,8 @@ A configuration step equips RTA1 with network addresses
 	export RTA_ENET=172.29.7.8
 	export RTA_WIFI=172.29.7.66
 	export SLOOP=lo0
-	export ENET=en0
-	export WIFI=en1
+	export ENET=en0		# in absence of any RJ45 socket
+	export WIFI=en1		# en0 may be WIFI. Consult ifconfig
 	$
 
 </pre>
@@ -394,6 +394,7 @@ All outputs and most input parameters are in hex. Cursor return prompts eight mo
 	r 128			# walk the interrupt registes. The parameter is decimal
 
 	b			# display all relocation bases
+				# command b is NOT continuous, period . exits the emulator
 
 	d1:800			# display device array 1 location 2048
 
@@ -489,15 +490,9 @@ Input expressions may have some dozens of tokens but it is simpler for the calle
 	~/rta/client> fponline 
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
 	 (1 - 5 / 1000) * (80 * (4840.0e900000 - 50 * 3.0e900001) + (4840.0e900000 - 50 * 3.0e900001) + 5.0e900006)
-	~/dynamic.rta ~/RTA1/rta/client
-	started mpdu
-	~/RTA1/rta/client
 	send state 330
-	recv state 53/60 +5.244187300000000000000000000000000000000002e+900006
+	recv state 53/11 <a style="color:FF0000">+5.244187300000000000000000000000000000000002e+900006</a>
 	4840.0e900000 - 50 * 3.0e900001
-	~/dynamic.rta ~/rta/client
-	started mpdu
-	~/rta/client
 	send state 114
 	recv state 53/11 +3.340000000000000000000000000000000000000001e+900003
 	scrambled
@@ -505,9 +500,6 @@ Input expressions may have some dozens of tokens but it is simpler for the calle
 	~/rta/client> fponline 172.29.7.74
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
 	scrambled * 80
-	~/dynamic.rta ~/rta/client
-	started mpdu
-	~/rta/client
 	send state 72
 	recv state 53/11 +2.672000000000000000000000000000000000000001e+900005
 	egg
@@ -515,34 +507,22 @@ Input expressions may have some dozens of tokens but it is simpler for the calle
 	~/rta/client> fponline 172.29.7.24
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
 	scrambled + egg
-	~/dynamic.rta ~/rta/client
-	started mpdu
-	~/rta/client
 	send state 72
 	recv state 53/11 +2.705400000000000000000000000000000000000002e+900005
 	.
 	~/rta/client> fponline 172.29.7.7
 	remote application socket 3 bind state 0 F 2 NB 0 udconnect state 0
 	+5.0e900006
-	~/dynamic.rta ~/rta/client
-	started mpdu
-	~/rta/client
 	send state 72
 	recv state 53/11 +5.270540000000000000000000000000000000000001e+900006
 	sofar
 	1 - 5 / 1000
-	~/dynamic.rta ~/RTA1/rta/client
-	started mpdu
-	~/rta/client
 	send state 114
 	recv state 9/11 +9.950e-1
 	ratio
 	* sofar
-	~/dynamic.rta ~/RTA1/rta/client
-	started mpdu
-	~/rta/client
 	send state 72
-	recv state 53/11 +5.244187300000000000000000000000000000000004e+900006
+	recv state 53/11 <a style="color:FF0000">+5.244187300000000000000000000000000000000004e+900006<a>
 
 </pre>
 netsnmp is used from any directory because it requires no client-local configuration
