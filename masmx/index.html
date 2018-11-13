@@ -34,10 +34,18 @@ There is a link to the licence text at the foot of this document
 
 </center>
 
-
+	<br><br>
+	<h3><a	style="color:0000FF">For the Assembly Language Developer using masmx</a></h3>
 
         <h2>masmx.7r3A Downloadable Binaries</h2>
 
+	These notes are for the developer using the supplied masmx binaries
+
+	<p>
+	There are more notes and a bigger download
+	for the <a href="#maintainer">maintainer</a> updating or porting masmx
+
+	<p>
 	<a href="http://timmilescox.github.io/masmx/masmx.html">
 	masmx.7r3A Manual</a>
 
@@ -46,23 +54,33 @@ There is a link to the licence text at the foot of this document
         download masmx.7r3A documentation and binaries</a>
         <br>
         for developer plaforms
-        <ul>
-                <li>linux.x86</li>
-                <li>osx.x86</li>
-                <li>osx.ppc</li>
-                <li>win32</li>
-        </ul>
+        <pre>
+
+                linux.x86
+                osx.x86
+                osx.ppc
+                win32
+        </pre>
 
 	<div	style="color:FF0000">
-	masmx.7r3A [Build 4] binaries<br><br>
+	masmx.7r3A [Build 5] binaries<br><br>
 
-	<u>Changes from 7r3 to 7r3A Build 3</u><br>
+	<u>Changes from 7r3 to 7r3A Build 5</u><br>
         masmx.7r3A revises and makes more consistent the assembly<br>
         of hierarchically structured and named code and data. Earlier<br>
         application code needs no changes<br><br>
 
 	<p>
 	added -H option, allows unrounded floating constants<br><br>
+
+	<p>
+        <u>Changes in Build 5</u><br><br>
+
+        displays errno if an input or an output file cannot be accessed
+        pointing to cause of problem
+
+        option flag -I legalises inline code generation from $func macros
+
 
 	<p>
 	<u>Changes in Build 4</u><br>
@@ -76,28 +94,17 @@ There is a link to the licence text at the foot of this document
 	
 	<p>
         Floating exponent underflow / overflow now marks the assembly in error<br>
-        Exponent underflow / overflow in an assembled storage expression was previously remarked<br>
+        Exponent underflow / overflow in an assembled storage constant was previously remarked<br>
         but is now error-flagged
 
 	<p>
         Earlier application code needs no changes<br>
 
+	<p>
+	<u>Introduced in masmx7r3A</u>
 
 	<p>
-        <u>Easy to Use Build Scripts</u><br>
-        
-	<p>
-        Directory src now has scripts for constructing updated masmx and masmz<br>
-        on and for platforms osx.x86 osx.ppc ubuntu.x86 win32
-	<pre>
-
-                ./bosx86
-                ./ppcbosx
-                ./bubuntu
-                ./bw32
-	</pre>
-        These builds are all for 32-bit targets. They also display guidance
-        for executing test suites
+        <a href="#easy"><u>Easy to Use Build Scripts for New or Updated masmx</u></a><br>        
 
 	<p>
 	<u>addition of freestanding utility symbol</u><br>
@@ -105,7 +112,7 @@ There is a link to the licence text at the foot of this document
 	symbol extracts exported assembly labels<br>
 	and makes them available as environmental variables<br><br> 
 	
-	this .zip loaded on 10 July 2018 at 18:00 Central European Time<br>
+	this .zip loaded on 14 November 2018 at 00:00 Central European Time<br>
 	</div>
 
 	<h2>masmx.7r3A for RTA1</h2>
@@ -118,35 +125,50 @@ There is a link to the licence text at the foot of this document
 	<br>
         download RTA1 emulator and target code materials plus masmx binaries and manual
 
-<p>
+	<p>
+
+	<a	name="maintainer"/>
+	<h3><a	style="color:0000FF">For the masmx Maintainer</a></h3>
 
 	<h2>masmx.7r3A for Any Developer Platforms / Any Targets</h2>
 
+	These notes are for anyone updating or porting masmx
+
+	<p>
 	<a href="http://timmilescox.github.io/masmx/masmx.html">
 	masmx.7r3A Manual</a>
 
-<p>
+	<p>
 
         <a href="http://timmilescox.github.io/masmx/masmx7r3A_gen.zip">
 	download masmx.7r3A documentation and build materials
 	for all developer platforms</a>
         <br>
 	plus masmx binaries for developer platforms
-	<ul>
-		<li>linux.x86</li>
-		<li>osx.x86</li>
-	        <li>osx.ppc</li>
-	        <li>win32</li>
-	</ul>
+	<pre>
+		linux.x86
+		osx.x86
+	        osx.ppc
+	        win32
+	</pre>
         <div    style="color:FF0000">
         masmx.7r3A [Build 4] binaries, source and test suites<br><br>
 
-	<u>Changes from 7r3 to 7r3A Build 3</u><br>
+	<u>Changes from 7r3 to 7r3A Build 5</u><br>
         masmx.7r3A revises and makes more consistent the assembly<br>
         of hierarchically structured and named code and data. Earlier<br>
         application code needs no changes<br><br>
 
 	added -H option, allows unrounded floating constants<br><br>
+
+        <p>
+        <u>Changes in Build 5</u><br><br>
+
+        displays errno if an input or an output file cannot be accessed
+        pointing to cause of problem
+
+        option flag -I legalises inline code generation from $func macros
+
 
         <p>
         <u>Changes in Build 4</u><br>
@@ -160,7 +182,7 @@ There is a link to the licence text at the foot of this document
 
         <p>
         Floating exponent underflow / overflow now marks the assembly in error<br>
-        Exponent underflow / overflow in an assembled storage expression was previously remarked<br>
+        Exponent underflow / overflow in an assembled storage constant was previously remarked<br>
         but is now error-flagged
 
         <p>
@@ -168,16 +190,19 @@ There is a link to the licence text at the foot of this document
 
 
         <p>
-        <u>Easy to Use Build Scripts</u><br>
-        
+	<a	name="easy"/>
+        <u>Introduced in masmx7r3A</u>
+
+        <p>
+        <u>Easy to Use Build Scripts for New or Updated masmx</u><br>
         <p>
         Directory src now has scripts for constructing updated masmx and masmz<br>
-        on and for platforms osx.x86 osx.ppc ubuntu.x86 win32
-        <pre>
+        on and for platforms osx.x86 osx.ppc openSUSE.x86 win32
+        <pre	style="color:000000">
 
                 ./bosx86
                 ./ppcbosx
-                ./bubuntu
+                ./bsuse
                 ./bw32
         </pre>
         These builds are all for 32-bit targets. They also display guidance
@@ -189,11 +214,13 @@ There is a link to the licence text at the foot of this document
         symbol extracts exported assembly labels<br>
         and makes them available as environmental variables<br><br>
 
-        this .zip loaded on 10 July 2018 at 18:00 Central European Time<br>
+        this .zip loaded on 14 November 2018 at 00:00 Central European Time<br>
         </div>
+
+	<a	href="rel_note.txt">Release Note</a>
 
 	<h2>GNU General Public Licence Version 3</h2>
 	<a href="http://timmilescox.github.io/masmx/gnu_gpl.html">
-	GNU General Public Licence Version 3</a>
+	GNU General Public Licence Version 3</a><br><br><br>
 </div>
 </html>
