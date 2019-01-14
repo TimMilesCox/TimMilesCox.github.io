@@ -57,17 +57,17 @@ The use and program-relative addresses of program sections are
                 | any size
                 | in 4Kword increments  |
                                                                 __________________________________________                      _________________________
-                                                        000100  |$(1)                   |                               001000  | $(65)                 |
+                                                        001000  |$(1)                   |                               001000  | $(65)                 |
                                                         hex     |  process private data |                               hex     | thread control block  |
                                                                 |                       |                                       | per thread 4k         |
                                                                 |  4K words     may be multiple                                 | addressed by kernel    |
                                                                 |_______________________|_________________                      |_______________________|
-                                                        000200  |$(2)                   |
+                                                        002000  |$(2)                   |
                                                         hex     |  vector list          |       application cannot write
                                                                 |  process global       |       its vector list
                                                                 |  4K words             |
                                                                 |_______________________|
-                                                        000300  |$(3)                   |
+                                                        003000  |$(3)                   |
                                                         hex     |  static data          |
                                                                 |  process global
                                                                    initial assignment multiple of 4Kwords
