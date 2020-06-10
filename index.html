@@ -12,8 +12,7 @@ microcontroller applications in a few dozen words of storage, and it can run
 as a major system maintaining some millions of TCP connections simultaneously
 
 <p>
-RTA1 is intended to work very fast without having operand cache.
-The large array of scratch registers is organised as an internal stack.
+RTA1  internal register stack gathers operands as functions are traversed, eliminating level-1 operand cache.
 No circuitry is needed for cache coherency. SMP scalability is at low cost.
 RTA1 and the smaragd7 kernel are SMP capable from the start
 
