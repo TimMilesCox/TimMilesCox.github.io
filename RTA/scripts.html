@@ -4,7 +4,7 @@
 
 <ol>
 	<li><a href="#location">Location of Build Scripts</a></li>
-	<li><a href="#amake">Building Loadable Applications</a></li>
+	<li><a href="#lmake">Building Loadable Applications</a></li>
 	<ol>
 		<li><a href="#lfiles">What should be in this Directory?</a></li>
 		<li><a href="#lsource">What should be in this Source File?</a></li>
@@ -30,33 +30,167 @@
 <h3>1: Location of Build Scripts</h3>
 Directory path <a style="color:#FF0000">rta/target.rta/image.app</a> needs to be in your environment
 
-<p>
-command <a href="#amake">amake</a> builds dynamically loadable applications of any size
-
-<p>
-command <a href="#romapp">romapp</a> builds applications of any size for inclusion in NVRAM system image
-
-<p>
-command <a href="#bmake">bmake</a> builds multiple applications packed together in iframes to optimise NVRAM use
-
 <a	name="amake"/>
+<h3>2: Loadable and NVRAM Applications</h3>
+
+<p>
+command <a href="#amake">amake</a> builds
+
+<ul	type="square">
+	<li>multiple or single dynamically loadable applications of any size</li>
+
+	<li>multiple or single applications of any size for inclusion in NVRAM system image</li>
+
+</ul>
+Multiple applications are applications with their instruction part packed into shared iframes in order to optimise instruction memory
+
+<p>
+Memory assignment is in multiples of 4K-word pages and applications may ne as compact as a few dozens or hundreds of instructions
+
+<p>
+Multiple application instruction parts are assembled relocatable as directed by script make_rel in the application directory
+<pre	style="font-size:14pt;color:#0000FF">
+
+	$ cd	rta/application.rta/rom1.app
+	$ cat	make_rel
+
+	relt	packed_app1
+	relt	packed_app2
+	.
+	.
+
+</pre>
+<p>
+If make_rel is absent build advances to absolute assembly of a single application
+
+<p>
+Application data memory is always assigned in multiples of 4K-word pages for each process instance of the application
+
+<p>
+All applications are shared code and unpack program data into process RAM at process start
+
+
+<a	name="lmake"/>
 <h3>2: Building Loadable Applications</h3>
+
+Loadable applications are constructed with one identifier left unresolved, the start page index of the containing group of iframes
+
+<p>
+Application iframes load updates all self-references
 
 <a	name="lfiles"/>
 <h4>2.1: What should be in this Directory?</h4>
 
-<h4>2.2: What should be in this Source File?</h4>
+If the iframe group contains multiple packed applications there must be a script make_rel
+
+<p>
+If the iframe group is a single application there may not be a script make_rel
+
+<p>
+There must be an applications main assembly file which is either the single application or the linking assembly of packed applications
+
+<p>
+If the iframe group contains multiple applications there must be a script make_pro to assemble lookup tags and process launch parameters
+
+<p>
+There must be a script loadfs to direct the store and retrieval of application initial data on process start
+
+<p>
+loadfs also directs the stored lookup and start parameters of applications if the iframe group contains multiple applications
 
 <a	name="lsource"/>
+<h4>2.2: What should be in this Source File?</h4>
+
+
+
 
 <a	name="rom"/>
 <h3>3: Building and Including Applications in NVRAM</h3>
 
+NVRAM applications are constructed with all addresses resolved and catenated onto the system image
+
+<h4>3.1: What should be in this Directory?</h4>
+
+If the iframe group contains multiple packed applications there must be a script make_rel
+
+<p>
+If the iframe group is a single application there may not be a script make_rel
+
+<p>
+There must be an applications main assembly file which is either the single application or the linking assembly of packed applications
+
+<p>
+There must be a script make_pro to assemble lookup tags and process launch parameters
+
+<p>
+There must be a script loadfs to direct the store and retrieval of application initial data on process start
+
+<p>
+loadfs also directs the stored lookup and start parameters of all the applications in the NVRAM iframe group
+
+<p>
+There must be a script amass which catenates the application group to the NVRAM system image
+
 <a	name="romapp"/>
-<h4>3.1: Large Fixed Applications</h4>
+<h4>3.1: Single and Multiple NVRAM Applications</h4>
+
+A single NVRAM application in a directory <a style="color:#FF0000">rta/target.rta/<i>application_directory</i></a> has no make_rel script and its make_pro script calls command romprofi
+
+<p>
+Sample application counter is in directory rom2.app:
+<pre	style="font-size:14pt;color:#0000FF">
+
+	$ cd	rta/target.rta/rom2.app
+	$ romapp counter
+
+</pre>
 
 <a	name="ffiles"/>
 <h5>3.1.1: What should be in this Directory?</h5>
+
+The directory for a single large NVRAM-based application needs four files
+
+<p>
+These examples are four supplied files to construct sample application <a style="color:#FF0000">counter</a> in <a style="color:#FF0000">rta/target.rta/rom2.app</a>
+<ul	type="square">
+
+	<li>application source code</li>
+	<li>a script called make_pro to construct run parameters
+	<pre	style="font-size:14pt;color:#0000FF">
+
+	$ #	application is counter
+	$ #	vector value is the offset part of value <a style="color:#FF0000">count</a> exported from assembly
+	$ #	run priority is 7 (lowest), one B1 private stack page
+	$ #	start page index APPLICATION(2) equated in rta/target.rta/def.app/iframes.def
+
+	$ cat make_pro
+
+	romprofi counter count/*24 7 1 "APPLICATION(2)" 
+	</pre>
+	</li>
+	<li>a text file called loadfs to direct the construction of an embedded file system
+	<pre	style="font-size:14pt;color:#0000FF">
+
+	$ #	volume name can be anything
+	$ #	application initial data is counter_data, build-linked by assembly name
+	$ #	search for lookup names is in directory application_templates
+	$ #	there is one lookup name count, launch parameters in file count
+	$ #	. end directory application_templates
+	$ #	. end root directory
+
+	$ cat	loadfs
+
+	volume embedded
+	file counter_data lsegment
+	tree application_templates
+	file count counter_profile.rom
+	.
+	.
+	</pre>
+	</li>
+	<li>a script called amass to catenate the total system image</li>
+	
+</ul>
 
 <a	name="fsource">
 <h5>3.1.2: What should be in this Source File?</h5>
@@ -76,7 +210,7 @@ command <a href="#bmake">bmake</a> builds multiple applications packed together 
 Basic system image <a style="color:#FF0000">rta/target.rta/initial.app/sysimage.rom</a> contains some supplied applications
 
 <p>
-Integrators add more applications with files physically catenated in the last step of build script romapp or bmake
+Integrators add more applications with files physically catenated in the last step of build script <a href="#location">romapp or bmake</a>
 
 <p>
 The catenated object is a block of one or more pages built in one application directory by romapp or bmake
@@ -100,7 +234,7 @@ File <a style="color:#FF0000">start_page_index</a> is constructed in directory <
 
 <p>
 <a style="color:#FF0000">APPLICATION(1)</a> must be at 00B000 and <a style="color:#FF0000">APPLICATION(2)</a> depends how large APPLICATION(1) is. Application blocks are in multiples of 4K words
-<pre	style="color:#0000FF">
+<pre	style="font-size:14pt;color:#0000FF">
 
 	cd	rta/target.rta/def.app
 	cat	iframes.def
