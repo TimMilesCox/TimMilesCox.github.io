@@ -56,18 +56,40 @@ There is a link to the licence text at the foot of this document
         for developer plaforms
         <pre>
 
-                linux.x86
-                osx.x86		osx.ia64
+                linux.x86	linux.x86_64
+                osx.x86		osx.x86_64
                 osx.ppc
                 win32
         </pre>
 
 	<div	style="color:FF0000">
-	masmx.7r3A [Builds 8 and 9-64] binaries<br><br>
+	masmx.7r3A [Build 11 Build 11-64] binaries<br><br>
 
+	<i>Binaries for MS Windows temporarily remain at Build 8</i>
+
+
+        <u>Introduced in masmx 7r3A Build 11 / Build 11-64</u>
+
+        algorithm plotter directive $xqt_fp correction
+        handling of parenthesised sub-expressions corrected
+
+        new script test.msm/clean removes benchmark results
+        before backup or zip
+
+        these benchmarks apply when masmx toolchain is generated
+
+        the required results controls are kept
+        but the generated test results are dropped after comparison
+
+
+        <u>Introduced in masmx 7r3A Build 10 / 10-64</u>
+
+        merged 64-bit / 32-bit sources
+        nothing is called long and all c language i32s are called int
+        correction to 1st / 2nd pass behaviour of $text translations
 
 	<p>
-	<u>Introduced in masmx7r3A</u>
+	<u>Introduced in earlier builds masmx7r3A</u>
 
 	<p>
 	64-bit OS X binaries run on Intel Mac from Snow Leopard to Catalina
@@ -82,7 +104,7 @@ There is a link to the licence text at the foot of this document
 	symbol extracts exported assembly labels<br>
 	and makes them available as environmental variables<br><br> 
 	
-	this .zip loaded on 27 February 2020 at 12:00 Central European Time<br>
+	this .zip loaded on 11 January 2021 at 00:00 Central European Time<br>
 	</div>
 
 	<h2>masmx.7r3A for RTA1</h2>
@@ -116,13 +138,13 @@ There is a link to the licence text at the foot of this document
         <br>
 	plus masmx binaries for developer platforms
 	<pre>
-		linux.x86
-		osx.x86		osx.ia64
+		linux.x86	linux.x86_64
+		osx.x86		osx.x86_64
 	        osx.ppc
 	        win32
 	</pre>
         <div    style="color:FF0000">
-        masmx.7r3A [Builds 8 and 9-64] binaries, source and test suites<br><br>
+        masmx.7r3A [ Build 11 and 11-64 ] binaries, source and test suites<br><br>
 
         <p>
 	<a	name="easy"/>
@@ -136,9 +158,10 @@ There is a link to the licence text at the foot of this document
         <pre	style="color:000000">
 
                 ./bosx86
-		src.64/bosx64
+		 ./bosx64
                 ./ppcbosx
                 ./bsuse
+		./bsuse.64
                 ./bw32
         </pre>
         <p>
@@ -157,7 +180,7 @@ There is a link to the licence text at the foot of this document
         symbol extracts exported assembly labels<br>
         and makes them available as environmental variables<br><br>
 
-        this .zip loaded on 27 January 2020 at 12:00 Central European Time<br>
+        this .zip loaded on 11 January 2021 at 00:00 Central European Time<br>
         </div>
 
 	<a	href="rel_note.txt">Release Note</a>
