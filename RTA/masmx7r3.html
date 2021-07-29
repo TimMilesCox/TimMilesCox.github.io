@@ -1676,21 +1676,21 @@ in the internal stack. This is achieved for kernel, IP stack and supplied applic
 		|_______________________________|					|_______________________________|
 	3	|		y		|	index register		131	|		y_x		|
 		|_______________________________|					|_______________________________|
-	4	|		a		|  arithmetic + index register	132	|		a_x		|
+	4	|		a		|  accumulator + index register	132	|		a_x		|
 		|_______________________________|					|_______________________________|
-	5	|		b		|  arithmetic + index register	133	|		b_x		|
+	5	|		b		|  accumulator + index register	133	|		b_x		|
 		|_______________________________|					|_______________________________|
-	6	|	mantissa2		|	arithmetic register	134	|	mantissa2_x		|
+	6	|	mantissa2		|	accumulator		134	|	mantissa2_x		|
 		|_______________________________|					|_______________________________|
-	7	|	mantissa3		|	arithmetic register	135	|	mantissa3_x		|
+	7	|	mantissa3		|	accumulator		135	|	mantissa3_x		|
 		|_______________________________|					|_______________________________|
-	8	|		aA		|	arithmetic register	136	|		aA_x		|
+	8	|		aA		|	accumulator		136	|		aA_x		|
 		|_______________________________|					|_______________________________|
-	9	|		bA		|	arithmetic register	137	|		bA_x		|
+	9	|		bA		|	accumulator		137	|		bA_x		|
 		|_______________________________|					|_______________________________|
-	10	|	mantissa2A		|	arithmetic register	138	|	mantissa2A_x		|
+	10	|	mantissa2A		|	accumulator		138	|	mantissa2A_x		|
 		|_______________________________|					|_______________________________|
-	11	|	mantissa3A		|	arithmetic register	139	|	mantissa3A_x		|
+	11	|	mantissa3A		|	accumulator		139	|	mantissa3A_x		|
 		|_______________________________|					|_______________________________|
 	12	|	    	 p		|	bitstream pointer write	140	|		p_x		|
 		|_______________________________|					|_______________________________|
@@ -2093,10 +2093,18 @@ third-words are sign-extended
 	|_______________|_______________|_______________________|_______________________________________________|
 	|	<a href="rta.html#tp" style="color:#00FF00">tp</a>	|   01111.0jj	|  test positive skip	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
 	|_______________|_______________|_______________________|_______________________________________________|
+	|	<a href="rta.html#tnz" style="color:#00FF00">tnz</a>	|	macro	|  test nonzero skip	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	<a href="rta.html#tn" style="color:#00FF00">tn</a>	|	macro	|  test negative skip	| [w0] ++ [t1 t2 t3] -- [h1 h2]			|
+	|_______________|_______________|_______________________|_______________________________________________|
 
 
-	Assembly Language Examples
-	__________________________
+	See also masked and long equal tests <a href="rta.html#mta" style="color:#00FF00">mta</a> <a href="rta.html#mta" style="color:#00FF00">mtane</a> <a href="rta.html#dte" style="color:#00FF00">dte</a> and integer compare macros <a href="rta.html#anu" style="color:#00FF00">anu</a> <a href="rta.html#anuba" style="color:#00FF00">anuba</a>
+
+
+
+	Assembly Language Examples tz and tp
+	____________________________________
 
 <div	style="color:#FF0000">
   :                            430 $(3:03000)
@@ -2120,7 +2128,6 @@ third-words are sign-extended
 00:000046 65FFFF              +446 	la, xi	-1
 00:000047 350000              +447 	lret	0
 </div>
-
 </pre>
 
 <a	name="xai"/>
@@ -2192,8 +2199,7 @@ Boolean algebra instructions do not update <b>carry$</b>
 <h3>6.10: Single Integer Add Instructions</h3>
 
 <p>
-The single integer add instructions add the operand or its 2s complement
-to arithmetic register a or b
+The single integer add instructions add the operand or its 2s complement to accumulator a or b
 
 <p>
 carry from bit 23 of the addition is stored in <b>carry$</b>.
@@ -2229,8 +2235,7 @@ of the 2s complement would write carry
 <a	name="mi"/>
 <h3>6.11: Multiply</h3>
 
-The integer multiply instruction multiplies arithmetic register b algebraically 
-by the operand and stores the 48-bit product in arithmetic registers a:b
+The integer multiply instruction multiplies accumulator b algebraically by the operand and stores the 48-bit product in accumulators a b
 <p>
 
 <b>carry$</b> is not updated
@@ -2256,12 +2261,10 @@ by the operand and stores the 48-bit product in arithmetic registers a:b
 <a	name="mf"/>
 <h3>6.12: Multiply Fractional</h3>
 
-Multiply Fractional instruction multiplies arithmetic register b by the
-operand and stores the 48-bit product in arithmetic registers a:b
+Multiply Fractional instruction multiplies unsigned accumulator b by the operand and stores the 48-bit product in accumulators a b
 
 <p>
-The multiplier is treated as signed and the multiplicand is treated
-as unsigned
+The multiplier is signed and the multiplicand is unsigned
 
 <p>
 Multiply Fractional is used to render binary fractions integrally
@@ -2293,7 +2296,7 @@ integer multiplicands more than one word in length
 <h3>6.13: Divide</h3>
 
 The integer divide instruction algebraically divides the 48-bit
-dividend in arithmetic registers a:b by the 24-bit divisor. The
+dividend in accumulators a b by the 24-bit divisor. The
 remainder is stored in b. The low order 24 bits of the quotient
 are stored in a. The high-order 24 bits of the quotient are
 stored in register 6 mantissa2
@@ -2355,9 +2358,9 @@ stored in register 6 mantissa2
         |       <a href="rta.html#ds" style="color:#00FF00">ds</a>      |   11000.111   |  double store		| a:b -> 2 words @ ea				|
         |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#dl" style="color:#00FF00">dl</a>      |   11001.111   |  double load		| 2 words @ ea -> a:b				|
-        |_______________|_______________|_______________________|_______________________________________________|
-        |       <a href="rta.html#dpop" style="color:#00FF00">dpop</a>    |   01011.111   |  double pop		| 2 words @ [sp] -> ea, internal sp += 2	|
-        |_______________|_______________|_______________________|_______________________________________________|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	<a href="rta.html#dpop" style="color:#00FF00">dpop</a>	|	macro	|  double pop		| 2 words @ internal stack top -> 2 words @ ea	|
+        |_______________|_______________|_______________________|______________________________________sp_+=_2__|
         |       <a href="rta.html#dpush" style="color:#00FF00">dpush</a>   |   01011.111   |  double push		| sp -= 2, 2 words @ ea added to internal stack	|
         |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#qs" style="color:#00FF00">qs</a>      |   01000.111   |  quadruple store      | a:b:mantissa2:mantissa3 -> 4 words @ ea	|
@@ -2365,7 +2368,7 @@ stored in register 6 mantissa2
         |       <a href="rta.html#ql" style="color:#00FF00">ql</a>      |   01001.111   |  quadruple load	| 4 words @ ea -> a:b:mantissa2:mantissa3       |
         |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#qpop" style="color:#00FF00">qpop</a>	|   10000.111   |  quadruple pop	| 4 words @ internal stack top -> 4 words @ ea  |
-        |_______________|_______________|_______________________|_______________________________________sp_+=_4_|
+        |_______________|_______________|_______________________|______________________________________sp_+=_4__|
         |       <a href="rta.html#qpush" style="color:#00FF00">qpush</a>   |   10001.111   |  quadruple push	| sp -= 4, 4 words @ ea added to internal stack |
         |_______________|_______________|_______________________|_______________________________________________|
 
@@ -2382,6 +2385,10 @@ stored in register 6 mantissa2
 
 	dl	socka
 	ds	save
+
+	dpush	argument
+
+	dpop	forward
 
 
 </pre>
@@ -2402,7 +2409,9 @@ stored in register 6 mantissa2
         |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#mlb" style="color:#00FF00">mlb</a>	|   10111.111   |  masked load b	| b AND NOT k OR word @ ea AND k -> b		|
         |_______________|_______________|_______________________|_______________________________________________|
-        |       <a href="rta.html#mta" style="color:#00FF00">mta</a>     |   10101.111   |  masked test equal	| skip if a AND k = word @ ea AND k		|
+        |       <a href="rta.html#mta" style="color:#00FF00">mta</a>     |   10101.111   |  masked test equal	| skip if (a AND k) = (word @ ea AND k)		|
+	|_______________|_______________|_______________________|_______________________________________________|
+	|	<a href="rta.html#mta" style="color:#00FF00">mtane</a>	|	macro	|masked test not equal a| skip if (a AND k) NOT = (word @ ea AND k)  	|
         |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#dte" style="color:#00FF00">dte</a>     |   01010.111   |  double test equal	| skip if value registers a:b = 2 words @ ea	|
         |_______________|_______________|_______________________|_______________________________________________|
@@ -2759,12 +2768,10 @@ causes a memory read followed by memory write. Execution on a register is at reg
 <a	name="si"/>
 <h3>6.18: Shift Instructions</h3>
 
-Shift instructions use the effective address as the shift count.
-An effective address may be indexed or indirect
+Shift instructions use the effective address as the shift count. An effective address may be indexed or indirect
 
 <p>
-Double shifts shift the value in arithmetic registers a and b as
-a single 48-bit register
+Double shifts shift the value in accumulators a and b as a single 48-bit register
 
 <p>
 Shift instructions do not update <b>carry$</b>
@@ -2843,11 +2850,12 @@ All threads are launched with a SIMD table one object in depth at the internal s
 	_________________________
 
 
-	SIMD_CONTROL	(-1, 4, REPEATS-1, SIZEOF_CONTAINING_STRUCTURE:q)	. walk 4-register floating accumulators
-										. data points 2 from a structure array
+	SIMD_CONTROL	(-1, 4, REPEATS-1, CONTAINER_SIZE:q)	. walk 4-register floating accumulators
+								. data points 2 from a structure array
 	lx	table,,xi
 
-	rex	(fa	OFFSET_IN_STRUCTRE, x)
+	rex	(fa	OFFSET_IN_CONTAINER, x)			. See also <a href="rta.html=rta1#simd_frame" style="color:#FFFFFF">SIMD Frame and Accumulator Vector</a>
+
 
 
 	Instructions in the Scope of Repeat Execute
@@ -2886,7 +2894,7 @@ All threads are launched with a SIMD table one object in depth at the internal s
 
 <a	name="rsr"/>
 <h4>6.20.1: Read Staging Register</h4>
-rsr instruction shifts [sign extended ea] bits left from staging register RDATA to arithmetic register a
+rsr instruction shifts [sign extended ea] bits left from staging register RDATA to accumulator a
 
 <p>
 Register RDATAC is decremented by shift count ea
@@ -2898,7 +2906,7 @@ If RDATAC reaches zero with shift count outstanding RDATA is reloaded from memor
 If PSR flag <b>b$stream16r</b> = 1 the restart count in RDATAC is 16 and RDATA is shifted left 8 bit positions on reload
 
 <p>
-If PSR flag <b>b$streamZR</b> = 1 arithmetic register a is cleared before the transfer
+If PSR flag <b>b$streamZR</b> = 1 accumulator a is cleared before the transfer
 
 <p>
 
@@ -2906,7 +2914,7 @@ If PSR flag <b>b$streamZR</b> = 1 arithmetic register a is cleared before the tr
 <a	name="wsr"/>
 <h4>6.20.2: Write Staging Register</h4>
 
-wsr instruction shifts [sign extended ea] bits left from arithmetic register a to staging register WDATA
+wsr instruction shifts [sign extended ea] bits left from accumulator a to staging register WDATA
 
 <p>
 Register WDATAC is incremented by shift count <b>xi</b>
@@ -2965,30 +2973,38 @@ Absolute program counter is updated with B0 * 4096 + effective address
         |_______________|_______________|_______________________|_______________________________________________________|
         |       <a href="rta.html#jc" style="color:#00FF00">jc</a>	|   01111.110   |  jump carry		|  jump if carry$ of PSR = one				|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jza" style="color:#00FF00">jza</a>	|   11000.110   |  jump zero a		|  jump if arithmetic register a = zero			|
+        |       <a href="rta.html#jza" style="color:#00FF00">jza</a>	|   11000.110   |  jump zero a		|  jump if accumulator a = zero				|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jzb" style="color:#00FF00">jzb</a>     |   11001.110   |  jump zero b		|  jump if arithmetic register b = zero			|
+        |       <a href="rta.html#jzb" style="color:#00FF00">jzb</a>     |   11001.110   |  jump zero b		|  jump if accumulator b = zero				|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jnza" style="color:#00FF00">jnza</a>	|   11010.110   |  jump nonzero a	|  jump if arithmetic register a = nonzero		|
+        |       <a href="rta.html#jnza" style="color:#00FF00">jnza</a>	|   11010.110   |  jump nonzero a	|  jump if accumulator a = nonzero			|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jnzb" style="color:#00FF00">jnzb</a>	|   11011.110   |  jump nonzero b	|  jump if arithmetic register b = nonzero		|
+        |       <a href="rta.html#jnzb" style="color:#00FF00">jnzb</a>	|   11011.110   |  jump nonzero b	|  jump if accumulator b = nonzero			|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jpa" style="color:#00FF00">jpa</a>	|   10100.110   |  jump positive a	|  jump if arithmetic register a high-order bit = zero	|
+        |       <a href="rta.html#jpa" style="color:#00FF00">jpa</a>	|   10100.110   |  jump positive a	|  jump if accumulator a high-order bit = zero		|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jpb" style="color:#00FF00">jpb</a>	|   10101.110   |  jump positive b	|  jump if arithmetic register b high-order bit = zero	|
+        |       <a href="rta.html#jpb" style="color:#00FF00">jpb</a>	|   10101.110   |  jump positive b	|  jump if accumulator b high-order bit = zero		|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jna" style="color:#00FF00">jna</a>	|   11100.110   |  jump negative a	|  jump if arithmetic register a high-order bit = one	|
+        |       <a href="rta.html#jna" style="color:#00FF00">jna</a>	|   11100.110   |  jump negative a	|  jump if accumulator a high-order bit = one		|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jnb" style="color:#00FF00">jnb</a>	|   11101.110   |  jump negative b	|  jump if arithmetic register b high-order bit = zero	|
+        |       <a href="rta.html#jnb" style="color:#00FF00">jnb</a>	|   11101.110   |  jump negative b	|  jump if accumulator b high-order bit = zero		|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jao" style="color:#00FF00">jao</a>	|   10011.110   |  jump a odd		|  jump if arithmetic register a low-order bit = one	|
+        |       <a href="rta.html#jao" style="color:#00FF00">jao</a>	|   10011.110   |  jump a odd		|  jump if accumulator a low-order bit = one		|
         |_______________|_______________|_______________________|_______________________________________________________|
+	|	<a href="rta.html#jao" style="color:#00FF00">jae</a>	|	macro	|  jump a even		|  jump if accumulator a low-order bit = zero		|
+	|_______________|_______________|_______________________|_______________________________________________________|
         |       <a href="rta.html#jpo" style="color:#00FF00">jpo</a>	|   10111.110   |  jump parity odd	|  jump if a AND mask register k has odd parity		|
         |_______________|_______________|_______________________|_______________________________________________________|
+	|	<a href="rta.html#jpo" style="color:#00FF00">jpe</a>	|	macro	|  jump parity even	|  jump if a AND mask register k has even parity 	|
+	|_______________|_______________|_______________________|_______________________________________________________|
         |       <a href="rta.html#jxge" style="color:#00FF00">jxge</a>	|   11110.110   |jump x greater or equal|  jump if index register x &ge; limit pointer r		|
         |_______________|_______________|_______________________|_______________________________________________________|
         |       <a href="rta.html#jyge" style="color:#00FF00">jyge</a>	|   11111.110   |jump y greater or equal|  jump if index register y &ge; limit pointer r		|
         |_______________|_______________|_______________________|_______________________________________________________|
+	|	<a href="rta.html#jxge" style="color:#00FF00">jxl</a>	|	macro	|  jump x lower		|  jump if index register x &lt; limit pointer r		|
+	|_______________|_______________|_______________________|_______________________________________________________|
+	|	<a href="rta.html#jyge" style="color:#00FF00">jyl</a>	|	macro	|  jump y lower		|  jump if index register y &lt; limit pointer r 		|
+	|_______________|_______________|_______________________|_______________________________________________________|
         |       <a href="rta.html#jdz" style="color:#00FF00">jdz</a>	|   01111.100   |  jump double zero	|  jump if 48-bit integer in registers a and b = zero	|
         |_______________|_______________|_______________________|_______________________________________________________|
         |       <a href="rta.html#lcal" style="color:#00FF00">lcal</a>    |   00111.110   |  local call           |  push absolute PC - B0* on internal stack, jump to ea	|

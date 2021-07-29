@@ -734,7 +734,7 @@ Additional run flags for the emulator command line may be passed from the emulat
 			00002b
 			loader: r load /util/tal
 			000031 tal
-			prang call 0:C00
+			test call 0:C00
 			t
 			console threads display
 			000000 000007 <a style="color:#FF0000">100000</a> 000031 000000 000000 tal
@@ -789,7 +789,7 @@ Additional run flags for the emulator command line may be passed from the emulat
 			loader: r load /util/tal
 
 			000035 tal
-			prang go 1:E80
+			test go 1:E80
 		</a>
 		the action is then at the debug console, where it's seen that
 		tal instruction frame was loaded at Start Page Index <a style="color:#000000">00002f</a> and went wrong at offset <a style="color:#000000">00016c</a>
@@ -1575,20 +1575,38 @@ of a future application launcher and shell starter
 			r	<a style="color:#FF0000">script_file_path</a>
 	t
 	console threads display
-	003ff6 000000 000000 000027 000000 000000 iserver
-	003fde 000000 000000 000026 000000 000000 fponline
-	003fe4 000000 000000 000025 000000 000000 telnet
-	003064 000000 000000 000024 000000 000000 http
-	003ff0 000000 000000 00000e 000000 000000 ip
+	003fe7 000000 000000 000017 000000 000000 000000 *iserver
+	003fc4 000007 000000 000016 000000 000000 000000 *snmp_agent
+	003fcb 000000 000000 000015 000000 000000 000000 *fponline
+	003fd2 000000 000000 000014 000000 000000 000000 *telnet
+	003084 000000 000000 000013 000000 000000 000000 *http
+	003fe0 000000 000000 00000d 000000 000000 000000 *ip
 
 </pre>
+2nd word in threads display is priority [ 0..7 ]. Zero is high. 4th word is TCB Page Index. Thread name starting * cannot be deleted
+
+<p>
+3rd display word is status
+
+<pre	style="font-size:12pt;color:#0000FF">
+	bit 23	800000<sub>16</sub>	TIME_WAIT	wait until dayclock millisecond in 5th:6th words
+
+	bit 21	200000<sub>16</sub>	EXIT		thread ended, TCB awaiting reuse
+
+	bit 20	100000<sub>16</sub>	TRAP		thread faulted, diagnostic information at TCB words 60..63
+
+	bit  0	000001<sub>16</sub>	XINT		awaiting pre-emptive schedule on event
+</pre>
+7th thread display word is core affinity bit mask
+
+
 <a	name="loader"/>
 <h4>8.8: ROM and Loadable Applications</h4>
 
-Telnet command <a style="color:#0000FF">r</a> runs applications which can be found easily by name. They are catalogued for lookup in file systems discrete to their storage block or iframe
+Telnet command <a style="color:#0000FF">r</a> runs applications by name. They are catalogued for lookup in file systems discrete to their storage block or iframe
 
 <p>
-An application <a style="color:#FF0000">load</a> loads other applications, for example the test utility tal. Like all applications load may have unlimited process instances executing its single ROM image. load is positioned like a shell and finds loadable applications in certified parts of attached file systems
+Application <a style="color:#FF0000">load</a> loads other applications, for example the test utility tal. Like all applications load may have unlimited process instances executing its single ROM image. load is positioned like a shell and finds loadable applications in certified parts of attached file systems
 <pre    style="font-size:12pt;color:#0000FF">
 
 	r <a style="color:#FF0000">load</a> /util/tal 

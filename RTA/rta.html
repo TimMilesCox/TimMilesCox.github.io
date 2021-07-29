@@ -1,5 +1,14 @@
 <html>
 <div	style="font-size:14pt">
+
+<a	href="index.html">
+<pre	style="border-radius:5px;color:#FFFFFF;background-color:#0000FF;font-size:12pt;
+	width:52pt;height:28pt;top:0pt;right:20pt;position:absolute">
+ INTRO
+  PAGE
+</pre>
+</a>
+
 <center>
 <h1>
 	The RTA1 Processor Architecture
@@ -743,7 +752,7 @@ A push is a load into CPU registers in RTA1, and a pop is a store
 		.	____________________________
 		.	|WINDOW|    word offset    |	<- effective address
 		.	|______|___________________|	   start of structure
-		.					   in register b
+		.					   in accumulator / index register b
 
 
 			sal		6		. position the big-block index
@@ -756,7 +765,7 @@ A push is a load into CPU registers in RTA1, and a pop is a store
 			sabr		WINDOW+1	. base that in the adjacent 
 							. address window
 
-							. register b is now a pointer to a
+							. accumulator / index register  b is now a pointer to a
 							. guaranteed 262145 words from the
 							. leading edge of the structure
 
@@ -1268,7 +1277,7 @@ If <b>b$stream16w</b> = 0 successive <b>wsr</b> instructions compose 24 bits for
 <p>
 Flag 3 <b>fp$r</b> is used for teaming pairs of floating numbers to calculate 192-bit values.
 When <b>fp$r</b> is asserted floating instructions store a minor result in registers
-8..11. If the entire result is contained in the major result in registers a:b:mantissa2:mantiss3 then
+8..11. If the entire result is contained in the major result in accumulators a:b:mantissa2:mantiss3 then
 the minor result is zero. The minor result is used in further floating operations on pairs of 96-bit
 floating numbers for 192-bit values
 
@@ -1276,15 +1285,15 @@ floating numbers for 192-bit values
 Flag 0 <b>carry$</b> is set or cleared by this subset of the fixed point instructions
 <pre	style="font-size:11pt">
 
-	<a href="#aa">aa</a>	Add to Register a
-	<a href="#ab">ab</a>	Add to Register b
-	<a href="#ana">ana</a>	Add Negative to Register a
-	<a href="#anb">anb</a>	Add Negative to Register b
-	<a href="#da">da</a>	Double Length Add to a:b
-	<a href="#dan">dan</a>	Double Length Add Negative to a:b
-	<a href="#src">src</a>	circular Shift Right through Carry
-	<a href="#slc">slc</a>	circular Shift Left through Carry
-	<a href="#popA">popA</a>	Pop and AddTo
+	<a href="#aa">aa</a>	add to accumulator a
+	<a href="#ab">ab</a>	add to accumulator b
+	<a href="#ana">ana</a>	add 2s-complement to accumulator a
+	<a href="#anb">anb</a>	add 2s-complement to accumulator b
+	<a href="#da">da</a>	double length ddd to accumulators a:b
+	<a href="#dan">dan</a>	double length add 2s-complement to accumulators a:b
+	<a href="#src">src</a>	circular shift right through carry$
+	<a href="#slc">slc</a>	circular shift left through carry$
+	<a href="#popA">popA</a>	pop and AddTo
 
 </pre>
 
@@ -1311,15 +1320,16 @@ The conditional jump instructions which examine carry or a register or storage w
 	<a href="#jpb">jpb</a>	Jump Positive b
 	<a href="#jna">jna</a>	Jump Negative a
 	<a href="#jnb">jnb</a>	Jump Negative b
-	<a href="#jpo">jpo</a>	Jump Parity a<a style="color:FFFFFF;background-color:0000FF"> AND </a>k Odd
-	<a href="#jao">jao</a>	Jump a Odd
-	<a href="#jdz">jdz</a>	Jump a:b Double Zero
-	<a href="#mta">mta</a>	Masked Test a skip equal
+	<a href="#jpo">jpo</a>	Jump Parity Odd<a style="color:FFFFFF;background-color:0000FF"> AND </a>k Odd	[ macro <a href="#jpo">jpe</a> Jump Parity Even ]
+	<a href="#jao">jao</a>	Jump a Odd 			[ macro <a href="#jao">jae</a> Jump a Even ]
+	<a href="#jdz">jdz</a>	Jump a b Double Zero
+	<a href="#mta">mta</a>	Masked Test a skip Equal	[ macro <a href="#mta">mtane</a> Masked Test a Skip NOT = ]
+	<a href="#dte">dte</a>	Double Test skip Equal
 	<a href="#tz">tz</a>	Test Zero skip
 	<a href="#tp">tp</a>	Test Positive skip
 	<a href="#ts">ts</a>	Test and Set skip
-	<a href="#jxge">jxge</a>	Jump x not less than r
-	<a href="#jyge">jyge</a>	Jump y not less than r
+	<a href="#jxge">jxge</a>	Jump x NOT < r			[ macro <a href="#jxge">jxl</a> Jump x < r ]
+	<a href="#jyge">jyge</a>	Jump y NOT < r			[ macro <a href="#jxge">jyl</a> Jump y < r ]
 	<a href="#jdr">jdr</a>	Jump Decrement Repeat Count
 </pre>
 
@@ -1428,21 +1438,21 @@ is reloaded and all flags are restored
 		|_______________________________|					|_______________________________|
 	3	|		y		|	index register		131	|		y_x		|
 		|_______________________________|					|_______________________________|
-	4	|		a		|  arithmetic + index register	132	|		a_x		|
+	4	|		a		|  accumulator + index register	132	|		a_x		|
 		|_______________________________|					|_______________________________|
-	5	|		b		|  arithmetic + index register	133	|		b_x		|
+	5	|		b		|  accumulator + index register	133	|		b_x		|
 		|_______________________________|					|_______________________________|
-	6	|	mantissa2		|	arithmetic register	134	|	mantissa2_x		|
+	6	|	mantissa2		|	accumulator		134	|	mantissa2_x		|
 		|_______________________________|					|_______________________________|
-	7	|	mantissa3		|	arithmetic register	135	|	mantissa3_x		|
+	7	|	mantissa3		|	accumulator		135	|	mantissa3_x		|
 		|_______________________________|					|_______________________________|
-	8	|		aA		|	arithmetic register	136	|		aA_x		|
+	8	|		aA		|	accumulator		136	|		aA_x		|
 		|_______________________________|					|_______________________________|
-	9	|		bA		|	arithmetic register	137	|		bA_x		|
+	9	|		bA		|	accumulator		137	|		bA_x		|
 		|_______________________________|					|_______________________________|
-	10	|	mantissa2A		|	arithmetic register	138	|	mantissa2A_x		|
+	10	|	mantissa2A		|	accumulator		138	|	mantissa2A_x		|
 		|_______________________________|					|_______________________________|
-	11	|	mantissa3A		|	arithmetic register	139	|	mantissa3A_x		|
+	11	|	mantissa3A		|	accumulator		139	|	mantissa3A_x		|
 		|_______________________________|					|_______________________________|
 	12	|	    	 p		|	bitstream pointer write	140	|		p_x		|
 		|_______________________________|					|_______________________________|
@@ -1609,25 +1619,30 @@ Instruction File 7 contains arithmetic instructions which have an operand of one
 	<a href="#lk">lk</a>	Load Mask Register		<a href="#rbr">rbr</a>	Rotate b Right			<a href="#ql">ql</a>	Quadruple Load
 
 	<a href="#lx">lx</a>	Load Index Pointer x		<a href="#drr">drr</a>	Double Rotate Right		<a href="#dte">dte</a>	Double Test Equal
-	<a href="#ly">ly</a>	Load Index Pointer y		<a href="#jnc">jnc</a>	Jump No Carry			<a href="#dpop">dpop</a>	Double Pop
+	<a href="#ly">ly</a>	Load Index Pointer y		<a href="#jnc">jnc</a>	Jump No Carry			<a href="#dpop">dpop</a>	Double Pop (macro)
 
 	<a href="#la">la</a>	Load Accumulator a		<a href="#ral">ral</a>	Rotate a Left			<a href="#fa">fa</a>	Floating Add
 	<a href="#lb">lb</a>	Load Accumulator b		<a href="#rbl">rbl</a>	Rotate b Left			<a href="#fan">fan</a>	Floating Add Negative
 
 	<a href="#tz">tz</a>	Test Zero			<a href="#drl">drl</a>	Double Rotate Left		<a href="#fm">fm</a>	Floating Multiply
 	<a href="#tp">tp</a>	Test Positive			<a href="#jc">jc</a>	Jump on Carry			<a href="#fd">fd</a>	Floating Divide
+	<a href="#tnz">tnz</a>	Test NonZero (macro)
+	<a href="#tn">tn</a>	Test Negative (macro)
 
 	<a href="#ax">ax</a>	Add to Index Pointer x		<a href="#saa">saa</a>	Shift a Algebraic		<a href="#qpop">qpop</a>	Quadruple Pop
 	<a href="#ay">ay</a>	Add to Index Pointer y		<a href="#sba">sba</a>	Shift b Algebraic		<a href="#qpush">qpush</a>	Quadruple Push
 
 	<a href="#or">or</a>	OR Accumulator a		<a href="#dsa">dsa</a>	Double Shift Algebraic		<a href="#ex">ex</a>	Execute
 	<a href="#orb">orB</a>	OR Accumulator b		<a href="#jao">jao</a>	Jump a Odd			<a href="#dpush">dpush</a>	Double Push
+						<a href="#jao">jae</a>	Jump a Even (macro)
 
 	<a href="#and">and</a>	AND Accumulator a		<a href="#jpa">jpa</a>	Jump Positive a			<a href="#lsc">lsc</a>	Load Shift and Count
-	<a href="#andb">andB</a>	AND Accumulator b		<a href="#jpb">jpb</a>	Jump Positive b			<a href="#mta">mta</a>	Masked Test a
+	<a href="#andb">andB</a>	AND Accumulator b		<a href="#jpb">jpb</a>	Jump Positive b			<a href="#mta">mta</a>	Masked Test Equal a
+											<a href="#mtane">mtane</a>  Masked Test Not Equal a (macro)
 
 	<a href="#xor">xor</a>	XOR Accumulator a		<a href="#j">j</a>	Jump				<a href="#sc">sc</a>	Store Carry
 	<a href="#xorb">xorB</a>	XOR Accumulator b		<a href="#jpo">jpo</a>	Jump Parity Odd			<a href="#mlb">mlb</a>	Masked Load b
+						<a href="#jpo">jpe</a>	Jump Parity Even (macro)
 
 	<a href="#aa">aa</a>	Add To Accumulator a		<a href="#jza">jza</a>	Jump Zero a			<a href="#ds">ds</a>	Double Store
 	<a href="#ab">ab</a>	Add To Accumulator b		<a href="#jzb">jzb</a>	Jump Zero b			<a href="#dl">dl</a>	Double Load
@@ -1640,9 +1655,14 @@ Instruction File 7 contains arithmetic instructions which have an operand of one
 
 	<a href="#d">d</a>	Divide				<a href="#jxge">jxge</a>	Jump x Not Less Than r		<a href="#go">go</a>	Jump to Iframe
 	<a href="#push">push</a>	Push				<a href="#jyge">jyge</a>	Jump y Not Less Than r		<a href="#call">call</a>	Call Iframe
+						<a href="#jxge">jxl</a>	Jump x Less Than r (macro)
+						<a href="#jyge">jyl</a>	Jump x Less Than r (macro)
 
+	INTEGER COMPARE MACROS
+	______________________
 
-
+	<a href="#anu">anu/tanu</a>	Add Negative Upper a (macro)
+	<a href="#anuba">anu/tanuba</a>	Add Negative Upper b (macro)
 
 </pre>
 
@@ -1761,12 +1781,12 @@ Instructions in File 7 take a one-word two-word or four-word operand in register
 
 		if X = 4
 			the effective address is the sum of
-			arithmetic register a plus the 12 unsigned bits U
+			accumulator a plus the 12 unsigned bits U
 
 
 		if X = 5
 			the effective address is the sum of
-			arithmetic register b plus the 12 unsigned bits U
+			accumulator b plus the 12 unsigned bits U
 
 
 		if X = 6
@@ -2434,13 +2454,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="sa"/>
-	Store Arithmetic Register a	sa
-	___________________________	__
+	Store Accumulator a	sa
+	___________________	__
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register a is stored			|
+				|	accumulator a is stored				|
 				|_______________________________________________________|
 				|	destination is memory/register at EA		|
 				|	memory target may be a word, half or thirdword	|
@@ -2478,13 +2498,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="sb"/>
-	Store Arithmetic Register b	sb
-	___________________________	__
+	Store Accumulator b	sb
+	___________________	__
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register b is stored			|
+				|	accumulator b is stored				|
 				|_______________________________________________________|
 				|	destination is memory/register at EA		|
 				|	memory target may be a word, half or thirdword	|
@@ -2897,13 +2917,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="la"/>
-	Load Arithmetic Register a	la
-	__________________________	___
+	Load Accumulator a	la
+	__________________	___
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register a is loaded			|
+				|	accumulator a is loaded				|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -2959,13 +2979,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="lb"/>
-	Load Arithmetic Register b	lb
-	__________________________	___
+	Load Accumulator b	lb
+	__________________	___
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register b is loaded			|
+				|	accumulator b is loaded				|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3088,6 +3108,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
         </div>
 	instructions	<a href="#tz">Test Zero</a>		<a href="#tp">Test Positive</a>
 
+	macros		<a href="#tnz">Test NonZero</a>		<a href="#tn">Test Negative</a>
+
 
         Integer test instructions sample a word, or a third or halfword
 
@@ -3155,6 +3177,16 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 
+	<a	name="tnz"/>
+	Test Nonzero	macro	tnz
+	____________		___
+
+	Test Nonzero is a 2-instruction macro which skips the next instruction if operand is nonzero
+	Operand types and assembly syntax are as <a href="#tz">Test Zero</a> instruction
+
+
+
+
 	<a	name="tp"/>
 	Test Positive		tp
 	_____________		__
@@ -3201,6 +3233,14 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	Instruction Code 15	| 0 1 1 1 1 | 0 . . |		<a style="color:#00AF6F">  address</a>		|
 				|___________|_______|___________________________________|
 				
+
+
+	<a	name="tn"/>
+	Test Negative	macro	tn
+	_____________		__
+
+	Test Negative is a 2-instruction macro which skips the next instruction if operand is negative
+	Operand types and assembly syntax are as <a href="#tp">Test Positive</a> instruction
 
 
 
@@ -3307,7 +3347,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 	<a	name="ay"/>
 	Add to Index Register y	ay
-	______________________	__
+	_______________________	__
 
 
 				_________________________________________________________
@@ -3406,13 +3446,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="or"/>
-	Or Arithmetic Register a	or
-	________________________	__
+	Or Accumulator a	or
+	________________	__
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register a OR operand -> a		|
+				|	accumulator a OR operand -> a			|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3469,13 +3509,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="orb"/>
-	Or Arithmetic Register b	orB
-	________________________	___
+	Or Accumulator b	orB
+	________________	___
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register b OR operand -> b		|
+				|	accumulator b OR operand -> b			|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3533,13 +3573,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="and"/>
-	And Arithmetic Register a	and
-	_________________________	___
+	And Accumulator a	and
+	_________________	___
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register a AND operand -> a		|
+				|	accumulator a AND operand -> a			|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3597,13 +3637,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="andb"/>
-	And Arithmetic Register b	andB
-	_________________________	___
+	And Accumulator b	andB
+	__________________	___
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register b AND operand -> b		|
+				|	accumulator b AND operand -> b			|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3660,13 +3700,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="xor"/>
-	Exlusive Or Arithmetic Register a	xor
-	_________________________________	___
+	Exlusive Or Accumulator a	xor
+	_________________________	___
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register a XOR operand -> a		|
+				|	accumulator a XOR operand -> a			|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3722,13 +3762,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="xorb"/>
-	Exlusive Or Arithmetic Register b	xorB
-	_________________________________	____
+	Exlusive Or Accumulator b	xorB
+	_________________________	____
 
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register b XOR operand -> b		|
+				|	accumulator b XOR operand -> b			|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3788,6 +3828,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 			<a href="#m">m</a>		<a href="#d">d</a>
 			<a href="#mf">mf</a>
 
+	compare macros	<a href="#anu">anu / tanu</a>	<a href="#anuba">anuba / tanuba</a>
+
 
         Integer arithmetic instructions read a one-word operand, a third or halfword,
         the effective address itself as an immediate operand, or a sign-extended immediate operand.
@@ -3817,12 +3859,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="aa"/>
-	Add to Arithmetic Register a	aa
-	____________________________	__
+	Add to Accumulator a	aa
+	____________________	__
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register a + operand -> a		|
+				|	accumulator a + operand -> a			|
 				|	carry$ = the carry from bit 23 of the addition	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
@@ -3880,12 +3922,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="ab"/>
-	Add to Arithmetic Register b	ab
-	____________________________	__
+	Add to Accumulator b	ab
+	____________________	__
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register b + operand -> b		|
+				|	accumulator b + operand -> b			|
 				|	carry$ = the carry from bit 23 of the addition	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
@@ -3943,12 +3985,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="ana"/>
-	Add Negative to Arithmetic Register a	ana
-	_____________________________________	___
+	Add Negative to Accumulator  a	ana
+	___________________________	___
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register a += 2scomplement(operand)	|
+				|	accumulator a += 2s-complement(operand)		|
 				|	carry$ = the carry from bit 23 of the addition	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
@@ -4003,12 +4045,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="anb"/>
-	Add Negative to Arithmetic Register b	anb
-	_____________________________________	___
+	Add Negative to Accumulator b	anb
+	_____________________________	___
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register b += 2scomplement(operand)	|
+				|	accumulator b += 2scomplement(operand)		|
 				|	carry$ = the carry from bit 23 of the addition	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
@@ -4062,8 +4104,6 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 
-
-
 	<a	name="m"/>
 	Multiply		m
 	________		_
@@ -4071,9 +4111,9 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	operand and arithmetic register b are		|
-				|	multiplied algebraically. The 48-bit product	|					
-				|	is stored in arithmetic registers a and b	|
+				|	multiplicand in accumulator b and operand	|
+				|	are multiplied algebraically			|					
+				|	giving 48-bit product in accumulators a b	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -4139,9 +4179,9 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	unsigned integer in register b is multiplied.	|
-				|	multiplier is signed. 48-bit product		|
-				|	is stored in arithmetic registers a and b	|
+				|	unsigned integer in accumulator b is multiplied	|
+				|	by signed multiplier				|
+				|	signed 48-bit product is in accumulators a b	|
 				|							|
 				|	multiply fractional is used for			|
 				|							|
@@ -4212,15 +4252,15 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the 48-bit integer in arithmetic registers	|
+				|	the 48-bit integer in accumulators		|
 				|	a and b is divided algebraically by the operand	|
 				|	giving a 48-bit integer quotient and 24-bit	|
 				|	integer remainder				|
 				|							|
-				|	quotient low-order 24 bits are in register a	|
-				|	and high-order 24-bits in register mantissa2	|
+				|	quotient low-order 24 bits are in accumulator a	|
+				|	and high-order 24-bits in accumulator mantissa2	|
 				|							|
-				|	remainder is in register b			|
+				|	remainder is in accumulator b			|
 				|							|
 				|	there is no divide fault. Overflow is discarded	|
 				|							|
@@ -4277,9 +4317,36 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 
+	INTEGER COMPARE MACROS
+	______________________
+
+
+        <a      name="anu"/>
+        Add Negative Upper	macros  anu tanu
+        __________________		________
+
+        Add Negative Upper is a 2-instruction macro and stores (accumulator a minus operand) in accumulator b
+        Carry or result in accumulator b may be tested for results with instructions <a href="#jc">jc</a> <a href="#jnc">jnc</a> <a href="#jzb">jzb</a> <a href="#jnzb">jnzb</a> <a href="#jpb">jpb</a> <a href="#jnb">jnb</a>
+
+        macro tanu is used insted of anu in ISRs to compare interrupt accumulator a = 128+4 a_x.
+	tanu stores difference (a_x minus operand) in interrupt accumulator b = 128+5 b_x.
+
+        Operand types and assembly syntax are as <a href="#ana">Add Negative a</a> instruction
 
 
 
+
+        <a      name="anuba"/>
+        Add Negative Upper b    macros  anuba tanuba
+        ____________________            ____________
+
+        Add Negative Upper b is a 2-instruction macro and stores (accumulator b minus operand) in accumulator a
+        Carry or result in accumulator a may be tested for results with instructions <a href="#jc">jc</a> <a href="#jnc">jnc</a> <a href="#jza">jza</a> <a href="#jnza">jnza</a> <a href="#jpa">jpa</a> <a href="#jna">jna</a> <a href="#jae">jae</a> <a href="#jpe">jpe</a>
+
+        macro tanuba is used instead of anuba in ISRs to compare interrupt accumulator b = 128+5 b_x.
+	tanuba stores difference (b_x minus operand) in interrupt accumulator a = 128+4 a_x. 
+
+        Operand types and assembly syntax are as <a href="#anb">Add Negative b</a> instruction
 
 
 
@@ -4307,12 +4374,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="ina"/>
-	I/O In to Arithmetic Register a		inA
-	_______________________________		___
+	I/O In to Accumulator a		inA
+	_______________________		___
 
 				_________________________________________________________
 				|							|
-				|	I/O port[EA] is read to arithmetic register a	|
+				|	I/O port[EA] is read to accumulator a		|
 				|_______________________________________________________|
 				|	source is the I/O port EA			|
 				|_______________________________________________________|
@@ -4329,12 +4396,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="inb"/>
-	I/O In to Arithmetic Register b		inB
-	_______________________________		___
+	I/O In to Accumulator b		inB
+	_______________________		___
 
 				_________________________________________________________
 				|							|
-				|	I/O port[EA] is read to arithmetic register b	|
+				|	I/O port[EA] is read to accumulator b		|
 				|_______________________________________________________|
 				|	source is the I/O port EA			|
 				|_______________________________________________________|
@@ -4352,12 +4419,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="outa"/>
-	I/O Out from Arithmetic Register a	outA
-	__________________________________	____
+	I/O Out from Accumulator a	outA
+	__________________________	____
 
 				_________________________________________________________
 				|							|
-				|	value is written from register a to I/O port[EA]|
+				|    value is written from accumulator a to I/O port[EA]|
 				|_______________________________________________________|
 				|	target is the I/O port EA			|
 				|_______________________________________________________|
@@ -4375,12 +4442,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="outb"/>
-	I/O Out from Arithmetic Register b	outB
-	__________________________________	____
+	I/O Out from Accumulator b	outB
+	__________________________	____
 
 				_________________________________________________________
 				|							|
-				|	value is written from register b to I/O port[EA]|
+				|    value is written from accumulator b to I/O port[EA]|
 				|_______________________________________________________|
 				|	target is the I/O port EA			|
 				|_______________________________________________________|
@@ -4412,18 +4479,18 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="sabr"/>
-	Store Arithmetic Register a to Base Register	sabr
-	____________________________________________	____
+	Store Accumulator a to Base Register	sabr
+	____________________________________	____
 
 
 				_________________________________________________________
 				|							|
 				|	the absolute pointer part of the storage	|
-				|	block identified in register a is written 	|
+				|	block identified in accumulator a is written 	|
 				|	to data window pointer I/O Port[EA]		|
 				|							|
 				|	the storage block symbolic identifier is copied	|
-				|	from register a to memory window 65 (thread	|
+				|	from accumulator a to memory window 65 (thread	|
 				|	control block) offset 64 + EA			|
 				|							|
 				|	value of EA may be 2..63			|
@@ -4484,7 +4551,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	two storage block identifiers are read from	|
-				|	memory at the address in Register a		|
+				|	memory at the address in accumulator a		|
 				|							|
 				|	the two retrieved storage pointers are written	|
 				|	to relocation registers				|
@@ -4492,7 +4559,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|		I/O Port[EA]				|
 				|		I/O Port[EA + 1]			|
 				|							|
-				|	Register a is incremented by 2			|
+				|	accumulator a is incremented by 2		|
 				|							|
 				|	value of EA can be 2..62			|
 				|_______________________________________________________|
@@ -4672,7 +4739,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	Read Staging Register	rsr
 	_____________________	___
 
-	rsr instruction shifts BITS bits from storage stream *q to arithmetic register a
+	rsr instruction shifts BITS bits from storage stream *q to accumulator a
 	controlled by counter register RDATAC and buffered in data register RDATA
 
 	BITS is the sign extended immediate operand
@@ -4680,7 +4747,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	shift BITS bits left from Staging Register	|
-				|	RDATA to Arithmetic Register a			|
+				|	RDATA to accumulator a				|
 				|							|
 				|	reload RDATA from storage on empty		|
 				|							|
@@ -4690,7 +4757,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|							|
 				|		subtract RDATAC	from BITS		|
 				|							|
-				|		shift RDATAC bits to Register a		|
+				|		shift RDATAC bits to accumulator a	|
 				|							|
 				|		read memory/register to RDATA with	|
 				|		Pointer Register *q			|
@@ -4699,15 +4766,15 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|							|
 				|		restart RDATAC = RSTREAM_WORD		|
 				|							|
-				|	shift BITS bits from RDATA to Register a	|
+				|	shift BITS bits from RDATA to accumulator a	|
 				|							|
 				|	subtract BITS from RDATAC			|
 				|_______________________________________________________|
 				|							|
 				|	if PSR Flag b$streamZR = 0 displace the prior	|
-				|	value in Register a leftwards			|
+				|	value in accumulator a leftwards		|
 				|							|
-				|	if PSR Flag b$streamZR = 1 clear Register a	|
+				|	if PSR Flag b$streamZR = 1 clear accumulator a	|
 				|	before shifting from RDATA			|
 				|							|
 				|	if PSR Flag b$stream16r = 0 RSTREAM_WORD = 24	|
@@ -4786,7 +4853,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	______________________	___
 
 
-	wsr instruction shifts BITS bits from arithmetic register a to storage stream *p
+	wsr instruction shifts BITS bits from arithmetic accumulator a to storage stream *p
 	controlled by counter register WDATAC and buffered in data register WDATA
 
 	BITS is the sign extended immediate operand 
@@ -4794,7 +4861,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	shift BITS bits left from Register a		|
+				|	shift BITS bits left from accumulator a		|
 				|	to Staging Register WDATA			|
 				|							|
 				|	write WDATA to storage on full			|
@@ -4818,14 +4885,14 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|							|
 				|		restart WDATA = 0			|
 				|							|
-				|	shift BITS bits from Register a to WDATA	|
+				|	shift BITS bits from accumulator a to WDATA	|
 				|							|
 				|	add BITS to WDATAC				|
 				|_______________________________________________________|
 				|							|
 				|	if PSR Flag b$stream16w = 0 WSTREAM_WORD = 24	|
 				|							|
-				|	if PSR Flag b$stream16r = 1 WSTREAM_WORD = 16	|
+				|	if PSR Flag b$stream16w = 1 WSTREAM_WORD = 16	|
 				|							|
 				|_______________________________________________________|
 				|							|
@@ -5190,11 +5257,11 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 			<a href="#ral">Rotate a Left</a>			<a href="#jpb">Jump Positive b</a>
 			<a href="#rbl">Rotate b Left</a>			<a href="#jna">Jump Negative a</a>
 			<a href="#drl">Double Rotate Left</a>		<a href="#jnb">Jump Negative b</a>
-			<a href="#saa">Shift a Algebraic</a>		<a href="#jao">Jump a Odd</a>
-			<a href="#sba">Shift b Algebraic</a>		<a href="#jpo">Jump Parity k**a Odd</a>
+			<a href="#saa">Shift a Algebraic</a>		<a href="#jao">Jump a Odd</a>			<a href="#jao">Jump a Even (macro)</a>
+			<a href="#sba">Shift b Algebraic</a>		<a href="#jpo">Jump Parity k**a Odd</a>		<a href="#jpo">Jump Parity Even (macro)</a>
 			<a href="#dsa">Double Shift Algebraic</a>		<a href="#jdr">Jump Decrement Counter Register</a>
-							<a href="#jxge">Jump x NOT < r</a>
-							<a href="#jyge">Jump y NOT < r</a>
+							<a href="#jxge">Jump x NOT < r</a>			<a href="#jxge">Jump x < r (macro)</a> 
+							<a href="#jyge">Jump y NOT < r</a>			<a href="#jyge">Jump y < r (macro)</a>
 							<a href="#jdz">Jump Double Zero</a>
 
 
@@ -5204,13 +5271,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="sar"/>
-	Shift Arithmetic Register a Right	sar
-	_________________________________	___
+	Shift Accumulator a Right	sar
+	_________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic register a is shifted	|
-				|	rightward for EA bit positions			|
+				|	the value in accumulator a is shifted right	|
+				|	for EA bit positions				|
 				|	0 is written to vacated high-order bit positions|
 				|_______________________________________________________|
 
@@ -5228,13 +5295,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="sbr"/>
-	Shift Arithmetic Register b Right	sbr
-	_________________________________	___
+	Shift Accumulator b Right	sbr
+	_________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic register b is shifted 	|
-				|	rightward for EA bit positions			|
+				|	the value in accumulator b is shifted right	|
+				|	for EA bit positions				|
 				|	0 is written to vacated high-order bit positions|
 				|_______________________________________________________|
 
@@ -5257,8 +5324,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the 48-bit value in arithmetic registers a and b|
-				|	is shifted rightward for EA bit positions	|
+				|	the 48-bit value in accumulators a b		|
+				|	is shifted right for EA bit positions		|
 				|	0 is written to vacated high-order bit positions|
 				|_______________________________________________________|
 
@@ -5299,13 +5366,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="sal"/>
-	Shift Arithmetic Register a Left	sal
-	________________________________	___
+	Shift Accumulator a Left	sal
+	________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic register a is shifted	|
-				|	leftward for EA bit positions			|
+				|	the value in accumulator a is shifted left	|
+				|	for EA bit positions				|
 				|	0 is written to vacated low-order bit positions |
 				|_______________________________________________________|
 
@@ -5323,13 +5390,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="sbl"/>
-	Shift Arithmetic Register b Left	sbl
-	________________________________	___
+	Shift Accumulator b Left	sbl
+	________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic register b is shifted	|
-				|	leftward for EA bit positions			|
+				|	the value in accumulator b is shifted		|
+				|	for EA bit positions				|
 				|	0 is written to vacated low-order bit positions	|
 				|_______________________________________________________|
 
@@ -5352,8 +5419,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the 48-bit value in arithmetic registers a and b|
-				|	is shifted leftward for EA bit positions	|
+				|	the 48-bit value in accumulators a b		|
+				|	is shifted left for EA bit positions		|
 				|	0 is written to vacated low-order bit positions	|
 				|_______________________________________________________|
 
@@ -5402,13 +5469,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="rar"/>
-	Rotate Arithmetic Register a Right	rar
-	__________________________________	___
+	Rotate Accumulator a Right	rar
+	__________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic register a is rotated 	|
-				|	rightward for EA bit positions			|
+				|	the value in accumulator a is rotated right	|
+				|	for EA bit positions				|
 				|	values shifted out of the register are		|
 				|	transferred to high-order bit positions 	|
 				|_______________________________________________________|
@@ -5425,13 +5492,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="rbr"/>
-	Rotate Arithmetic Register b Right	rbr
-	__________________________________	___
+	Rotate Accumulator b Right	rbr
+	__________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic begister b is rotated 	|
-				|	rightward for EA bit positions			|
+				|	the value in accumulator b is rotated right	|
+				|	for EA bit positions				|
 				|	values shifted out of the register are		|
 				|	transferred to high-order bit positions		|
 				|_______________________________________________________|
@@ -5454,8 +5521,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the 48-bit value in arithmetic registers a and b|
-				|	is rotated rightward for EA bit positions	|
+				|	the 48-bit value in accumulators a b		|
+				|	is rotated right for EA bit positions		|
 				|	values shifted out of the register pair are	|
 				|	transferred to high-order bit positions		|
 				|_______________________________________________________|
@@ -5495,13 +5562,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="ral"/>
-	Rotate Arithmetic Register a Left	ral
-	_________________________________	___
+	Rotate Accumulator a Left	ral
+	_________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic register a is rotated 	|
-				|	leftward for EA bit positions			|
+				|	the value in accumulator a is rotated left	|
+				|	for EA bit positions				|
 				|	values shifted out of the register are		|
 				|	transferred to low-order bit positions		|
 				|_______________________________________________________|
@@ -5520,13 +5587,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="rbl"/>
-	Rotate Arithmetic Register b Left	rbl
-	_________________________________	___
+	Rotate Accumulator b Left	rbl
+	_________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic register b is rotated 	|
-				|	leftward for EA bit positions			|
+				|	the value in accumulator b is rotated left	|
+				|	for EA bit positions				|
 				|	values shifted out of the register are		|
 				|	transferred to low-order bit positions		|
 				|_______________________________________________________|
@@ -5550,8 +5617,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the 48-bit value in arithmetic registers a and b|
-				|	is rotated leftward for EA bit positions	|
+				|	the 48-bit value in accumulators a  b		|
+				|	is rotated left for EA bit positions		|
 				|	values shifted out of the register pair are	|
 				|	transferred to low-order bit positions		|
 				|_______________________________________________________|
@@ -5593,15 +5660,15 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="saa"/>
-	Shift Arithmetic Register a Algebraic	saa
-	_____________________________________	___
+	Shift Accumulator a Algebraic	saa
+	_____________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic Register a is shifted	|
+				|	the value in accumulator a is shifted		|
 				|	algebraically rightwards for EA bit positions	|
-				|	the initial value of bit 23 is repeated in	|
-				|	each vacated high order bit position		|
+				|	the initial value of bit 23 is replicated	|
+				|	in each vacated high order bit position		|
 				|_______________________________________________________|
 
 	assembler syntax	saa	BIT_POSITIONS[, {x|y|a|b|fp|sp}]
@@ -5617,15 +5684,15 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	<a	name="sba"/>
-	Shift Arithmetic Register b Algebraic	sba
-	_____________________________________	___
+	Shift Accumulator b Algebraic	sba
+	_____________________________	___
 
 				_________________________________________________________
 				|							|
-				|	the value in arithmetic Register b is shifted	|
-				|	algebraically rightwards for EA bit positions	|
-				|	the initial value of bit 23 is repeated in	|
-				|	each vacated high order bit position		|
+				|	the value in accumulator b is shifted right	|
+				|	algebraically for EA bit positions		|
+				|	the initial value of bit 23 is replicated		|
+				|	in each vacated high order bit position		|
 				|_______________________________________________________|
 
 
@@ -5645,10 +5712,10 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	______________________	___
 				_________________________________________________________
 				|							|
-				|	the 48-bit value in arithmetic registers a and b|
-				|	is shifted algebraically rightwards for EA bit	|
-				|	positions. The value of bit 47 is repeated in	|
-				|	each vacated high order bit position		|
+				|	the 48-bit value in accumulators a b is shifted	|
+				|	right algebraically for EA bit positions	|
+				|	the initial value of bit 47 is replicated	|
+				|	in each vacated high order bit position		|
 				|_______________________________________________________|
 
 	assembler syntax	dsa	BIT_POSITIONS[, {x|y|a|b|fp|sp}]
@@ -5669,7 +5736,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA 			|
-				|	if bit 0 of Arithmetic Register a = 1		|
+				|	if bit 0 of Accumulator a = 1			|
 				|_______________________________________________________|
 
 
@@ -5683,6 +5750,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 
+	<a	name="jae"/>
+	Jump a Even	macro	jae
+	___________		___
+
+	Jump a Even is a 2-instruction macro which jumps to EA if Accumulator a low-order bit is zero
+	Target address and assembly syntax are as <a href="#jao">Jump a Odd</a> instruction
+
 
 
 	<a	name="jpa"/>
@@ -5692,7 +5766,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA			|
-				|	if bit 23 of Arithmetic Register a = 0		|
+				|	if bit 23 of accumulator a = 0			|
 				|_______________________________________________________|
 
 
@@ -5714,7 +5788,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA			|
-				|	if bit 23 of Arithmetic Register b = 0		|
+				|	if bit 23 of accumulator b = 0			|
 				|_______________________________________________________|
 
 
@@ -5757,7 +5831,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA			|
-				|	if register a AND mask register k has odd parity|
+				|   if parity (accumulator a AND mask register k) is odd|
 				|_______________________________________________________|
 
 
@@ -5772,6 +5846,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 
+	<a	name="jpe"/>
+	Jump Parity Even	macro	jpe
+	________________		___
+
+	Jump Parity Even is a 2-instruction macro which jumps to EA if parity (accumulator a AND mask register k) is even
+	Target address and assembly syntax are as <a href="#jpo">Jump Parity Odd</a> instruction
 
 
 	<a	name="jza"/>
@@ -5781,7 +5861,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps EA			|
-				|	if all bits of Arithmetic register a are 0	|
+				|	if all bits of accumulator a are 0		|
 				|_______________________________________________________|
 
 
@@ -5804,7 +5884,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA			|
-				|	if all bits of arithmetic register b are 0	|
+				|	if all bits of accumulator b are 0		|
 				|_______________________________________________________|
 
 
@@ -5827,7 +5907,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA			|
-				|	if any bits of arithmetic register a are 1	|
+				|	if any bits of accumulator a are 1		|
 				|_______________________________________________________|
 
 	assembler syntax	jnza	jump_address[, {x|y|a|b|fp|sp}]
@@ -5849,7 +5929,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA			|
-				|	if any bits of arithmetic register b are 1	|
+				|	if any bits of accumulator b are 1		|
 				|_______________________________________________________|
 
 	assembler syntax	jnzb	jump_address[, {x|y|a|b|fp|sp}]
@@ -5870,7 +5950,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA			|
-				|	if bit 23 of arithmetic register a = 1		|
+				|	if bit 23 of accumulator a = 1			|
 				|_______________________________________________________|
 
 	assembler syntax	jna	jump_address[, {x|y|a|b|fp|sp}]
@@ -5891,7 +5971,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA			|
-				|	if bit 23 of arithmetic register b = 1		|
+				|	if bit 23 of accumulator b = 1			|
 				|_______________________________________________________|
 
 	assembler syntax	jnb	jump_address[, {x|y|a|b|fp|sp}]
@@ -5927,6 +6007,14 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 
+	<a	name="jxl"/>
+	Jump x Lower	macro	jxl
+	____________		___
+
+	Jump x Lower is a 2-instruction macro which jumps to EA if index register x < limit pointer register r
+	Target address and assembly syntax are as instruction <a href="#jxge">Jump x Greater or Equal</a>
+
+
 
 
 	<a	name="jyge"/>
@@ -5948,6 +6036,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|___________|_______|___________________________________|
 
 
+	<a	name="jyl"/>
+	Jump y Lower	macro	jyl
+	___________		___
+
+	Jump y Lower is a 2-instruction macro which jumps to EA if index register y < limit pointer register r
+	Target address and assembly syntax are as instruction <a href="#jyge">Jump y Greater or Equal</a>
 
 
 
@@ -5959,7 +6053,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	instruction path jumps to EA if all 48 bits 	|
-				|	of arithmetic registers a and b are 0		|
+				|	of accumulators a b are zero			|
 				|_______________________________________________________|
 
 
@@ -6255,13 +6349,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 	instructions		<a href="#ds">Double Store</a>			<a href="#dl">Double Load</a>
-				<a href="#dpop">Double Pop</a>			<a href="#dpush">Double Push</a>
+				<a href="#dpop">Double Pop (macro)</a>		<a href="#dpush">Double Push</a>
 
 				<a href="#qs">Quadruple Store</a>			<a href="#ql">Quadruple Load</a>
 				<a href="#qpop">Quadruple Pop</a>			<a href="#qpush">Quadruple Push</a>
 
-				<a href="#mta">Masked Test A</a>			<a href="#mlb">Masked Load B</a>
-				<a href="#dte">Double Test Equal</a>
+				<a href="#mta">Masked Test Equal a</a>		<a href="#mta">Masked Test Not Equal a (macro)</a>
+				<a href="#dte">Double Test Equal</a>		<a href="#mlb">Masked Load B</a>
 
 				<a href="#da">Double Add</a> 			<a href="#dan">Double Add Negative</a>
 				<a href="#sc">Store Carry</a>
@@ -6275,11 +6369,11 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	four arithmetic registers			|
+				|	4 accumulators					|
 				|	a b mantissa2 mantissa3	are stored to EA	|
 				|							|
-				|	Register a is stored at register / storage EA	|
-				|	Register b is stored at register / storage EA+1	|
+				|		a  is stored at register / storage EA	|
+				|		b  is stored at register / storage EA+1	|
 				|	mantissa2  is stored at register / storage EA+2	|
 				|	mantissa3  is stored at register / storage EA+3	|
 				|_______________________________________________________|
@@ -6311,11 +6405,11 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	a 96-bit value at EA is loaded to four		|
-				|	arithmetic registers a b mantissa2 mantissa3	|
+				|	a 96-bit value at EA is loaded to		|
+				|	4 accumulators a b mantissa2 mantissa3		|
 				|							|
-				|	register / storage at EA   loads to Register a	|
-				|	register / storage at EA+1 loads to Register b	|
+				|	register / storage at EA   loads to a		|
+				|	register / storage at EA+1 loads to b		|
 				|	register / storage at EA+2 loads to mantissa2	|
 				|	register / storage at EA+3 loads to mantissa3	|
 				|_______________________________________________________|
@@ -6590,15 +6684,15 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	|	________________________________________________________________________|
 	|	|	<a name="rex_lane"/>								|
 	|	|	SIZE may be 2 for 1-word operands treated in left /right pairs	|
-	|	|	because repeated instructions notionally addressing register a	|
+	|	|	because repeated instructions notionally operating accumulator a|
 	|	|									|	
-	|	|		<a style="color:#00AF6F">aa ana or and xor register a shifts la sa</a>		|
+	|	|		<a style="color:#00AF6F">aa ana or and xor accumulator a shifts la sa</a>		|
 	|	|									|		_________________________
 	|	|	operate in a left lane of registers at cursor  [q] --------------------------->	|    register lane A	|
 	|	|									|		|_______________________|
-	|	|	and repeated instructions notionally addresssing register b	|	------>	|    register lane B	|
+	|	|	and repeated instructions notionally accumulator b		|	------>	|    register lane B	|
 	|	|									|	|	|_______________________|
-	|	|		<a style="color:#00AF6F">ab anb orB andB xorB register b shifts lb sb</a>		|	|	.		   A	.
+	|	|		<a style="color:#00AF6F">ab anb orB andB xorB accumulator b shifts lb sb</a>		|	|	.		   A	.
 	|	|									|	|	.........................
 	|	|	operate in a right lane of registers at cursor [q + 1] -----------------	.		   B	.
 	|	|									|		.........................
@@ -6647,8 +6741,10 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				
 	<a	name="dpop"/>
-	Double Pop		dpop
+	Double Pop	macro	dpop
 	_________		____
+
+	Double Pop is a 2-instruction macro which pops two words from the internal stack top to registers or storage
 
 				_________________________________________________________
 				|	two words are stored at EA from the registers	|
@@ -6676,10 +6772,6 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 		?		do	STRUCTURES_IN_TABLE,	dpop	table+CONTAINER_SIZE*?-CONTAINER_SIZE+OFFSET_IN_CONTAINER
 
 
-
-				_________________________________________________________
-	instruction Code 11.7	| 0 1 0 1 1 | 1 1 1 |		<a style="color:#00AF6F">  address</a>		|
-				|___________|_______|___________________________________|
 
 
 
@@ -6734,12 +6826,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	a value at EA is retrieved, rotated to scale	|
-				|	and stored in arithmetic register a		|
+				|	and stored in Accumulator a			|
 				|							|
 				|	the value is rotated left counting		|
 				|	until bit 23 changes or the count reaches 24	|
 				|							|
-				|	the shift count is stored in register b		|
+				|	the shift count is stored in accumulator b	|
 				|							|
 				|_______________________________________________________|
 				|	source is the register or storage word at EA	|
@@ -6771,8 +6863,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	the next instruction is skipped  if		|
-				|	(Register a AND Mask Register k) equals		|
-				|	(register / storage at EA) AND Mask Register k 	|
+				|	(accumulator a AND mask register k) equals		|
+				|	(register / storage at EA) AND mask register k 	|
 				|_______________________________________________________|
 				|	comparand is register or storage word at EA	|
 				|_______________________________________________________|
@@ -6798,6 +6890,16 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 
+	<a	name="mtane"/>
+	Masked Test Not Equal a		macro	mtane
+	_______________________			_____
+
+	Masked Test Not Equal a	is a 2-instruction macro which skips the next instruction
+	if (accumulator a AND mask register k) is unequal to (operand AND k)
+
+	Operand type and assembly syntax are as <a href="#mta">Masked Test Equal a</a> 
+	
+
 
 	<a	name="dte"/>
 	Double Test Equal ab	dte
@@ -6805,8 +6907,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the next instruction is skipped if registers ab	|
-				|	equal two registers or storage words at EA	|
+				|	the next instruction is skipped
+				|	if accumulators a b = 2 operand words		|
 				|							|
 				|	a is compared with register or storage at EA	|
 				|	b is compared with register or storage ar EA+1	|
@@ -6871,9 +6973,9 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	arithmetic register b is loaded with 		|
-				|	   (register / storage AND Mask Register k)	|
-				|	OR (Register b AND (NOT Mask Register k))	|
+				|	accumulator b is loaded with	 		|
+				|	   (register / storage AND mask register k)	|
+				|	OR (b AND (NOT mask register k))		|
 				|_______________________________________________________|
 				|	source is the register or storage word at EA	|
 				|_______________________________________________________|
@@ -6902,11 +7004,11 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the 48-bit value in arithmetic registers a and b|
+				|	the 48-bit value in accumulators a b		|
 				|	is stored at EA					|
 				|							|
-				|	Register a is stored at EA			|
-				|	Register b is stored at EA+1			|
+				|	accumulator a is stored at EA			|
+				|	accumulator b is stored at EA+1			|
 				|_______________________________________________________|
 				|	target is two registers or storage words at EA	|
 				|	EA is any word address				|
@@ -6938,10 +7040,10 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	a 48-bit value is loaded from EA		|
-				|	to arithmetic registers a and b			|
+				|	to accumulators a b				|
 				|							|
-				|	the word at EA is loaded to Register a		|
-				|	the word at EA+1 is loaded to Register b	|
+				|	the word at EA is loaded to accumulator a	|
+				|	the word at EA+1 is loaded to accumulator b	|
 				|_______________________________________________________|
 				|	source is two registers or storage words at EA	|
 				|	EA is any word address				|
@@ -6974,7 +7076,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	a 48-bit integer at EA is added to		|
-				|	arithmetic registers a and b			|
+				|	accumulators a b				|
 				|							|
 				|	the word at EA contains high-order bits 47..24	|
 				| 	of the addend					|
@@ -7013,7 +7115,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	the 2s complement of a 48-bit integer at EA 	|
-				|	is added to arithmetic registers a and b	|
+				|	is added to accumulators a and b		|
 				|							|
 				|	the word at EA contains high-order bits 47..24	|
 				| 	of the subtrahend				|
@@ -7052,14 +7154,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	a 48-bit value is loaded from two words at EA	|
-				|	and rotated to scale then stored in arithmetic 	|
-				|	registers a and b				|
+				|	2 words read from EA are rotated to scale	|
+				|	and stored in accumulators a b			|
 				|							|
-				|	the value is rotated left counting		|
+				|	48-bit value is rotated left counting		|
 				|	until bit 47 changes or the count reaches 48	|
 				|							|
-				|	the shift count is stored in register mantissa2	|
+				|	shift count is stored in accumulator  mantissa2	|
 				|							|
 				|_______________________________________________________|
 				|	source is two registers or storage words at EA	|
@@ -7148,7 +7249,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	|			la	(<i>NEW_PATTERN</i>)									|
 	|			ii	FP_GUARD$									|
 	|														|
-	|	This system call returns the rounding pattern from before in application register a			|
+	|	This system call returns the rounding pattern from before in application accumulator a			|
 	|														|
 	|														|
 	|														|
@@ -7172,8 +7273,8 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	|	_______________________											|
 	|														|
 	|														|
-	|	PSR Flag <b>fp$r</b> signals floating instructions to store a minor result in registers 8..11			|
-	|	giving this overall format in the eight registers a:b:mantissa2:mantissa3::8:9:10:11			|
+	|	PSR Flag <b>fp$r</b> signals floating instructions to store a minor result in accumulators 8..11			|
+	|	giving this overall format in the eight accumulators a:b:mantissa2:mantissa3::8:9:10:11			|
 	|														|
 	|														|
 	|      191|190			 167								      96	|
@@ -7287,15 +7388,15 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|							|
 				|	the four-word floating-point number at EA	|
 				|	is added to the four-word floating-point number	|
-				|	in arithmetic registers a b mantissa2 mantissa3	|
+				|	in accumulators a b mantissa2 mantissa3		|
 				|							|
-				|	Register a contains sign and characteristic bits|
-				|	95..72 of one addend and of the sum		|
+				|	accumulator a contains sign and characteristic	|
+				|	bits 95..72 of one addend and of the sum	|
 				|							|
-				|	Registers b mantissa2 mantissa3 contain	the	|	
+				|	accumulators b mantissa2 mantissa3 contain the	|	
 				|	mantissa of one addend and of the sum with	|
-				|	highest order bits in Register b and lowest	|
-				|	order bits in Register mantissa3		|
+				|	highest order bits in accumulator b and lowest	|
+				|	order bits in accumulator mantissa3			|
 				|							|
 				|	the word at EA contains sign and characteristic	|
 				|	bits of the other addend. The highest order	|
@@ -7350,15 +7451,15 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|	the 1s complement of the four-word		|
 				|	floating-point number at EA is added to		|
 				|	the four-word floating-point number		|
-				|	in arithmetic registers a b mantissa2 mantissa3	|
+				|	in accumulators a b mantissa2 mantissa3		|
 				|							|
-				|	Register a contains sign and characteristic bits|
-				|	95..72 of the minuend and of the difference	|
+				|	accumulator a contains sign and characteristic	|
+				|	bits 95..72 of the minuend and of the difference|
 				|							|
-				|	Registers b mantissa2 mantissa3 contain the	|	
+				|	accumulators b mantissa2 mantissa3 contain the	|	
 				|	mantissa of the minuend and of the difference	|
-				|	with highest order bits in Register b and	|
-				|	lowest order bits in Register mantissa3		|
+				|	with highest order bits in accumulator b and	|
+				|	lowest order bits in accumulator mantissa3	|
 				|							|
 				|	the word at EA contains sign and characteristic	|
 				|	bits of the subtrahend. The highest order	|
@@ -7414,17 +7515,17 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	the four-word floating-point number		|
-				|	in arithmetic registers a b mantissa2 mantissa3	|
+				|	in accumulators a b mantissa2 mantissa3		|
 				|	is multiplied by				|
 				|	the four-word floating-point number at EA	|
 				|							|
-				|	Register a contains sign and characteristic bits|
-				|	95..72 of the multiplicand and of the product	|
+				|	accumulator a contains sign and characteristic	|
+				|	bits 95..72 of multiplicand and product		|
 				|							|
-				|	Registers b mantissa2 mantissa3 contain the	|	
+				|	accumulators b mantissa2 mantissa3 contain the	|	
 				|	mantissa of the multiplicand and of the product	|
-				|	with highest order bits in Register b and	|
-				|	lowest oder bits in mantissa3			|
+				|	with highest order bits in accumulator b and	|
+				|	lowest oder bits in accumulator mantissa3	|
 				|							|
 				|	the word at EA contains sign and characteristic	|
 				|	bits of the multiplier. The highest order	|
@@ -7483,17 +7584,17 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	the four-word floating-point number 		|
-				|	in arithmetic registers a b mantissa2 mantissa3	|
+				|	in accumulators a b mantissa2 mantissa3		|
 				|	is divided by					|
 				|	the four-word floating-point number at EA 	|
 				|							|
-				|	Register a contains sign and characteristic bits|
-				|	95..72 of the dividend and of the quotient	|
+				|	accumulator a contains sign and characteristic	|
+				|	bits 95..72 of the dividend and of the quotient	|
 				|							|
-				|	Registers b mantissa2 mantissa3 contain the	|
+				|	accumulators b mantissa2 mantissa3 contain the	|
 				|	mantissa of the dividend and of the quotient	|
-				|	with highest order bits in Register b and	|
-				|	lowest oder bits in mantissa3			|
+				|	with highest order bits in accumulator b and	|
+				|	lowest oder bits in accumulator mantissa3	|
 				|							|
 				|	the word at EA contains sign and characteristic	|
 				|	bits of the divisor. The highest order		|
@@ -7948,8 +8049,9 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 		in ordinary context					in repeat context
 		___________________					_________________
 
-		24-bit signed register b * 24-bit signed multiplier	48-bit signed multiplicand in two internal stack registers
-		= 48-bit signed product in registers a:b		* 24-bit signed multiplier = 48-bit signed product
+		24-bit signed accumulator b				48-bit signed multiplicand in two internal stack registers
+		* 24-bit signed multiplier				* 24-bit signed multiplier
+		= 48-bit signed product in accumulators a b		= 48-bit signed product
 
 
 		<a	name="rex_mf"/>
@@ -7959,9 +8061,9 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 		in ordinary context					in repeat context
 		___________________					_________________
 
-		unsigned 24-bit register b				24-bit signed multiplicand in one internal stack register
+		unsigned 24-bit multiplicand in accumulator b		24-bit signed multiplicand in one internal stack register
 		* signed 24-bit multiplier				* 24-bit signed multiplier = 24-bit signed product
-		= signed 48-bit product in a:b
+		= signed 48-bit product in accumulators a:b		in the same internal stack register
 
 		<a	name="rex_d"/>
 		Divide <a href="#d" style="color:#00AF6F">d</a> stores results differently in repeat context
@@ -7969,11 +8071,11 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 		in ordinary context					in repeat context
 		___________________					_________________
 
-		signed 48-bit dividend in registers a:b			48-bit signed dividend in two internal stack registers
+		signed 48-bit dividend in accumulators a:b		48-bit signed dividend in two internal stack registers
 		/ signed 24-bit divisor					/= 24-bit signed divisor
 		= signed 48-bit quotient				giving 48-bit signed quotient in the same two registers
-		in [HIGH] register mantissa2 : [LOW] register a		remainder is by default discarded
-		remainder in register b	is either zero			if PSR flag fp$r 24-bit remainder -> target registers + 2
+		in [HIGH] register mantissa2 : [LOW] accumulator a	remainder is by default discarded
+		remainder in accumulator b is either zero		if PSR flag fp$r 24-bit remainder -> target registers + 2
 		or has the sign of the dividend				remainder is either zero or has the sign of the dividend
 
 
@@ -8307,8 +8409,10 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	<a	name="A2_4"/>
 	<a	style="font-size:12.75pt;color:0000FF">A2.4	Loading / Storing the Internal Stack with Datafile Reads and Writes</a>
 
-	Loading and storing the internal stack with pipes or datafiles maintains arrays of densely packed Data Point 1 and output datapoints
-	on fixed storage. Source2 datapoints may be packed or scattered
+	Loading and storing the internal stack with pipes or datafiles maintains arrays of
+	densely packed Data Point 1 and output datapoints on fixed storage
+
+	Source2 datapoints may be packed or scattered
 	<div	style="color:#00AF6F">
 	routine	$head_near	 params(input1_fd,	int		;
 					output_fd,	int		;
@@ -8454,55 +8558,108 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
         Subsequent Repeat Execute instructions reinitialise Accumulator Vector to <a href="#simd_frame">SIMD Frame</a>
 
         Objects called <a style="color:#00AF6F">params</a> and <a style="color:#00AF6F">scalars</a> are in the internal stack.
-        In this example object <a style="color:#00AF6F">sum(1)</a> is on the stack top
+        In this example objects are named by base + displacement
 
+	Object <a style="color:#00AF6F">0, sp</a> is at the internal stack top and has value 1.0
+	
         Macro <a style="color:#00AF6F">SIMD_TARGET</a> updates accumulator cursor q to an object
-        <a style="color:#00AF6F">sum(3)</a> at internal stack top + two floats displacement for a six operations
+        at internal stack top + six floats displacement for twelve floating operations
 
 
 	<div	style="color:#00AF6F">
 
+00:00050A  FDFFA1              +827 	push	-95,,xi				. 96-word frame
+00:00050B  2F000F              +828 	popA	sp
+  :                            829 
+00:00050C  8F0738              +830 	SIMD_CONTROL	(-1, 4, 24-1, 4q)	. default vector is frame of 24 floats
+00:00050D  870014              +830 
+  :                            831 
+                                	lx	(zlist	1.0, 2.0, 3.0, 4.0, 5.0, 6.0,		;
+                                			7.0, 8.0, 9.0, 10.0, 11.0, 12.0,	;
+                                			13.0, 14.0, 15.0, 16.0, 17.0, 18.0,	;
+00:00050E  55073C              +835 			19.0, 20.0, 21.0, 22.0, 23.0, 24.0),,xi
+  :                            836 
+00:00050F  74079C              +837 	rex	(ql	0, x)		. load SIMD Frame 24 * 96-bit float
+  :                            838 					. register increment and ea increment are both 1 float
+  :                            839 					. 12 floats in storage to add
+  :                            840 
+00:000510  55079D              +841 	lx	(zlist	20.0, 21.0, 22.0, 23.0, 24.0, 25.0, 26.0, 27.0, 28.0, 29.0, 30.0, 31.0),,xi
+  :                            842 
+  :                            843 						. vector is 12 floats (48 words)
+00:000511  FCF018              +844 	SIMD_TARGET	6*4,sp	12-1		. @ frame + 6 floats (24 words)
+00:000512  38000D              +844 
+00:000513  FD000B              +844 
+00:000514  380014              +844 
+00:000515  7407CD              +845 	rex	(fa	0, x)			. 12 floating operations
+  :                            846 
+00:000516  553094              +847 	lx	outline,,xi			. start print stream
+00:000517  FF07CE              +848 	call	(wstream_starta)		. this overwrites SIMD control registers
+  :                            849 						. but SIMD default controls are restored after
+  :                            850 
+00:000518  450003              +851 	lr	4-1,,xi				. 4 lines
+  :                            852 
+  :                            853 publish_line
+00:000519  003093              +854 	sr	count1	
+00:00051A  450005              +855 	lr	6-1,,xi				. * 6 floats
+  :                            856 
+00:00051B  003092              +857 publish	sr	count
+00:00051C  6007CF              +858 	la	(' '*/16)
+00:00051D  1D0008              +859 	wsr	$byte
+00:00051E  170010              +860 	inc	BYTES
+00:00051F  870004              +861 	qpop	a				. take a float off the internal stack top
+00:000520  FF07D0              +862 	call	(feditia)			. compose it into the display line
+00:000521  403092              +863 	lr	count
+00:000522  1E051B              +864 	jdr	publish
+  :                            865 
+00:000523  6007D1              +866 	la	(LF*/16)
+00:000524  1D0008              +867 	wsr	$byte
+00:000525  170010              +868 	inc	BYTES
+00:000526  403093              +869 	lr	count1
+00:000527  1E0519              +870 	jdr	publish_line
+  :                            871 
+00:000528  1D0010              +872 	wsr	$word-$byte			. push out last bytes
+  :                            873 
+00:000529  F80010              +874 	c	(write)	stdout	outline,,xi	BYTES
+00:00052A  FD3094              +874 
+00:00052B  FD0001              +874 
+00:00052C  FCF003              +874 
+00:00052D  FF07D2              +874 
+00:00052E  38000F              +874 
+00:00052F  FD0001              +875 	c	(fsync)	stdout
+00:000530  FCF001              +875 
+00:000531  FF07D3              +875 
+00:000532  38000F              +875 
+  :                            876 
+00:000533  8F067F              +877 	SIMD_CONTROL	(-1, 0, 0, 0q)		. restore SIMD default controls
+00:000534  870014              +877 
+00:000535  350000              +878 	lret	0
 
-rex_vector	$head_near	scalars(sum(8),	float,	1.0
-					sum(7),	float,	2.0
-					sum(6),	float,	3.0
-					sum(5),	float,	4.0
-					sum(4),	float,	5.0
-					sum(3),	float,	6.0
-					sum(2),	float,	7.0
-					sum(1),	float,	8.0	)
 
-00:0004FC  8F074D              +825 	SIMD_CONTROL	(-1, 4, 8-1, 4q)	. Accumulator Vector = SIMD Frame = 8 floats sp -&gt;
-00:0004FD  870014              +825 
-  :                            826 						. cursor update + ea increment both 1 float = 4w
-  :                            827 						. six Data Point 2 floats in storage
-00:0004FE  550751              +828 	lx	(zlist	20.0, 21.0, 22.0, 23.0, 24.0, 25.0),,xi
-00:0004FF  FCF008              +829 	SIMD_TARGET	sum(3)	6-1		. Accumulator Vector = 6 floats @ Frame + 2 floats
-00:000500  38000D              +829 
-00:000501  FD0005              +829 
-00:000502  380014              +829 
-00:000503  740769              +830 	rex	(fa	0, x)
-00:000504  8FF008              +831 	$do	6,	print1off
+	<a style="color:#0000FF">telnet	172.29.7.7</a>
+	RTA1 smaragd7 OS shared console
 
-	display rex_vector
-	+2.600e+1
-	+2.600e+1
-	+2.600e+1
-	+2.600e+1
-	+2.600e+1
-	+2.600e+1
+	<a style="color:#0000FF">r load /util/tal</a>
+	00001d
+	loader: load /util/tal
+
+	[000050000018:001000003238]
+	000022 
+
+	<a style="color:#0000FF">test rex_vector</a>
+	 +1.000 +2.000 +3.000 +4.000 +5.000 +6.000
+	<a style="color:#FF0000"> +27.000 +29.000 +31.000 +33.000 +35.000 +37.000
+	 +39.000 +41.000 +43.000 +45.000 +47.000 +49.000</a>
+	 +19.000 +20.000 +21.000 +22.000 +23.000 +24.000
 
 	</div>
 
-	If default SIMD configuration is required again it must be set again
+	If default SIMD configuration is required again it must be set again as line 877
 
 		SIMD_CONTROL	(-1, 0, 0, 0q)
-
 
 <i>
 
     <hr/>
-
 
 
     LICENCE NOTICE
