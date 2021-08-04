@@ -60,6 +60,11 @@ See also the licensing notice at the foot of this document
         <li><a href="#suse">Appendix A: Installing openSUSE Linux</a></li>
         <li><a href="#autoconf">Appendix B: Autoconf and Multihomed Routes</a></li>
         <li><a href="#alltests">Appendix C: Benchmark Suite alltests</a></li>
+	<li><a href="#readout">Appendix D: Readout Utility and Hot Debug</a></li>
+		<ul	type="none">
+		<li><a href="#readout">D.1: General Application of readout Utility</a></li>
+		<li><a href="#hot_d">D.2: Walking a Faulted Application with readout Utility</a></li>
+		</ul>
 	<li><a href="#deconta">Appendix Y: Clearing Download Restrictions</a></li>
         <li><a href="#licence">Appendix Z: GNU General Public Licence Version 3</a></li>
 </ul>
@@ -106,7 +111,7 @@ Client-side UDP floating arithmetic applications are packaged for OSX, Linux and
 
 RTA1 is downloaded as zip from <a href="http://timmilescox.github.io/RTA/#downloads">http://timmilescox.github.io/RTA/#downloads</a>
 and unpacks for example to
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	$HOME/Downloads/rta
 
@@ -114,7 +119,7 @@ and unpacks for example to
 masmx meta-assembler is required both for operational just-in-time assemblies and for developing any RTA1 target code.<br>
 zip is in <a href="http://timmilescox.github.io/masmx/">http://timmilescox.github.io/masmx/</a>
 and unpacks for example to
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	$HOME/Downloads/masmx.7r3
 
@@ -173,26 +178,26 @@ What goes in .bash_profile or .bashrc is like this
 
 <pre	style="font-size:10pt">
 
-	<a style="color:#FF0000">OSX x86-64</a>										<a style="color:#FF0000">Linux x86-64</a>
-	__________										____________
+	<a style="color:#FF0000">OSX x86-64</a>									<a style="color:#FF0000">Linux x86-64</a>
+	__________									____________
 
-	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x64						export	RTA_BINARY=$HOME/rta/binary.rta/suse.x64
-	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x64					export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x64
-	export	PATH=$PATH:$MASMX:$RTA_BINARY							export	PATH=$PATH:$MASMX:$RTA_BINARY
-	export	RTA_MBANKS=1	# you rarely need more than 2 banks				export	RTA_MBANKS=1	# RTA1 executable space
-				# RTA1 executable space									# from 1 * 262144 words
-				# up to 65536 * 262144 words (16 Gigawords)						# to 1024 * 262144 words
+	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x64					export	RTA_BINARY=$HOME/rta/binary.rta/suse.x64
+	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x64				export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x64
+	export	PATH=$PATH:$MASMX:$RTA_BINARY						export	PATH=$PATH:$MASMX:$RTA_BINARY
+	export	RTA_MBANKS=1	# you rarely need more than 2 banks			export	RTA_MBANKS=1	# RTA1 executable space
+				# RTA1 executable space								# from 1 * 262144 words
+				# up to 65536 * 262144 words (16 Gigawords)					# to 1024 * 262144 words
 
 
-	<a style="color:#FF0000">OSX x86</a>											<a style="color:#FF0000">Linux</a>
-	_______											_____
+	<a style="color:#FF0000">OSX x86</a>										<a style="color:#FF0000">Linux</a>
+	_______										_____
 
-	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x86						export	RTA_BINARY=$HOME/rta/binary.rta/suse.x86
-	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x86					export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x86
-	export	PATH=$PATH:$MASMX:$RTA_BINARY							export	PATH=$PATH:$MASMX:$RTA_BINARY
-	export	RTA_MBANKS=1	# you rarely need more than 2 banks				export	RTA_MBANKS=1	# you rarely need more than 2 banks
-				# but you can have 1024 banks								# but you can have 1024 banks
-				# = 256 megawords executable space							# = 256 megawords executable space
+	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x86					export	RTA_BINARY=$HOME/rta/binary.rta/suse.x86
+	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x86				export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x86
+	export	PATH=$PATH:$MASMX:$RTA_BINARY						export	PATH=$PATH:$MASMX:$RTA_BINARY
+	export	RTA_MBANKS=1	# you rarely need more than 2 banks			export	RTA_MBANKS=1	# you rarely need more than 2 banks
+				# but you can have 1024 banks							# but you can have 1024 banks
+				# = 256 megawords executable space						# = 256 megawords executable space
 
 
 	
@@ -231,7 +236,7 @@ Supplied emulators have RTA_MBANKS=[ 1 2 4 8 32 64 256 1024 8192 65536 ]
 
 <p>
 Depending on platform available emulators are
-<pre	style="font-size:12pt">
+<pre	style="font-size:11pt">
 
 	$RTA_BINARY/tipa[1..1024]	# 32-bit Intel OSX and Linux	run as script rta/rta.run/ra	[-[O][R][Z][s]]
 	$RTA_BINARY/tipt[1..1024]	# 32-bit Intel OSX and Linux	run as script rta/rta.run/r	[-[O][R][Z][s]]
@@ -265,7 +270,7 @@ These routes may need to be changed in <a href="#route_from">$HOME/.rta_net</a> 
 Interface names are different in Linux
 
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 	OSX									<a style="color:#FF0000">Linux</a>
 	___									<a style="color:#FF0000">_____</a>
 
@@ -292,7 +297,7 @@ Variables $RTA_ENET and $RTA_WIFI attach multiple IP addresses to external inter
 Here RTA1 host 172.29.7.12 with Wifi address 172.29.7.72 is configured and has some extra IP addresses and routes
 
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	export RTA_ENET=172.29.7.12/26<a style="background-color:#00FF00">+172.29.7.14/26</a>@192.168.1.0/24<a style="background-color:#00FF00">+10.0.0.5/8</a>@172.29.7.0/26
 	export RTA_WIFI=172.29.7.72/12@0.0.0.0/0*192.168.1.254@192.168.0.0/16@172.16.0.0/12
@@ -307,7 +312,7 @@ Here RTA1 host 172.29.7.12 with Wifi address 172.29.7.72 is configured and has s
 <p>
 Here host 172.29.7.12 is interrogated with <a href="http://www.net-snmp.org">NET-SNMP</a>
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 
 	$ snmpwalk -v 1 -c public -Ir -Os 172.29.7.12 ipAddrTable
@@ -343,7 +348,7 @@ $HOME/.rta_net also configures routes which RTA1 uses for outgoing traffic
 <p>
 * introduces the <a style="color:#FFFFFF;background-color:#000000">gateway</a> of an indirect route
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	export RTA_ENET=172.29.7.12/26+172.29.7.14/26<a style="color:#FF0000">@192.168.1.0/24</a>+10.0.0.5/8<a style="color:#FF0000">@172.29.7.0/26</a>
 	export RTA_WIFI=172.29.7.72/12<a style="color:#FF0000">@0.0.0.0/0</a><a style="color:#FFFFFF;background-color:#000000">*192.168.1.254</a><a style="color:#FF0000">@192.168.0.0/16@172.16.0.0/12</a>
@@ -422,7 +427,7 @@ It prints prints network addresses in hex which is intuitive for other protocols
 It prints zero next hop for direct routes where the real next hop is the destination<br>
 as distinct from the traditional display of the primary address of the interface as next hop 
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	$ snmpwalk -v 1 -c public -Ir -Os -m+IP-FORWARD-MIB 172.29.7.7 inetCidrRouteTable
 	inetCidrRouteDestType.ipv4.6.0.0.0.0 = INTEGER: ipv4(1)
@@ -490,7 +495,7 @@ as distinct from the traditional display of the primary address of the interface
 A host communicating with RTA1 emulated on a different host must set direct routes onto Ethernet and / or Wifi<br>
 Script rta/client/rundum does this
 
-<pre    style="font-size:12pt;color:0000FF">
+<pre    style="font-size:11pt;color:0000FF">
 
 	$ cat rundum
 	export	PLATFORM=`uname`
@@ -513,7 +518,7 @@ Script rta/client/rundum does this
 
 If you prefer to add host routes it's done like this
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	OSX								Linux
 	___								_____
@@ -526,7 +531,7 @@ If you prefer to add host routes it's done like this
 <p>
 ifconfig is on Windows ipconfig.<br>
 Host routes on Windows 10 are assigned via an administrator command prompt (a different program from plain command prompt)
-<pre	style="font-size:12pt;color:00C040">
+<pre	style="font-size:11pt;color:00C040">
 
 	route add [-p] 172.29.7.8/32 192.168.0.20	# -p means more persistent than system runlife
 	route add [-p] 172.29.7.66/32 192.168.0.21
@@ -534,7 +539,7 @@ Host routes on Windows 10 are assigned via an administrator command prompt (a di
 </pre>
 
 You can check a route with these commands
-<pre	style="font-size:12pt">
+<pre	style="font-size:11pt">
 
 	<a style="color:0000FF">OSX				<a style="color:FF0000">Linux				<a style="color:00C040">Windows 10
 	<a style="color:0000FF">___				<a style="color:FF0000">_____				<a style="color:00C040">__________
@@ -569,32 +574,33 @@ Client routing to RTA1 and some client applications run from a third platform sh
 
 <p>
 These three actions are 
-<pre	style="font-size:12pt">
-<div	style="right:0pt;width:250pt;position:absolute;font-size:10pt"><div    style="width:250pt;border-radius:5pt;color:#00FF00;background-color:#707870C0">
+<pre	style="font-size:11pt">
+<div	style="right:0pt;width:250pt;position:absolute;font-size:11pt">
+
+<div	style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
 
 
 $ cd rta/linuxnet.x64   <a style="color:#FF0000">rta/portal[64]</a>
 $ ./runL                <a style="color:#FF0000">-ozx</a>
 </div>
-<div    style="width:250pt;border-radius:5pt;color:#00FF00;background-color:#707870C0">
+<div    style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
 
 
 $ cd rta/rta.run        <a style="color:#FF0000">rta/tgen.x64</a>
-$ ./ra <a style="color:#FF0000">-O</a>        	  <a style="color:#FF0000">./r -O</a>
+$ ./ra <a style="color:#FF0000">-O[R]</a>		<a style="color:#FF0000">./r -O[R]</a>
 </div>
-<div    style="width:250pt;border-radius:5pt;color:#00FF00;background-color:#707870C0">
+<div    style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
 
 
 $ cd rta/client
 $ ./prun
 </div>
-<div    style="width:250pt;border-radius:5pt;color:#00FF00;background-color:#707870C0">
+<div    style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
+		<a style="color:#FF0000" href="scripts.html#auto">background processes</a>
+		<a style="color:#FF0000">broadcast console</a>
 
-                        <a style="color:#FF0000" href="scripts.html#auto">background processes</a>
-                        <a style="color:#FF0000">broadcast console</a>
 $ sudo oconsole
-</div>
-</div>
+</div></div>
   _______________________________________________________________________________________
   |											|	
   |  1st shell: network trunk:	$ cd rta/{ linux.net | linuxnet.x64 | portal[64] }	|
@@ -637,7 +643,7 @@ Network trunk process run flags
 
 </ul>
 runL flags can be reversed on the fly by typing them in during operation, for example
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	./runL
 	-vu		# watch the traffic
@@ -657,21 +663,23 @@ The most efficient emulator is rta.run/ra for OSX Intel x86 and Linux Intel x86
 
 The network trunk process is a Berkeley Packet Filter application connecting RTA1 emulator to networks
 
-<pre	style="font-size:12pt;color:0000FF">
-	OSX									<a style="color:FF0000">Linux</a>
-	___									<a style="color:FF0000">_____</a>
+<pre	style="font-size:11pt;color:0000FF">
+	OSX						<a style="color:FF0000">Linux</a>
+	___						<a style="color:FF0000">_____</a>
 
-	cd rta/portal[64]							<a style="color:FF0000">cd rta/linux.net</a>
-	./runL [-[zx][vu]]	# can be stopped with command .<a style="background-color:#00FF00">CR</a>		<a style="color:FF0000">./runL [-[zx][vu]]	# can be stopped with command .</a><a style="background-color:#00FF00">CR</a>
-				# entered twice					<a style="color:FF0000">		# entered twice</a>
+	cd rta/portal[64]				<a style="color:FF0000">cd rta/linux.net</a>
+	./runL [-[zx][vu]]				<a style="color:FF0000">./runL [-[zx][vu]
+	# can be stopped with command .</a><a style="background-color:#00FF00">CR</a>		<a style="color:FF0000"># can be stopped with command .</a><a style="background-color:#00FF00">CR</a>
+	# entered twice					<a style="color:FF0000"># entered twice</a>
 
 
 
-										<a style="color:FF0000">64-Bit Linux</a>
-										<a style="color:FF0000">____________</a>
-										<a style="color:FF0000">cd rta/linuxnet.x64</a>
-										<a style="color:FF0000">./runL [-[zx][vu]] # can be stopped with command .</a><a style="background-color:#00FF00">CR</a>
-										<a style="color:FF0000">                   # entered twice</a>
+							<a style="color:FF0000">64-Bit Linux</a>
+							<a style="color:FF0000">____________</a>
+							<a style="color:FF0000">cd rta/linuxnet.x64</a>
+							<a style="color:FF0000">./runL [-[zx][vu]]
+							<a style="color:FF0000"># can be stopped with command .</a><a style="background-color:#00FF00">CR</a>
+							<a style="color:FF0000"># entered twice</a>
 </pre>
 
 <a	name="emu"/>
@@ -679,21 +687,23 @@ The network trunk process is a Berkeley Packet Filter application connecting RTA
 
 RTA1 emulator -s option means start in <a href="#debug">debug</a> single step, for example to set a breakpoint
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
-	OSX x86 <a style="color:FF0000">and Linux x86</a>			<a style="color:FF0000">OSX x86-64</a> and Linux x86-64
-	________________							____________________
+	OSX x86 <a style="color:FF0000">and Linux x86</a>				<a style="color:FF0000">OSX x86-64</a> and Linux x86-64
+	________________				____________________
 
-	cd rta/rta.run								cd rta/tgen.x64
-	./ra [-[O][R][Z][s]]	# ./r for older emulators			./r [-[O][R][Z][s]]
+	cd rta/rta.run					cd rta/tgen.x64
+	./ra [-[O][R][Z][s]]				./r [-[O][R][Z][s]]
+	# ./r for older emulators
 
 
 	<a style="color:FF0000">OSX PowerPC</a>
 	___________
 
 	cd rta/rta.run
-	./r [-[O][R][Z][s]]	# G4 Macs are single core and -O option is not advised
-				# because it reduces performance by starving the network trunk process of scheduling priority
+	./r [-[O][R][Z][s]]
+	# G4 Macs are single core and -O option is not advised
+	# that starves network trunk and other processes of scheduling
 
 </pre>
 
@@ -706,17 +716,18 @@ See also <a href="#ORZ">./ra -ORZs</a> extra run flags and <a href="#_dev_"> ext
 <h4>6.4: Emulator Additional Run FLags</h4>
 
 Additional run flags for the emulator command line may be passed from the emulator script call ./r[a] -ORZ
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	-O	is recommended and allows RTA1 emulator to organise its own powersave
 		by having the decision when to yield to platform scheduling
 
-	-R	automatically resets the network frames trunk by in-band reconfigure / resynchronise request to runL
-		this saves an operational stop and start of runL
+	-R	in-band resynchronise request to runL to reinititalise the network trunk
+		saves an operational stop and start of runL
 
-	-Z	enter debug single step if a contingency interrupt GUARD$ happens, otherwise
-		on application fault:  thread is sidelined, visible in RTA1 telnet threads display, command t
-		on ISR fault without application cause: load image restarts
+	-Z	enter debug single step when thread faults
+		before thread is  sidelined with status 100000<sub>16</sub>
+
+		on ISR fault without application cause: -Z flag switches single step before load image restart
 
 		Here -Z is not opted:
 		an application thread tal calls an unallowed iframe
@@ -851,17 +862,16 @@ Up to 61 more devices can be added on the emulator command line inside the start
 Device arguments can be added to the script call script rta.run/{ra|r} or tgen.x64/r. The number of possible arguments depends on the shell
 
 
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
-	./ra	/3/+banks		\	# add an array device number 3. Its addressing start bank index is 400003<sub>16</sub>
-		/33/ file_system_path	\	# load a file system device number 33. Its addressing start bank index is 400021<sub>16</sub>
-		/63/#network_trunk_key		# add a network trunk device number 63. Its addressing start bank index is 40003F<sub>16</sub>
-
+	./ra	/3/+banks		\	# add memory array device 3 with Start Page Name 400003<sub>16</sub>
+		/33/ file_system_path	\	# load file system device 33 with Start Page Name 400021<sub>16</sub>
+		/63/#network_trunk_key		# add network trunk device 63 with Start Page Name 40003F<sub>16</sub>
 
 </pre>
 
 <p>
-The examples /3/+n /33/ /63/ are input in decimal
+Device numbers /3/+n /33/ /63/ are input in decimal
 
 <p>
 The network trunk key is a 32-bit shared memory identifier stated in hex. If its value is 60000000+ hex the trunk is created by the corresponding network trunk process and RTA1 emulator binds to it
@@ -886,7 +896,7 @@ It is possible to state extra devices directly on the command line inside script
 
 <p>
 The emulator command line inside the script is of this form
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	sudo $RTA_BINARY/tipa$RTA_MBANKS -li $RTA_IMAGE $RTA_FSIMAGE $1 $2 $3 $4 $5 $6 $7 $8 $9
 
@@ -913,7 +923,7 @@ $RTA_FSIMAGE is the file system in device 1
 <p>
 A shell on the emulator platform sets routes to RTA1 on the platform and other platforms and hosts client applications which bind to RTA1 servers
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	cd rta/client
 	./prun
@@ -932,7 +942,7 @@ Entering letter s plus return while the emulator is running or starting the emul
 <p>
 Here -s opts to start in the debug console
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
  
 	$ ./ra -s
 	emulator ../binary.rta/osx.x86/tipa1
@@ -971,7 +981,7 @@ Interrupt registers at 128+ are displayed because restart is in interrupt mode
 
 <p>
 Single step is advanced by return key. Two instructions later RTA1 has initialised the interrupt internal stack pointer
-<pre    style="font-size:12pt;color:0000FF">
+<pre    style="font-size:11pt;color:0000FF">
  
 
         &gt;
@@ -996,14 +1006,14 @@ Command <a style="color:0000FF">g</a> sets RTA1 running free and the prompt chan
 
 <p>
 Command
-<pre    style="font-size:12pt;color:0000FF">
+<pre    style="font-size:11pt;color:0000FF">
  
 	g[page:]offset
 
 </pre>
 sets a breakpoint. If the breakpoint is reached or command <a style="color:0000FF">s</a> is entered single-step returns<br>
 There is only one breakpoint at one time. It may be changed in single step. Otherwise <a style="color:0000FF">g</a> runs to the existing breakpoint if any
-<pre	style="font-size:12pt;color:FF0000">
+<pre	style="font-size:11pt;color:FF0000">
 
 	Note on Using Breakpoints
 	_________________________
@@ -1026,7 +1036,7 @@ All single-step outputs and most input parameters are in hex
 <p>
 Cursor return prompts eight more words of register / memory / device display, enter period to escape
 
-<pre    style="font-size:12pt;color:0000FF">
+<pre    style="font-size:11pt;color:0000FF">
 
 	s			# enter single step
 
@@ -1073,8 +1083,8 @@ Cursor return prompts eight more words of register / memory / device display, en
 <h4>8:1 What Applications are Present?</h4>
 
 <a	name="basics"/>
-<pre	style="font-size:12pt;color:#0000FF">
-<div	style="right:20pt;width:700pt;height:300pt;position:absolute;font-size:10pt">
+<pre	style="font-size:11pt;color:#0000FF">
+<div	style="right:20pt;width:700pt;height:300pt;position:absolute;font-size:11pt">
 <div	style="top:0pt;right:50pt;width:1pt;position:absolute;height:240pt;background-color:#00FF0080"></div>
 <div	style="top:0pt;right:170pt;width:1pt;position:absolute;height:240pt;background-color:#00FF0080"></div>
 <div	style="top:0pt;right:290pt;position:absolute;width:1pt;height:240pt;background-color:#00FF0080"></div>
@@ -1271,11 +1281,17 @@ algorithm engine
 
 
 
+
+
+
+
+
+
 </pre>
 
 <a      name="routapp"/>
 <h4>8.2: Routing to RTA1 Applications and Server Wake-Up</h4>
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	on-platform RTA1 address is always 172.29.7.7
 	you needed to run ./prun in rta/client
@@ -1290,7 +1306,7 @@ See <a href="#topol">3: Network Topology</a> and <a href="#route">4: Routing</a>
 
 <p>
 If emulated RTA is on your client platform its adress is 172.29.7.7 made available by script client/prun
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	cd client
 	./prun
@@ -1298,7 +1314,7 @@ If emulated RTA is on your client platform its adress is 172.29.7.7 made availab
 </pre>
 To call an RTA1 server application an another platform in your network, RTA1 server addresses 172.29.7.x are made
 available by script client/rundum
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	cd client
 	./rundum
@@ -1313,7 +1329,7 @@ telnet server and floating point server
 <a	name="webhost"/>
 <h4>8.3: WebHost and Adding your Enterprise Web Pages</h4>
 RTA1 WebHost is at
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	http://172.29.7.7
 
@@ -1322,7 +1338,7 @@ from the emulator platform itself
 
 <p>
 or over local networks at the addresses in $HOME/.rta_net of the emulator platform, for example
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	http://172.29.7.8
 
@@ -1342,7 +1358,7 @@ Add your enterprise web pages to $HOME/enterprise.rta/web in your home directory
 <p>
 The tuples in $HOME/enterprise.rta/web are the online filename[.html ] then the path of a file containing html text
 
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 file enterprise.html rta.doc/sample.txt
 
@@ -1354,7 +1370,7 @@ include updated web pages
 
 <p>
 The lines in $HOME/enterprise.rta/web might for example read
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 file products.html /home/YOU/enterprise.rta/products.txt
 file service.html /home/YOU/enterprise.rta/service.txt
@@ -1368,7 +1384,7 @@ file service.html /home/YOU/enterprise.rta/service.txt
 <br>
 construct online file system
 </div>
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	cd	rta
 	./mrand7
@@ -1379,13 +1395,13 @@ two blocks of 768K octets to a larger number
 
 <p>
 For example for 3 * 768K octets add the argument 3
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	./mrand7 3
 
 </pre>
 fsformat states how many file granules 64 of RTA1 words (192 octets) are loaded
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	$ ./mrand7
 	.
@@ -1421,14 +1437,14 @@ The caller can move between servers without dropping intermediate results
 <h4>8.5.1: Binary Calculators fp and i Client Command Line Interface</h4>
 
 Three four-function calculators are termed binary because each input line is
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	<a style="color:#FF0000"><i>number</i></a> { [<a style="color:#FF0000"> + - * / </a>] } <a style="color:#FF0000"><i>number</i></a>[,<a style="color:#FF0000"><i>how_many_times</i></a>]
 
 </pre>
 
 Option flags common to floating client fp and 72-bit integer client i are -pvxQR
-<pre    style="font-size:12pt;color:#0000FF">
+<pre    style="font-size:11pt;color:#0000FF">
 
 
         -p      display input requests
@@ -1473,7 +1489,7 @@ Floating point servers are called from bash shell or Windows Command Prompt. Cli
 <p>
 The 96-bit floating server is called with no arguments to reach RTA address 172.29.7.7 over loopback
 or with the target platform's configured Ethernet or WiFi address over a network
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	$ cd rta/client
 	$ fp	[server]	# Default server 172.29.7.7 = this platform
@@ -1491,7 +1507,7 @@ or with the target platform's configured Ethernet or WiFi address over a network
 <a	name="fp192"/>
 <h4>8.5.3: 192-bit floating point</h4>
 The 192-bit floating server is called with flag -U
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	$ cd rta/client
 	$ fp -U	[server]	# Default server 172.29.7.7 = this platform
@@ -1515,7 +1531,7 @@ These tests are also included within multiple benchmark suite <a href="#alltests
 <p>
 Default RTA1 server is 172.29.7.7 on <i>this</i> platform. An address can be given for another RTA1 server in the network
 
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	$ cd rta/client
 	$ ./alltests	[server]	# Default server is 172.29.7.7 = this platform
@@ -1525,7 +1541,7 @@ Default RTA1 server is 172.29.7.7 on <i>this</i> platform. An address can be giv
 <a	name="snmp"/>
 <h4>8.6: SNMP Agent</h4>
 netsnmp is used from any directory because it requires no client-local configuration
-<pre	style="font-size:12pt;color:0000FF">
+<pre	style="font-size:11pt;color:0000FF">
 
 	$ snmpwalk -v 1 -c public -Ir -Os 172.29.7.7 tcp
 	tcpRtoAlgorithm = INTEGER: 0
@@ -1555,7 +1571,7 @@ netsnmp is used from any directory because it requires no client-local configura
 
 RTA1 Telnet Server currently hosts a system enquiry console which is intended as base
 of a future application launcher and shell starter
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	$ telnet 172.29.7.7
 	Trying 172.29.7.7...
@@ -1588,12 +1604,12 @@ of a future application launcher and shell starter
 <p>
 3rd display word is status
 
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 	bit 23	800000<sub>16</sub>	TIME_WAIT	wait until dayclock millisecond in 5th:6th words
 
-	bit 21	200000<sub>16</sub>	EXIT		thread ended, TCB awaiting reuse
+	bit 21	200000<sub>16</sub>	EXIT		thread ended
 
-	bit 20	100000<sub>16</sub>	TRAP		thread faulted, diagnostic information at TCB words 60..63
+	bit 20	100000<sub>16</sub>	TRAP		thread faulted, interrupt stack frame at TCB words 60..63
 
 	bit  0	000001<sub>16</sub>	XINT		awaiting pre-emptive schedule on event
 </pre>
@@ -1607,7 +1623,7 @@ Telnet command <a style="color:#0000FF">r</a> runs applications by name. They ar
 
 <p>
 Application <a style="color:#FF0000">load</a> loads other applications, for example the test utility tal. Like all applications load may have unlimited process instances executing its single ROM image. load is positioned like a shell and finds loadable applications in certified parts of attached file systems
-<pre    style="font-size:12pt;color:#0000FF">
+<pre    style="font-size:11pt;color:#0000FF">
 
 	r <a style="color:#FF0000">load</a> /util/tal 
 
@@ -1634,19 +1650,19 @@ RTA1 publisher accepts no liability for mishaps leading to damage or loss
 
 <p>
 Access this list of download mirrors
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	<a href="https://download.opensuse.org/distribution/leap/15.0/iso/openSUSE-Leap-15.0-NET-x86_64.iso?mirrorlist">https://download.opensuse.org/distribution/leap/15.0/iso/openSUSE-Leap-15.0-NET-x86_64.iso?mirrorlist</a>
 
 </pre>
 Click on a URL which has this iso
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	openSUSE-Leap-15.0-NET-x86_64.iso
 
 </pre>
 Download a USB boot stick writer from here
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	<a href="https://unetbootin.github.io">https://unetbootin.github.io</a>
 
@@ -1763,7 +1779,7 @@ or from another platform in the network<br>
 Routing initialiser script rta/client/prun should have been run once since platform boot.<br>
 If fponline has not been run since client platform boot, running it before benchmark script alltests will avoid capturing
 outputs from RAM file system initialisation in the benchmark outputs.
-<pre	style="font-size:12pt;color:#0000FF">
+<pre	style="font-size:11pt;color:#0000FF">
 
 	cd	client
 	./prun
@@ -1772,6 +1788,190 @@ outputs from RAM file system initialisation in the benchmark outputs.
 	./alltests
 
 </pre>
+
+<a	name="readout"/>
+<h3>Appendix D: readout Utility and Hot Debug</h3>
+<h4>D.1: General Application of readout Utility</h4>
+
+readout utility allows selective walk and display of RTA1 system memory pages of 4096 or 262144 words
+
+<p>
+readout does not display NVRAM or filestore arrays
+
+<p>
+I / O Port 124 <a href="rta.html#iomem">ram$boundary</a> contains the lowest RAM Page Index which is also the lower limit of readout in Device Zero (executable space)
+
+<p>
+NVRAM in the pages lower than ram$boundary may contain information which should not be scanned online
+
+<p>
+Peripheral arrays can be accessed if they are of system memory type but an attempt to access a network trunk array or a filestore array will automatically halt readout. readout can then be run again to <a href="#hot_d">diagnose</a> the halt. The cause is that only ISRs can base filestore arrays and network trunks in address windows. Applications can freely call ISRs which do that, but readout executes online and as a matter of policy network users may not do raw scans of filestore devices. readout does not check device types but allows itself to be crashed on illegal access
+
+<p>
+readout is dynamically loadable and is mostly run online but is script capable. It has very few commands. Help is available at all points
+
+<pre	style="font-size:11pt;color:#00FF00;background-color:#000000C0;border-radius:5px">
+
+	$ <a style="color:#FFFFFF">telnet 172.29.7.7</a>
+	Trying 172.29.7.7...
+	Connected to 172.29.7.7.
+	Escape character is '^]'.
+	RTA1 smaragd7 OS shared console
+	<a style="color:#FFFFFF">stay</a>
+	no timeout
+	<a style="color:#FFFFFF">r load /util/readout</a>
+	00001d
+	loader: load /util/readout
+
+	[000050000018:0010000030ce]
+	000022 readout
+	h / Page Index><a style="color:#FFFFFF">h</a>
+	Start Page Index is decimal or leading zero for hex
+	large page flag 04xxxxx to scan a block of 262144 words
+	key . to quit instead
+	key h at any point for running help
+	h / Page Index><a style="color:#FFFFFF">016</a>
+	TCB
+	000016:000000 544342 003fcb 00000d 000000 003094 002079 000000 000015 <a style="color:#FFFFFF">256</a>
+	000016:000100 2a736e 6d705f 616765 6e7400 000000 000000 000000 000000 <a style="color:#FFFFFF">h</a>
+	key return for next line. Key . to quit
+	input lines are PAGE:OFFSET or just OFFSET
+	first[:] token is decimal for small intuitive numbers, leading zero for hex
+	OFFSET after : in PAGE:OFFSET is always hex
+	large page flag 04xxxxx:OFFSET to scan a block of 262144 words
+	<a style="color:#FFFFFF">0400180:3FFFE0</a>
+	400180:03ffe0 000000 c00160 000002 000000 c00160 c0016a c00174 000000 
+	400180:03ffe8 000000 c00140 000002 000000 c00140 c0014a c00154 000000 
+	400180:03fff0 000000 c00120 000002 000002 c00120 c0012a c00134 000002 
+
+</pre>
+
+If a device is over four gigawords in size <a style="color:#00FF00;background-color:#000000C0">&nbsp;large page flag 04xxxxx&nbsp;</a> may look like [ 05xxxxx .. 07xxxxx ], potentially 400000<sub>16</sub> <a style="color:#FFFFFF;background-color:#000000">OR</a> 3FFFC0<sub>16</sub> <a style="color:#FFFFFF;background-color:#000000">OR</a> [device]
+
+<p>
+When 400000<sub>16</sub> is applied bits bits 21..6 are the 16-bit index of a 262144-word page ("bank") and bits 5..0 are a device index
+
+<p>
+When 400000<sub>16</sub> is not applied, device is zero = executable space and highest possible index of a 4096-word page is  3FFFFF<sub>16</sub>
+
+<p>
+All devices are addressable up to 16 gigawords
+
+<a	name="hot_d"/>
+<h4>D.2: Walking a Faulted Application with readout Utility</h4>
+
+General purpose memory readout utility is used to diagnose faulted applications without stopping the system. It runs over telnet from the platform or local net
+
+<p>
+An application fault becomes apparent if an application returns to a launch interface without completing
+
+<p>
+In the example below a request to application <a style="color:#FFFFFF;background-color:#000000C0">&nbsp;tal&nbsp;</a> went directly to loader prompt <a style="color:#00FF00;background-color:#000000C0">&nbsp;load&gt;&nbsp;</a>
+
+<p>
+loader interface is left with <a style="color:#FFFFFF;background-color:#000000C0">&nbsp;@eof&nbsp;</a> command. Console command <a style="color:#FFFFFF;background-color:#000000C0">&nbsp;t&nbsp;</a> lists active threads and one halted thread named <a style="color:#00FF00;background-color:#000000C0">&nbsp;tal&nbsp;</a>
+
+<p>
+Status bit 20 <a style="color:#FF0000;background-color:#000000"><b>&nbsp;100000&nbsp;</b></a> in <a href="#telnet">console threads display</a> shows the thread is sidelined from scheduling after interrupt GUARD$
+
+<p>
+Multiple shells on the platform or network can run telnet to one RTA1. if an application breaks in one shell it can be examined from another
+
+<p>
+Application tal is expected to break. It is a utility for testing the legality and working of system features. Application tal issues a call to 000001:000C40
+
+<p>
+Page Index 1 is in ISR space below Application Threshold. Applications may not call ISR space. System call ISRs are called with Internal Interrupt instruction
+
+<p>
+Application tal halts and <a style="color:#00FF00;background-color:#000000C0">&nbsp;load&gt;&nbsp;</a>  prompt appears
+
+<p>
+The Thread Control Block of application tal has Page Index <a style="color:#00FF00;background-color:#000000C0">&nbsp;000022&nbsp;</a>
+
+<p>
+The first 260 words of the TCB contain all or most information necessary for diagnosing faulted applications
+
+<pre	style="font-size:11pt;color:#00FF00;background-color:#000000C0;border-radius:5px">
+
+	$ <a style="color:#FFFFFF">telnet 172.29.7.7</a>
+	Trying 172.29.7.7...
+	Connected to 172.29.7.7.
+	Escape character is '^]'.
+	RTA1 smaragd7 OS shared console
+	<a style="color:#FFFFFF">r load /util/tal</a>
+	00001d
+	loader: load /util/tal
+
+	[000050000018:001000003235]
+	000022 tal
+	<a style="color:#FFFFFF">test call 1:c40</a>
+	load><a style="color:#FFFFFF">@eof</a>
+	<a style="color:#FFFFFF">t</a>
+	console threads display
+	003fd2 000002 <a style="color:#FF0000">100000</a> 000022 000000 000000 000000 tal
+	000000 000007 200000 00001d 000000 000000 000000 load
+	003fe7 000000 000000 000017 000000 000000 000000 *iserver
+	003fc4 000007 000000 000016 000000 000000 000000 *snmp_agent
+	003fcb 000000 000000 000015 000000 000000 000000 *fponline
+	003fd2 000000 000000 000014 000000 000000 000000 *telnet
+	003084 000000 000000 000013 000000 000000 000000 *http
+	003fe0 000000 000000 00000d 000000 000000 000000 *ip
+	<a style="color:#FFFFFF">r load /util/readout</a>
+	00001d 
+	loader: load /util/readout
+
+	[000050000025:0010000030ce]
+	000026 readout
+	h / Page Index><a style="color:#FFFFFF">022</a>
+	TCB
+	000022:000000 544342 003fb6 000000 000000 0030a2 002079 000000 000000 <a style="color:#FFFFFF">56</a>
+	000022:000038 000000 000000 000000 c00000 <a style="color:#FF0000">000001 000041 000018 0001a3 </a>
+	000022:000040 000000 000021 000023 <a style="color:#FF0000">000024</a> c00001 c00001 c00001 c00001 <a style="color:#FFFFFF">080</a>
+	000022:000080 0000a0 0000ff <a style="color:#FF0000">000003</a> c0000a 000000 000000 000000 000004 
+	000022:000088 000004 000000 000000 000000 00301e 00301e 004000 00007e 
+	000022:000090 000000 000000 000000 000000 ffffff 000000 000000 000000 <a style="color:#FFFFFF">256</a>
+	000022:000100 <a style="color:#FF0000">74616c</a> 000000 000000 000000 000000 000000 000000 000000 <a style="color:#FFFFFF">024:58</a>
+	000024:000058 <a style="color:#FF0000">000c40 000001</a> 000001 000c40 000000 000000 000003 000001
+
+</pre>
+Operator <a style="color:#FFFFFF;background-color:#000000C0">keyins</a> walking the TCB requested:
+<pre	style="font-size:11pt">
+	words from TCB + <a style="color:#FFFFFF;background-color:#000000C0">&nbsp;56&nbsp;</a> or 000038<sub>16</sub> to be displayed:
+	00003C..00003F<sub>16</sub> of the TCB are the <a href="rta.html#is_frame">interrupt stack frame</a> / scheduler transfer frame <a style="color:#FF0000;background-color:#000000"><b>&nbsp;000001 000041 000018 0001a3&nbsp;</b></a>
+	The problem is already diagnosed. The instruction at iframe offset <a style="color:#FF0000;background-color:#000000"><b>&nbsp;0001a3&nbsp;</b></a> minus 1 was not permitted
+	(latent parameter <a style="color:#FF0000;background-color:#000000"><b>&nbsp;000001&nbsp;</b></a>). loader announced iframe name <a style="color:#FF0000;background-color:#000000"><b>&nbsp;000018&nbsp;</b></a> when tal was loaded
+
+	words from TCB + 41<sub>16</sub> are relocation base pointers save area. Start Page Index of static data $(3) is <a style="color:#FF0000;background-color:#000000"><b>&nbsp;000024<sub>16</sub>&nbsp;</b></a>
+
+	application registers saved at TCB <a style="color:#FFFFFF;background-color:#000000">&nbsp;000080<sub>16</sub>&nbsp;</a>: index register x contains <a style="color:#FF0000;background-color:#000000"><b>&nbsp;000003<sub>16</sub>&nbsp;</b></a>
+
+	the application name <a style="color:#FF0000;background-color:#000000"><b>&nbsp;74616c&nbsp;</b></a> at TCB + <a style="color:#FFFFFF;background-color:#000000">256</a>
+
+	a far routine call gate at location <a style="color:#FFFFFF;background-color:#000000">&nbsp;000024:000058<sub>16</sub>&nbsp;</a> (<a style="color:#FFFFFF;background-color:#000000">&nbsp;3058<sub>16</sub>&nbsp;</a>) in application static data : <a style="color:#FF0000;background-color:#000000"><b>&nbsp;000c40 000001&nbsp;</b></a>
+	this is a correct call gate to an illegal destination
+
+</pre>
+
+<p>
+Index register x = 3. Execute instruction at offset offset 0001A2<sub>16</sub> executes the call instruction at 1A7<sub>16</sub>
+
+<pre	style="font-size:11pt;color:#00FF00;background-color:#000000C0;border-radius:5px">
+
+	00:0001A2  97A1A4              +203 dothat	ex	doso, x
+	00:0001A3  B6005B              +204 	j	input
+	  :                            205 
+	00:0001A4  6085DF              +206 doso	la	*(31*/18)
+	00:0001A5  B685DF              +207 	j	*(31*/18)
+	00:0001A6  F705E0              +208 	go	(1*/23++gate:s)
+	00:0001A7  FF05E0              +209 	call	(1*/23++gate:s)
+
+	00:0005e0+803058
+
+</pre>
+
+The call operand constant at 0005e0<sub>16</sub> is indirect pointer 803058<sub>16</sub> to a gate at location 003058<sub>16</sub> : 000c40 000001
+
 
 <a	name="deconta"/>
 <h3>Appendix Y: Clearing Download Restrictions</h3>
@@ -1800,7 +2000,7 @@ If you have more than one download with the same name in Downloads, the newest o
 <h3>Appendix Z: GNU General Public Licence Version 3</h3>
 
 <i>
-<pre	style="font-size:12pt">
+<pre	style="font-size:11pt">
 
 
 LICENCE NOTE

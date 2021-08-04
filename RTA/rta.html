@@ -136,7 +136,7 @@ SNMP, HTTP, ICMP and floating point servers interact with other computers
 				<li><a href="#relo"><i>Process and Thread Memory Switch Instructions</i></a></li>
 				<li><a href="#onoff"><i>PSR Flags Update Instructions</i></a></li>
 				<li><a href="#bstream"><i>Bit Stream Read and Write Channels</i></a></li>
-				<li><a href="#lfiret"><i>Return Instructions and Internal Interrupt</i></a></li>
+				<li><a href="#lfiret"><i>Return Instructions, Internal Interrupt and Interrupt Stack Frame</i></a></li>
 				<li><a href="#shijo"><i>Shift and Jump Instructions</i></a></li>
 				<li><a href="#modify"><i>Target Modify Instructions</i></a></li><br>
 				<li><a href="#scala"><i>Double and Quadword Load and Store<br>
@@ -989,7 +989,7 @@ Source indications in MCAST_PENDING$ may be multiple, are reset on a single read
 	alert unicast/multicast		outA|B to Port 79 MCAST_TO$
 					raises MCAST_PENDING$[ 1 << sending core ] at up to 24 cores
 					parameters in kernel storage
-</pre
+</pre>
 
 <a	name="iomem"/>
 <h4>2.9.2: I/O Ports for Memory and Peripheral Configuration</h4>
@@ -1662,7 +1662,7 @@ Instruction File 7 contains arithmetic instructions which have an operand of one
 	______________________
 
 	<a href="#anu">anu/tanu</a>	Add Negative Upper a (macro)
-	<a href="#anuba">anu/tanuba</a>	Add Negative Upper b (macro)
+	<a href="#anuba">anuba/tanuba</a>	Add Negative Upper b (macro)
 
 </pre>
 
@@ -4598,7 +4598,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	|														|
 	|	window B1 is a frame in a private stack. B1 is outside the scope of sabr and reload instructions	|
 	|														|
-	|	<a href="#sabr">sabr</a> and <a href="#reload">reload</a> instructions concern windows B2..B63				|
+	|	<a href="#sabr">sabr</a> and <a href="#reload">reload</a> instructions concern windows B2..B63							|
 	|														|
 	|	applications execute sabr instruction to base memory blocks in B2..B63					|
 	|	sabr also copies the relocation values through to the TCB						|
@@ -4959,10 +4959,12 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 	<a      name="lfiret"/>
 	<div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
-	<i>3.6.11	Return Instructions and Internal Interrupt</i>
+	<i>3.6.11	Return Instructions, Internal Interrupt and Interrupt Stack Frame</i>
 	</div>
 	instructions	<a href="#lret">Local Return</a>		<a href="#ii">Internal Interrupt</a>
 			<a href="#fret">Far Return</a>		<a href="#ir">Interrrupt return</a>
+
+	<a	href="#is_frame">Interrupt Stack Frame</a>
 
 	Return instructions increment the stacked return address with the sign extended immediate operand
  
@@ -5077,7 +5079,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 
 
-
+	<a	name="is_frame">
 	<div	style="font-size:11pt">
 	_________________________________________________________________________________________________________________
 	|					   	INTERRUPTS							|
