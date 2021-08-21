@@ -142,10 +142,15 @@ SNMP, HTTP, ICMP and floating point servers interact with other computers
 				<li><a href="#scala"><i>Double and Quadword Load and Store<br>
 					Masked, Execute, and Scale Operations<br>
 					Large Integer Arithmetic</i></a></li><br>
-				<li><a href="#fp"><i>96-Bit and 192-Bit Floating-Point<br>
-					Rounding Setting<br>
-					Exponent Underflow and Overflow Handling<br>
-					Floating 48-Bit Compression</i></a></li><br>
+				<li><a href="#fp"><i>96-Bit and 192-Bit Floating-Point</i>
+				<ul	type="none"><i>
+					<li><a href="#fp">Floating Point Instructions</a></li>
+					<li><a href="#fp96">96-Bit Floating Point</a></li>
+					<li><a href="#fp192">192-Bit Floating Point</a></li>
+					<li><a href="#fpround">Rounding Setting</a></li>
+					<li><a href="#fpoflo">Exponent Underflow and Overflow Handling</a></li>
+					<li><a href="#fpcompress">Floating Point Compression for Storage</a></li>
+				</i></ul><br>
 				<li><a href="#gocall"><i>Far Go and Call</i></a></li>
 			</ol>
 		</ol>
@@ -165,6 +170,9 @@ SNMP, HTTP, ICMP and floating point servers interact with other computers
 <p>
 RTA1 is a 24-bit word-addressing architecture with 24- 48- and 96-bit arithmetic.<br>
 For unusual requirements RTA1 can calculate 192-bit floating values
+
+<p>
+Integer arithmetic is twos complement and floating point arithmetic is ones complement
 
 <p>
 The addressable storage location is the 24-bit computer word. Instructions are one computer word in size
@@ -1298,17 +1306,17 @@ Flag 0 <b>carry$</b> is set or cleared by this subset of the fixed point instruc
 </pre>
 
 <p>
-The instructions which add the twos complement of the operand, <b>ana</b> <b>anb</b> <b>dan</b>,
-have the same result in <b>carry$</b> as positive adds which have that twos complement as input operand.
-Carry is set if addition at the register high order bit position carries, in all these instructions
+The instructions which add the twos complement of the operand, <a href="#ana">ana</a> <a href="#anb">anb</a> <a href="#dan">dan</a>,
+have the same result in carry$ as positive adds which have that twos complement as input operand.
+carry$ is set if addition at the register high order bit position carries
 
 <p>
-There are no PSR condition bits other than <b>carry$</b>. All other conditions are available in the register
+There are no PSR condition bits other than carry$. All other conditions are available in the register
 containing the instruction result. Many different results can be examined long after they are generated
 
 
 <p>
-The conditional jump instructions which examine carry or a register or storage word are
+The conditional jump instructions which examine carry$ or a register or storage word are
 <pre	style="font-size:11pt">
 	<a href="#jc">jc</a>	Jump Carry
 	<a href="#jnc">jnc</a>	Jump No Carry
@@ -3289,7 +3297,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	operand is added to index register x		|
-				|	carry$ is not affected				|
+				|	<a href="#nonar">carry$</a> is not affected				|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3353,7 +3361,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	operand is added to index register y		|
-				|	carry$ is not affected				|
+				|	<a href="#nonar">carry$</a> is not affected				|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3865,7 +3873,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	accumulator a + operand -> a			|
-				|	carry$ = the carry from bit 23 of the addition	|
+				|	<a href="#nonar">carry$</a> = the carry from bit 23 of the addition	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3928,7 +3936,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	accumulator b + operand -> b			|
-				|	carry$ = the carry from bit 23 of the addition	|
+				|	<a href="#nonar">carry$</a> = the carry from bit 23 of the addition	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -3991,7 +3999,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	accumulator a += 2s-complement(operand)		|
-				|	carry$ = the carry from bit 23 of the addition	|
+				|	<a href="#nonar">carry$</a> = the carry from bit 23 of the addition	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -4051,7 +4059,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	accumulator b += 2scomplement(operand)		|
-				|	carry$ = the carry from bit 23 of the addition	|
+				|	<a href="#nonar">carry$</a> = the carry from bit 23 of the addition	|
 				|_______________________________________________________|
 				|	operand is memory/register value at EA		|
 				|	or the value EA or a signed immediate		|
@@ -4326,7 +4334,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
         __________________		________
 
         Add Negative Upper is a 2-instruction macro and stores (accumulator a minus operand) in accumulator b
-        Carry or result in accumulator b may be tested for results with instructions <a href="#jc">jc</a> <a href="#jnc">jnc</a> <a href="#jzb">jzb</a> <a href="#jnzb">jnzb</a> <a href="#jpb">jpb</a> <a href="#jnb">jnb</a>
+        <a href="#nonar">carry$</a> or result in accumulator b may be tested for results with instructions <a href="#jc">jc</a> <a href="#jnc">jnc</a> <a href="#jzb">jzb</a> <a href="#jnzb">jnzb</a> <a href="#jpb">jpb</a> <a href="#jnb">jnb</a>
 
         macro tanu is used insted of anu in ISRs to compare interrupt accumulator a = 128+4 a_x.
 	tanu stores difference (a_x minus operand) in interrupt accumulator b = 128+5 b_x.
@@ -4341,7 +4349,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
         ____________________            ____________
 
         Add Negative Upper b is a 2-instruction macro and stores (accumulator b minus operand) in accumulator a
-        Carry or result in accumulator a may be tested for results with instructions <a href="#jc">jc</a> <a href="#jnc">jnc</a> <a href="#jza">jza</a> <a href="#jnza">jnza</a> <a href="#jpa">jpa</a> <a href="#jna">jna</a> <a href="#jae">jae</a> <a href="#jpe">jpe</a>
+        <a href="#nonar">carry$</a> or result in accumulator a may be tested for results with instructions <a href="#jc">jc</a> <a href="#jnc">jnc</a> <a href="#jza">jza</a> <a href="#jnza">jnza</a> <a href="#jpa">jpa</a> <a href="#jna">jna</a> <a href="#jae">jae</a> <a href="#jpe">jpe</a>
 
         macro tanuba is used instead of anuba in ISRs to compare interrupt accumulator b = 128+5 b_x.
 	tanuba stores difference (b_x minus operand) in interrupt accumulator a = 128+4 a_x. 
@@ -5547,7 +5555,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	instruction path jumps to EA if carry$ flag is 0|
+				|	instruction path jumps to EA if <a href="#nonar">carry$</a> flag is 0|
 				|_______________________________________________________|
 
 
@@ -5644,7 +5652,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	instruction path jumps to EA if carry$ flag is 1|
+				|	instruction path jumps to EA if <a href="#nonar">carry$</a> flag is 1|
 				|_______________________________________________________|
 
 
@@ -6162,7 +6170,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	+1 is added to the 24-bit value at EA		|
-				|	 carry$ is not affected				|
+				|	 <a href="#nonar">carry$</a> is not affected				|
 				|_______________________________________________________|
 				|	target is the register or storage word at EA	|
 				|_______________________________________________________|	
@@ -6191,7 +6199,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	-1 is added to the 24-bit value at EA		|
-				|	carry$ is not affected				|
+				|	<a href="#nonar">carry$</a> is not affected				|
 				|_______________________________________________________|
 				|	target is the register or storage word at EA	|
 				|_______________________________________________________|	
@@ -6261,7 +6269,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				_________________________________________________________
 				|							|
 				|	the value at the internal stack top is added to |
-				|	the word at EA. carry$ = the carry out of bit 23|
+				|	the word at EA. <a href="#nonar">carry$</a> = the carry out of bit 23|
 				|	of the addition. sp is incremented		|
 				|							|
                                 |       on internal stack overflow / underflow		|
@@ -6295,7 +6303,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the word at EA and carry$ are rotated in	|
+				|	the word at EA and <a href="#nonar">carry$</a> are rotated in	|
 				|	a 25-bit ring rightwards one bit position	|
 				|_______________________________________________________|
 				|	target is the register or storage word at EA	|
@@ -6323,7 +6331,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	the word at EA and carry$ are rotated in 	|
+				|	the word at EA and <a href="#nonar">carry$</a> are rotated in 	|
 				|	a 25-bit ring leftwards one bit position	|
 				|_______________________________________________________|
 				|	target is the register or storage word at EA	|
@@ -6944,7 +6952,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
 				_________________________________________________________
 				|							|
-				|	Processor State Register AND 1 is stored	|
+				|	<a href="#nonar">Processor State Register</a> AND 1 is stored	|
 				|	at the target register / storage word		|
 				|_______________________________________________________|
 				|	target is the register or storage word at EA	|
@@ -7086,7 +7094,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|	the word at EA+1 contains low-order bits 23..0	|
 				|	of the addend					|
 				|							|
-				|	carry$ = the carry from bit 47 of the addition	|
+				|	<a href="#nonar">carry$</a> = the carry from bit 47 of the addition	|
 				|_______________________________________________________|
 				|	2nd addend is 2 registers or storage words at EA|
 				|	EA is any word address				|
@@ -7125,7 +7133,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 				|	the word at EA+1 contains low-order bits 23..0	|
 				|	of the subtrahend				|
 				|							|
-				|	carry$ = the carry from bit 47 of the addition	|
+				|	<a href="#nonar">carry$</a> = the carry from bit 47 of the addition	|
 				|_______________________________________________________|
 				|	subtrahend is 2 registers or storage words at EA|
 				|	EA is any word address				|
@@ -7192,20 +7200,24 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 
         <a      name="fp"/>
         <div    style="margin-left:28pt;font-family:times-roman;font-size:12.75pt;color:0000FF">
-        <i>3.6.15       96-bit and 192-bit Floating Point, Rounding Setting, Exponent Underflow and Overflow Handling, Floating 48-Bit Compression</i>
+        <i>3.6.15       <a href="#fp96">96-bit</a> and <a href="#fp192">192-bit</a> Floating Point, <a href="#fpround">Rounding Setting</a>, <a href="#fpoflo">Exponent Underflow and Overflow Handling</a>, <a href="#fpcompress">Floating 48-Bit Compression</a></i>
         </div>
 	instructions	<a href="#fa">Floating Add</a>			<a href="#fm">Floating Multiply</a>
 			<a href="#fan">Floating Add Negative</a>		<a href="#fd">Floating Divide</a>
 
 
-	<div	style="font-size:11pt">
+	<div	style="font-size:11pt"><a name="fp96"/>
 	_________________________________________________________________________________________________________________
-	|					The 96-bit Floating Architecture					|
+	|														|
+	|														|
+	|	The 96-bit Floating Architecture									|
 	|_______________________________________________________________________________________________________________|
 	|														|
 	|														|
-	|	RTA1 has four floating operation instructions and two instructions for					|
-	|	storage compression and expansion of floating numbers							|
+	|	RTA1 floating arithemetic is ones complement								|
+	|	Sign bit 95 = 1 indicates that all 96 bits are inverse to the positive magnitude of the number		|
+	|														|
+	|	RTA1 has four floating operation instructions								|
 	|														|
 	|	Four consecutive computer words form a 96-bit floating number						|
 	|														|
@@ -7226,22 +7238,15 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	|														|
 	|	A maximum characteristic 7FFFFF expresses the highest possible exponent					|
 	|														|
-	|	Bit 95 = 1 indicates the the number is a ones complement negative number				|
-	|														|
-	|	Bit 95 is not a sign bit in the sense of indicating negative polarity over a following positive		|
-	|	magnitude. It is an indication that all the bits of the positive magnitude are flipped to make		|
-	|	a negative number											|
-	|														|
-	|	Internally addition and subtraction require no conditional inversions					|
-	|	Subtraction is the addition of a ones complement							|
-	|														|
 	|	A number is normalised if bit 71 is different from sign bit 95						|
 	|														|
 	|	All unnormalised numbers have the algebraic value of zero						|
 	|														|
+	|_______________________________________________________________________________________________________________|
+	|	<a name="fpround"/>													|
 	|														|
 	|	Rounding Setting											|
-	|	________________											|
+	|_______________________________________________________________________________________________________________|
 	|														|
 	|	Rounding is determined by the pattern of high-order bits in register <b>fp$guard</b> at address 147		|
 	|	(hex 93). <b>fp$guard</b> can only be written by interrupt code. Prototype kernel smaragd7 assigns a	 	|
@@ -7268,14 +7273,13 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	|														|
 	|														|
 	|_______________________________________________________________________________________________________________|
+	|	<a name="fp192"/>													|
+	|														|
+	|	192-bit Floating Point											|
+	|_______________________________________________________________________________________________________________|
 	|														|
 	|														|
-	|														|
-	|	192-bit floating values											|
-	|	_______________________											|
-	|														|
-	|														|
-	|	PSR Flag <b>fp$r</b> signals floating instructions to store a minor result in accumulators 8..11			|
+	|	PSR Flag <b>fp$r</b> signals floating instructions to store a minor result in accumulators 8..11		|
 	|	giving this overall format in the eight accumulators a:b:mantissa2:mantissa3::8:9:10:11			|
 	|														|
 	|														|
@@ -7300,11 +7304,10 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	|	guard pattern register <b>fp$guard</b> takes place on the minor result and not the major result		|
 	|														|
 	|_______________________________________________________________________________________________________________|
+	|	<a name="fpoflo"/>													|
 	|														|
-	|														|
-	|														|
-	|	Exponent Underflow and Overflow	Handling								|
-	|	________________________________________								|
+	|	Exponent Underflow and Overflow Handling								|
+	|_______________________________________________________________________________________________________________|
 	|														|
 	|														|
 	|	If a floating point operation borrows or carries from the 23-bit exponent field, a true	result		|
@@ -7376,7 +7379,72 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	|	FP_XPO$FLAG return + 1 is equally a reliable indication that floating exponent underflow/overflow	|
 	|	did not happen since the last FP_XPO$FLAG enquiry							|
 	|														|
-	|_______________________________________________________________________________________________________________|	
+	|_______________________________________________________________________________________________________________|
+	|	<a name="fpcompress"/>													|
+	|														|
+	|	Floating Compression for Storage									|
+	|_______________________________________________________________________________________________________________|
+	|														|
+	|	Macro language compresses 96-bit floating values to 48-bit and other formats for storage if required	|
+	|	and re-expands for computation. 48-bit compressed format has 11 exponent bits and 36 mantissa bits	|
+	|														|
+	|	See macros <a href="masmx7r3.html#fp48data">floating pop and pack</a> / <a href="masmx7r3.html#fp48data">floating push and expand</a>						| 
+	|														|
+	|	Negative floating numbers are 1s-complement. The range of compressed decimal exponent is &plusmn;307		|
+	|														|
+	|		  												|
+	|	_________________________________________________							|
+	|	|s| exponent |	         mantissa	    	|							|
+	|	|_|__________|__________________________________|							|
+	|          46         35                               0							|
+	|														|
+	|														|
+	|														|
+	|	On expansion of compressed floating values 36 trailing signs are added to the mantissa			|
+	|	and 12 bits of inverse value to the bit at midpoint position are inserted after midpoint position	|
+	|														|
+	|														|
+	|		    compressed format										|
+	|		    11-bit exponent										|
+	|		    _____________										|
+	|		    |1|   10    |										|
+	|          	    |_|_________|      										|
+	|		     |		|										|
+	|		     |		|										|
+	|		     |		|										|
+ 	|	  |<---------    	|										|
+	|	__|______________________________________________________________________________________________	|
+	|	|s|.| inserts |  10 bits|   mantissa from compressed value  |  		    signs		|	|
+	|	|_|_|_________|_exponent|___________________________________|___________________________________|	|
+	|	   | 93     ^  81        71                                  35                                0	|
+	|	   |	    |												|
+	|	   |________|												|
+	|	    inverted												|
+	|														|
+	|	Twelve assembled values with exponent closely above and below midpoint 400000<sub>16</sub> demonstrate		|
+	|	the expansion of midpointed exponent with inserts the inverse of the bit value at midpoint position to	|
+	|	preserve the proximity of the expanded exponent to exponent &plusmn;zero = 400000<sub>16</sub> for values ≥ 0.5 .. < 1.0	|
+	|														|
+	|		00:000000  401C00 000000        +1  1.5d							|
+	|		00:000002  400001 C00000 000000 000000								|
+	|		                                +2  1.5								|
+	|		00:000006  400800 000000        +3  0.5d							|
+	|		00:000008  400000 800000 000000 000000								|
+	|		                                +4  0.5								|
+	|		00:00000C  3FF800 000000        +5  0.25d							|
+	|		00:00000E  3FFFFF 800000 000000 000000								|
+	|		                                +6  0.25							|
+	|		00:000012  BFE3FF FFFFFF        +7  -1.5d							|
+	|		00:000014  BFFFFE 3FFFFF FFFFFF FFFFFF								|
+	|		                                +8  -1.5							|
+	|		00:000018  BFF7FF FFFFFF        +9  -0.5d							|
+	|		00:00001A  BFFFFF 7FFFFF FFFFFF FFFFFF								|
+	|		                                +10  -0.5							|
+	|		00:00001E  C007FF FFFFFF        +11  -0.25d							|
+	|		00:000020  C00000 7FFFFF FFFFFF FFFFFF								|
+	|		                                +12  -0.25							|
+	|														|
+	|_______________________________________________________________________________________________________________|
 	</div>
 
 

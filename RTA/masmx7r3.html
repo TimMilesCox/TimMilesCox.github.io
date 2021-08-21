@@ -705,6 +705,12 @@ MASMX 7r3
 
 <a	name="numbers"/>
 <h4>4.1.2: Integers and Floating Point</h4>
+
+RTA1 has twos complement integer arithmetic and ones complement floating arithmetic
+
+<p>
+&nbsp;-<i>FLOATING_EXPRESSION</i> generates the same constant as ^<i>FLOATING_EXPRESSION</i>
+
 <p>
 Integer and floating constants can be up to eight words in size
 
@@ -1058,6 +1064,9 @@ left_plus_right
 </pre>
 <a	name="fp48data"/>
 <h4>4.1.4: Floating Storage Compression</h4>
+
+See also <a href="#fpai">Floating Arithmetic Instructions</a>
+
 <p>
 The two-word suffix [ d D l L] assembles the floating expression as a 48-bit constant which library can
 expand to four words at the internal stack top with macro fpx
@@ -1981,7 +1990,7 @@ The ,,i and ,,xi options of instructions sr sk sx sy sa sb z pop tz tp
 are assigned to I/O and control instructions which take only an immediate
 operand
 
-Integer store instructions do not update <b>carry$</b>
+Integer store instructions do not update <a href="#nar">carry$</a>
 
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
@@ -2028,7 +2037,7 @@ Integer store instructions do not update <b>carry$</b>
 <a	name="sili"/>
 <h3>6.6: Single Integer Load Instructions</h3>
 
-Integer load instructions do not update <b>carry$</b>
+Integer load instructions do not update <a href="#nar">carry$</a>
 
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
@@ -2078,7 +2087,7 @@ before the operation the guard interrupt intervenes
 <a	name="ti"/>
 <h3>6.7: Test Instructions</h3>
 
-Integer test instructions do not update <b>carry$</b>
+Integer test instructions do not update <a href="#nar">carry$</a>
 
 <p>
 The operand is tested for zero or for bit 23=0. If so, the next instruction is skipped. Storage half-and
@@ -2133,7 +2142,7 @@ third-words are sign-extended
 <a	name="xai"/>
 <h3>6.8: Index Register Add  Instructions</h3>
 
-Index register add instructions do not update <b>carry$</b>
+Index register add instructions do not update <a href="#nar">carry$</a>
 
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
@@ -2159,7 +2168,7 @@ Index register add instructions do not update <b>carry$</b>
 <a	name="booli"/>
 <h3>6.9: Boolean Algebra Instructions</h3>
 
-Boolean algebra instructions do not update <b>carry$</b>
+Boolean algebra instructions do not update <a href="#nar">carry$</a>
 
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
@@ -2202,9 +2211,11 @@ Boolean algebra instructions do not update <b>carry$</b>
 The single integer add instructions add the operand or its 2s complement to accumulator a or b
 
 <p>
-carry from bit 23 of the addition is stored in <b>carry$</b>.
-Carry is not inverted after negative adds. They write carry as the positive add
-of the 2s complement would write carry
+carry from bit 23 of the addition is stored in <a href="#nar">carry$</a>.
+
+<p>
+Carry is not inverted after negative adds. They update carry$ as the positive add
+of the twos complement would
 
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
@@ -2238,7 +2249,7 @@ of the 2s complement would write carry
 The integer multiply instruction multiplies accumulator b algebraically by the operand and stores the 48-bit product in accumulators a b
 <p>
 
-<b>carry$</b> is not updated
+<a href="#nar">carry$</a> is not updated
 
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
@@ -2272,7 +2283,7 @@ for editing and conversion, and may also be used serially to multiply
 integer multiplicands more than one word in length
 
 <p>
-<b>carry$</b> is not updated
+<a href="#nar">carry$</a> is not updated
 
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
@@ -2302,7 +2313,7 @@ are stored in a. The high-order 24 bits of the quotient are
 stored in register 6 mantissa2
 
 <p>
-<b>carry$</b> is not updated
+<a href="#nar">carry$</a> is not updated
 
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
@@ -2401,10 +2412,12 @@ stored in register 6 mantissa2
         _________________________________________________________________________________________________________
         |       mnemonic|   fffff.jjj   |                       |               action                          |
         |_______________|_______________|_______________________|_______________________________________________|
-        |       <a href="rta.html#da" style="color:#00FF00">da</a>      |   11010.111   |  double add		| a:b += 2 words @ ea, carry from MS bit of add	|       
-        |_______________|_______________|_______________________|_______________________________________________|
-        |       <a href="rta.html#dan" style="color:#00FF00">dan</a>	|   11011.111   |  double add negative	| a:b += 2s complement of 2 words @ ea, 	|
-        |_______________|_______________|_______________________|______________________carry_from_MS_bit_of_add_|
+        |       <a href="rta.html#da" style="color:#00FF00">da</a>      |   11010.111   |  double add		| a:b += 2 words @ ea				|       
+    	|		|		|			| carry$ = carry from MS bit of addition	|
+	|_______________|_______________|_______________________|_______________________________________________|
+        |       <a href="rta.html#dan" style="color:#00FF00">dan</a>	|   11011.111   |  double add negative	| a:b += 2s complement of 2 words @ ea	 	|
+  	|		|		|			| carry$ = carry from MS bit of addition	|
+	|_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#sc" style="color:#00FF00">sc</a>      |   10110.111   |  store carry          | PSR AND 1 -> word @ ea			|
         |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#mlb" style="color:#00FF00">mlb</a>	|   10111.111   |  masked load b	| b AND NOT k OR word @ ea AND k -> b		|
@@ -2505,7 +2518,7 @@ the rounding value from before is returned in application register a
 
 </pre>
 <p>
-Floating arithmetic instructions do not update <b>carry$</b>
+Floating arithmetic instructions do not update <a href="#nar">carry$</a>
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
         _________________________________________________________________________________________________________
@@ -2731,16 +2744,19 @@ causes a memory read followed by memory write. Execution on a register is at reg
         |       <a href="rta.html#n" style="color:#00FF00">n</a>	|   00001.111   |  negate		| word @ ea XOR= all 1s				|
         |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#inc" style="color:#00FF00">inc</a>	|   00010.111   |  increment		| word @ ea += 0000 0000 0000 0000 0000 0001	|
-        |_______________|_______________|_______________________|______________________carry$_is_not_updated____|
+	|		|		|			¡ carry is not updated				|
+        |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#dec" style="color:#00FF00">dec</a>	|   00011.111   |  decrement		| word @ ea += 1111 1111 1111 1111 1111 1111	|
-        |_______________|_______________|_______________________|______________________carry$_is_not_updated____|
+	|		|		|			| carry is not updated				|
+        |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#sim" style="color:#00FF00">sim</a>	|   00100.111   |  switch interrupt mask| switch interrupt mask with word @ea, b23:3 = 0|
         |_______________|_______________|_______________________|_______________________________________________|
         |       <a href="rta.html#popA" style="color:#00FF00">popA</a>    |   00101.111   |  pop and add to store	| word @ ea += word at internal stack top, sp++	|
-        |_______________|_______________|_______________________|_____________________________carry$_is_updated_|
-        |       <a href="rta.html#src" style="color:#00FF00">src</a>	|   00110.111   |shift right thru carry	| R.rotate word @ ea in 25-bit ring with carry	|
+	|		|		|			| carry$ is updated				|
         |_______________|_______________|_______________________|_______________________________________________|
-        |       <a href="rta.html#slc" style="color:#00FF00">slc</a>	|   00111.111	| shift left thru carry	| L.rotate word @ ea in 25-bit ring with carry	|
+        |       <a href="rta.html#src" style="color:#00FF00">src</a>	|   00110.111   | shift right thru carry| R.rotate word @ ea in 25-bit ring with carry$	|
+        |_______________|_______________|_______________________|_______________________________________________|
+        |       <a href="rta.html#slc" style="color:#00FF00">slc</a>	|   00111.111	| shift left thru carry	| L.rotate word @ ea in 25-bit ring with carry$	|
         |_______________|_______________|_______________________|_______________________________________________|
 
 
@@ -2774,7 +2790,7 @@ Shift instructions use the effective address as the shift count. An effective ad
 Double shifts shift the value in accumulators a and b as a single 48-bit register
 
 <p>
-Shift instructions do not update <b>carry$</b>
+Shift instructions do not update <a href="#nar">carry$</a>
 <pre	style="font-size:12pt;background-color:#0000C0;color:#FFFFFF;border-radius:10px">
 
         _________________________________________________________________________________________________________________
@@ -2967,7 +2983,7 @@ Absolute program counter is updated with B0 * 4096 + effective address
         |_______________|_______________|_______________________|_______________________________________________________|
         |       <a href="rta.html#j" style="color:#00FF00">j</a>	|   10110.110   |  jump			|  continue execution @ B0* + ea			|
         |_______________|_______________|_______________________|_______________________________________________________|
-        |       <a href="rta.html#jdr" style="color:#00FF00">jdr</a>     |   00011.110   |  jump decrement r	|  add -1 to r, jump if r &ne; -1, carry is not updated	|
+        |       <a href="rta.html#jdr" style="color:#00FF00">jdr</a>     |   00011.110   |  jump decrement r	|  add -1 to r, jump if r &ne; -1, carry$ is not updated	|
         |_______________|_______________|_______________________|_______________________________________________________|
         |       <a href="rta.html#jnc" style="color:#00FF00">jnc</a>	|   01011.110   |  jump no carry	|  jump if carry$ of PSR = zero				|
         |_______________|_______________|_______________________|_______________________________________________________|
