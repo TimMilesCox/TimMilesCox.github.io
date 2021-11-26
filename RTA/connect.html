@@ -252,7 +252,7 @@ Emulators tipc8192 and tipc65536 are only in rta/binary.rta/osx.x64
 
 <a	name="topol"/>
 <h3>3: Network Topology</h3>
-Script .rta_net must be copied from { linux.net | linuxnet.x64 | portal | portal64 } to $HOME
+Script .rta_net must be copied from { linux.net | linuxnet.x64 | portal | portal.x64 } to $HOME
 
 <p>
 Adjust values in $HOME/.rta_net RTA_ENET and RTA_WIFI if you need different addresses from 172.29.7.8 and 172.29.7.66
@@ -552,7 +552,7 @@ You can check a route with these commands
 See also <a href="#autoconf">Appendix B: Autoconf and Multihomed Routes</a>
 
 <p>
-Script <a style="color:0000FF">(OSX)rta/{ portal | portal64 }/runL</a> or <a style="color:FF0000">rta/{ linux.net | linuxnet.x64 }/runL</a> can now start network service for RTA1
+Script <a style="color:0000FF">(OSX)rta/{ portal | portal.x64 }/runL</a> or <a style="color:FF0000">rta/{ linux.net | linuxnet.x64 }/runL</a> can now start network service for RTA1
 
 <p>
 runL must start before RTA1 emulator
@@ -580,7 +580,7 @@ These three actions are
 <div	style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
 
 
-$ cd rta/linuxnet.x64   <a style="color:#FF0000">rta/portal[64]</a>
+$ cd rta/linuxnet.x64   <a style="color:#FF0000">rta/portal[.x64]</a>
 $ ./runL                <a style="color:#FF0000">-ozx</a>
 </div>
 <div    style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
@@ -603,7 +603,7 @@ $ sudo oconsole
 </div></div>
   _______________________________________________________________________________________
   |											|	
-  |  1st shell: network trunk:	$ cd rta/{ linux.net | linuxnet.x64 | portal[64] }	|
+  |  1st shell: network trunk:	$ cd rta/{ linux.net | linuxnet.x64 | portal[.x64] }	|
   |				$ ./runL [-[zx][vu]] # script to run network frame trunk|
   |						     # linuxnet or (OSX) osserv		|
   |_____________________________________________________________________________________|
@@ -667,7 +667,7 @@ The network trunk process is a Berkeley Packet Filter application connecting RTA
 	OSX						<a style="color:FF0000">Linux</a>
 	___						<a style="color:FF0000">_____</a>
 
-	cd rta/portal[64]				<a style="color:FF0000">cd rta/linux.net</a>
+	cd rta/portal[.x64]				<a style="color:FF0000">cd rta/linux.net</a>
 	./runL [-[zx][vu]]				<a style="color:FF0000">./runL [-[zx][vu]
 	# can be stopped with command .</a><a style="background-color:#00FF00">CR</a>		<a style="color:FF0000"># can be stopped with command .</a><a style="background-color:#00FF00">CR</a>
 	# entered twice					<a style="color:FF0000"># entered twice</a>

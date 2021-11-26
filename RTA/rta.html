@@ -956,12 +956,10 @@ A push is a load into CPU registers in RTA1, and a pop is a store
 	An inadvertant attempt to base a device from an application raises the guard interrupt
 	See Section 2.10: <a href="#iassign">Interrupt Assignments</a>
 
-	Applications may call ISRs to place a block of a peripheral device array in the address space.
-	The application may subsequently read and write the based information without restriction.
+	ISRs which base peripheral blocks are only callable from kernel iframes
 
-	The primary reason for allowing only ISRs to base device array storage is to avoid accident
-
-	ISRs which base device banks on user request may also include a credential check
+	Applications requiring access to a peripheral array call a kernel iframe which
+	may apply a credential check
 
 </pre>
 
@@ -1252,9 +1250,12 @@ or else they are thirdwords (8 bits) with sign extension on read
 </pre>		
 <p>
 
-But it is very undesirable that the File 1 Instructions should all have five different encodings
-for accessing bytes. There are three byte-select encodings available in those instructions,
-and flag <b>half$w</b> = 1 = halfword access, otherwise the application may access thirdwords
+It is undesirable that the File 1 Instructions should all have five different encodings
+for accessing bytes
+
+<p>
+Instructions which access bytes have three byte-select encodings available.
+The application accesses thirdwords unless PSR flag <b>half$w</b> = 1 = halfword access
 
 <p>
 Flags 6 5 and 4 adjust the <b>Bit Stream Read Channel</b> and <b>Bit Stream Write Channel</b>
