@@ -477,12 +477,32 @@ Instruction frames can be any size in consecutive pages of 4096 words
                                 ii      EVENT_WAIT$
                                 </a>
 
-                                wait for the event flagged in application register a
+                                wait for the event[s] flagged in application register a
 
 				wait for event 1 XINT queues for preemptive realtime scheduling
 
                                 events  100000 (thread faulted)
                                         200000 (thread ended) cannot be flagged for wait
+
+				if TIME_WAIT flag 800000<sub>16</sub> is flagged in accumulator a
+				the event wait is limited to milliseconds count in accumulator b
+				and [preemptive] scheduling takes place on event or timeout
+
+				<a	style="color:#0000FF">
+				dl	(TIME_WAIT++<i>EVENT_SELECTORS</i>, <i>milliseconds</i>:L)
+				ii	EVENT_WAIT$
+				</a>
+
+				XINT scheduling is preemptive when event or timeout triggers
+
+				<a	style="color:#0000FF">
+				dl	(TIME_WAIT++XINT, 5000L)	. event or 5 seconds
+				ii	EVENT_WAIT$
+				</a>
+
+				value in accumulator b has no effect on the EVENT_WAIT$ ISR
+				if event flags in accumulator a do not include TIME_WAIT
+
 
         <a      name="event_free_ii"/>
         EVENT_FREE$     93 (05D<sub>16</sub>)        = Page Index 1  offset 29
