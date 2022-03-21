@@ -1,0 +1,454 @@
+<div	style="font-size:14pt;color:#0000FF">
+<h2>High Volumes of TCP Connections on RTA1</h2>
+
+<ol	style="color="000000"">
+
+	<li><a href="#purpose"/>Purpose</a></li>
+	<li><a href="#api"/>API</a></li>
+	<li><a href="#from"/>Performance Measurements to Date</a></li>
+	<li><a href="#test"/>Running Available Tests</a></li>
+	<li><a href="#config"/>Configuration and Tuning</a></li>
+</ol>
+
+<a	name="purpose"/>
+<h3>1: Purpose</h3>
+
+
+RTA1 high-volume TCP supports one million connections at each of multiple endpoints
+
+<p>
+Its purpose is to connect large numbers of remote users to their data over request / response  sessions modelled directly onto TCP connections
+
+<p>
+TCP is suitable for this purpose because its persistence at delivery does not require additional delivery assurance as connectionless transmission does
+
+<p>
+RTA1 success at constructing TCP for millions of simulteneous connections provides an alternative to threaded protocols. TCP is very widely known and understood and requires minimal state variables per dialogue
+
+<p>
+Remote users are advised of a TCP port number designated to serve them. Users may be equipped with accompanying encryption data or software on an electronic medium. 
+
+<p>
+Application threads serving a population of remote users defined with a range of TCP ports also bind to those remote users' data
+<pre	style="font-size:10pt;color:#000000">
+
+	_________________		_________________		_________________  connections	_________________
+	|		| <-----+	|  application	|		|    assigned	| <----------->	|  remote users	|
+	| remote user	|	|	|	thread	|  selections	|   tcp ports	| <----------->	|		|
+	| data		|	|	|		| <----------->	|		| <----------->	|		|
+	|		|	|	|		|		|		| <----------->	|		|
+	|		|	|	|		|		|		| <----------->	|		|
+	|		|	|	|		| <----------->	|		| <----------->	|		|
+	|		|	+----->	|		|		|		| <----------->	|		|
+	|_______________|		|_______________|		|_______________|		|_______________|
+
+</pre>
+
+There may be several threads doing the same work for several populations of remote users. This structural plan is calculated for multicore RTA1
+
+<p>
+These telnet outputs show the the application plan in action
+
+<p>
+Application proto has an array of threads executing remote requests. Each thread serves one million sustained connections
+
+<pre	style="font-size:11pt;color:#000000">
+
+
+	RTA1 OS shared console
+
+										r load /test/proto
+										000041 proto
+
+	t
+	console threads display
+	13efe2 000000 000020 00004d 000000 000000 000000 proto_rx(8)
+	13ef8e 000000 000020 00004c 000000 000000 000000 proto_rx(7)
+	13ef95 000000 000020 00004b 000000 000000 000000 proto_rx(6)
+	13ef9c 000000 000020 00004a 000000 000000 000000 proto_rx(5)
+	13efa3 000000 000020 000049 000000 000000 000000 proto_rx(4)
+	13efaa 000000 000020 000048 000000 000000 000000 proto_rx(3)
+	13efb1 000000 000020 000047 000000 000000 000000 proto_rx(2)
+	13efb8 000000 000020 000046 000000 000000 000000 proto_rx(1)
+	003084 000005 000000 000041 000000 000000 000000 proto
+	13efc6 000007 000000 00003c 000000 000000 000000 load
+	13eff7 000000 000000 000016 000000 000000 000000 *iserver
+	13efd4 000007 000000 000015 000000 000000 000000 *snmp_agent
+	13efdb 000000 000000 000014 000000 000000 000000 *fponline
+	13efe2 000000 000000 000013 000000 000000 000000 *telnet
+	13efcd 000000 000000 000012 000000 000000 000000 *http
+	13eff0 000000 000000 00000c 000000 000000 000000 *ip
+
+										proto>state
+										8000000 established
+
+										proto>rx + 1024000 > 1024000 tx 1024000 responses
+										rx + 1024000 > 2048000 tx 2048000 responses
+										rx + 1024000 > 3072000 tx 3072000 responses
+										rx + 1024000 > 4096000 tx 4096000 responses
+										rx + 1024000 > 5120000 tx 5120000 responses
+										rx + 1024000 > 6144000 tx 6144000 responses
+										rx + 1024000 > 7168000 tx 7168000 responses
+										rx + 832000 > 8000000 tx 8000000 responses
+
+
+</pre>
+The endpoint concentrates up to 500 connections on each of up to 2000 TCP ports. An application thread receives traffic over a rotating selection in its range of TCP ports
+
+<p>
+Within a TCP port received payload on all connections is concentrated on one input queue
+
+<p>
+Application receive threads are event-activated and process all available traffic before resuming event wait
+
+<a	name="api"/>
+<h3>2: API</h3>
+High volume API is different from the POSIX-like handle-based network API which is also present
+
+<p>
+No application has millions of handles. The high-volume API uses a two-part handle { PORT_NUMBER.CONNECTION_IDENTIFIER }
+
+<pre	style="font-size:10pt;color:#000000">
+
+		high volume API			standard TCP API
+		_________________		_________________
+		| rotary port	|		|		|
+		| selector	|		|		|
+		|_______________|		|		|
+		|port:connection|		| socket handle	|
+		|_______________|		|_______________|
+
+</pre>
+
+Ranges of TCP ports are assigned to high volume activity in a configuration step at system start
+
+<p>
+Application threads may claim ownership of part or all of a range of high volume ports with call hvsocket_xbind
+<pre	style="font-size:12pt;color:#000000">
+
+$(3)
+	$include	t77.4/socket.def
+	$include	t77.4/hvsocket.def
+
+sockets	$socket_array	start_port_number:start_port_number+number_of_ports
+
+$(0)
+
+rx_thread
+	dl	(first, first+how_many:L)
+
+	ds	sockets:first
+	la	sockets:limit
+	ana	sockets:first
+	aa	4,,xi
+	sa	sockets:span
+	sa	sockets:span_restart
+	sa	sockets:actual
+	
+	c	(hvsocket_xbind)	sockets:first	sockets:limit	0,,xi
+
+	la	ACTIVATE,,xi
+	ii	EVENT_WAIT$
+
+rx_next_port
+	lc	response_routine	sockets:actual		. routine to receive and respond
+	jza	forward			. all received 1 port up to 500 connections
+	
+	la	sockets:span_restart
+	sa	sockets:span		. restart search range
+
+forward	lx	sockets:actual
+	ax	1,,xi			
+	lr	sockets:limit
+	jxl	span?
+
+	lx	sockets:first		. wrap to start of range
+
+span?	sx	sockets:actual
+	dec	sockets:span
+	tz	sockets:span
+	j	rx_next_port
+					. empty circuit
+
+	dl	(ACTIVATE++TIME_WAIT, 50d) . cool and check occasionally
+	ii	EVENT_WAIT$
+	j	rx_next_port
+
+
+</pre>
+
+Where threads are cloned to do identical work for multiple populations of remote users, the 6-word structure $socket_array may be a dynamic variable of in the internal stack of the thread instance
+<pre	style="font-size:12pt;color:#000000">
+
+$(71::,sp)
+sockets	$socket_array
+
+$(0)
+	$head_near	scalars(sox,	6)
+
+rx_thread				. shared code of multiple threads
+	dl	0, a			. retrieve 2-word range assigned by application
+	ds	sockets:first		.
+	la	sockets:limit
+	.
+	.
+
+</pre>
+Application interface is principally reading on selection among up to one million connections and writing on specific connections
+<pre	style="font-size:12pt;color:#000000">
+
+	c	(hvsocket_rx)	port	0,,xi	buffer[,,xi]	maximum_bytes[,,xi]
+
+	c	(hvsocket_tx)	port	connection	buffer[,,xi]	actual_bytes	0[++TCP_PSH],,xi
+
+</pre>
+Connection identifier is a wild card on read request { PORT.0 }
+
+<p>
+The result of a read has two parts, { BYTES_OBTAINED.CONNECTION_IDENTIFIER }
+
+<p>
+Read result { 0.0 } means there is no remaining payload on the port. If more arrives the port will select again
+
+<p>
+
+Applications making active connections over high volume ports call connect() function in the standard socket api. They treat the port number as bound and available and do not attempt to bind to it.
+
+<p>
+Listening Applications do not manage connections in TCP high volume environment. An application may close a connaction for any reason
+
+<pre>
+
+        c       (hvsocket_close)        port    connection
+
+</pre>
+read result { 0.CONNECTION_IDENTIFIER } means remote close and connection local state CLOSE_WAIT
+
+<p>
+Protocol suite extensions manage and resource connections and may apply credential checks on incoming connect
+
+
+<a	name="from"/>
+<h3>3: Performance Measurements to Date</h3>
+
+Test traffic for millions of TCP connections is obtained from another RTA1
+
+<p>
+Unit tests are done with socket programming on PCs but testing in this way for millions of connections would need thousands of networks and computers.
+
+<p>
+Larger scale testing uses a second RTA1 on the same emulator platform as the listening RTA1. They are connected with a common interface buffer which RTA1 documentation calls a trunk. Trunks also connect emulated RTA1 to WiFi, Ethernet and the software loopback of the platform
+
+<p>
+Test and demonstration are for one million connections which is the recommended load for one single-core RTA1. Currently all RTA1 emulators are single-core.
+
+<p><a	name="start"/>
+Using optimal emulators (386 platform-specific emulators called tipa2048) RTA1 responds at socket layer to requests on one million TCP connections in 50 seconds, so 20000 responses per second
+<pre	style="font-size:12pt;color:#000000">
+
+	$ telnet 172.29.7.7
+	RTA1 smaragd7 OS shared console
+	ifsync
+	<a style="color:#FF0000">&gt;</a>stay
+	no timeout
+	r load /test/proto
+	<a style="color:#FF0000">proto&gt;rx + 500 > 500 tx 500 responses
+	rx + 3000 &gt; 3500 tx 3500 responses
+	rx + 17500 &gt; 21000 tx 21000 responses
+	rx + 116500 &gt; 137500 tx 137500 responses
+	rx + 625500 &gt; 763000 tx 763000 responses
+	rx + 237000 &gt; 1000000 tx 1000000 responses</a>
+
+</pre>
+Observation of the interfaces via SNMP shows that it takes another 40 seconds for the million responses to get from socket to network medium. About 11111 remote sockets per second have therefore a response transmitted towards them
+
+<p>
+Requesting application proton on RTA at 172.29.7.5 reports its final count of responses about 100 seconds after it started sending requests
+
+<p>
+These timings are obtained with two RTA1 machines emulated on one i5 platform. Each executes RTA1 target instructions as if clocked for about 65 MHz
+
+<p>
+Command + connects outwards on a range of ports. Command has already been given specifying a density of 500 connections per port. See also <a href="#config">Configuration and Tuning</a>
+
+<p>
+Command > sends messages on all open connections. Command has already been given
+<p>
+
+<pre	style="font-size:12pt;color:#000000">
+
+	<a style="color:#00000040">telnet 172.29.7.5</a>
+	<a style="color:#FF000040">proton&gt;</a><a style="color:#00000040">+10240/2000/500</a>
+	<a style="color:#FF000040">proton&gt;</a><a style="color:#00000040">&gt; 1 roo</a>
+
+	<a style="color:#FF0000">0 tx 1000000
+	proton>rx @ socket 1000000 -> 1000000<a>
+
+</pre>
+
+<p>
+Command &lt; closes all open connections
+
+<a	name="test"/>
+<h3>4: Running Available Tests</h3>
+
+<a	name="hvtrafic"/>
+The trunk between the two emulated RTA1s is made available with inert process lif which is called with script note.txt in directory rta/hvtrafic
+
+<p>
+note.txt replies with a device identifier of the new trunk and that must go on the command lines which start the RTA1 two emulations
+
+<pre	style="font-size:12pt;color:#000000">
+
+	$ cd hvtrafic
+	$ source note.txt
+	<a style="color:#FF0000">device is /3/#70700004</a>
+	$
+
+</pre>
+
+Another trunk which connects RTA1 to terminal operation is started with a process called osserv or linuxnet and is run from directory portal or portal.x64 or linux.net or linuxnet.x64
+<pre	style="font-size:12pt;color:#000000">
+
+	$ cd portal
+	$ ./runL
+
+</pre>
+Both RTA1s forward subnets of many addresses to themselves
+
+<p>
+On MacOS the optimal emulator for one million TCP connections has a half-gigaword system memory and is named tipa2048
+
+<p>
+This emulation binds to the shared network trunk loaded from directory <a href="#hvtrafic">hvtrafic</a>
+
+<pre	style="font-size:12pt;color:#000000">
+
+	$ cd rta.run
+	$ export RTA_MBANKS=2048
+	$ ./ra -ZO /3/#70700004	
+
+</pre>
+
+On Linux there is currently no emulator large enough to run one million connections. The 256-Megaword tipa1024 supports a half-million connections
+
+<pre	style="font-size:12pt;color:#000000">
+
+	$ cd rta.run
+	$ export	RTA_MBANKS=1024
+	$ ./ra -ZO /3/#70700004
+
+</pre>
+
+Then the listening or server application can run. Once per platform power-up routes must first be added with script prun
+
+<p>
+Command ifsync tells RTA1 load image to reposition to the start of the shared interface buffers trunk. It has consumed some configuration frames and needs to resynchronise for traffic frames
+
+<p>
+Command stay tells RTA1 load image telnet not to time the connection out
+
+
+<pre	style="font-size:12pt;color:#000000">
+
+	$ cd client
+	$ ./prun
+	$ telnet 172.29.7.7
+	ifsync
+	stay
+	r load /test/proto
+	<a style="color:#FF0000">proto></a>
+
+</pre>
+
+The traffic-generating RTA1 can now start. The directories and scripts are all start with a for alternative RTA1. A new network trunk is started to connect the second RTA1 to terminal operation
+
+<p>
+Start scripts are executed in directory aportal or aportal.x64 or alixnet or alixnet.x64
+<pre	style="font-size:12pt;color:#000000">
+
+	$ cd aportal
+	$ arunL
+
+</pre>
+
+The second RTA1 is started in directory rta/arta.run
+
+<p>
+This emulation binds to the shared network trunk loaded from directory <a href="#hvtrafic">hvtrafic</a>
+
+<pre	style="font-size:12pt;color:#000000">
+
+	$ cd arta.run
+	$ export RTA_MBANKS=2048
+	$ ./ara	-ZO /3/#70700004
+
+</pre>
+
+Routing needs to be set with script aprun once per platform start for this new RTA1 which has address 172.29.7.5
+
+<p>
+Command ifswap tells RTA1 load image kernel to mirror its use of the network trunk so that each RTA1 receives traffic which the other sends
+
+<p>
+Command stay tells RTA1 load image telnet not to time the connection out
+
+<p>
+Application proton is commanded to connect one million connections. It does that serially in about 150 seconds
+
+
+<pre	style="font-size:12pt;color:#000000">
+
+	$ cd aclient
+	$ ./aprun
+	$ telnet 172.29.7.5
+	ifswap
+	stay
+	r load /test/proton
+	<a style="color:#FF0000">proton></a>+10240/2000/500
+
+</pre>
+
+If a prompt does not come back connections can be traced at the listening end with this command from any shell if 3rd party net-snmp is installed. High volume connections are not displayed individually but included in the totals tcpPassiveOpens and tcpCurrEstab
+<pre	style="font-size:12pt;color:#000000">
+
+	$ snmpwalk -v 1 -c public -Ir -Os -t 120 -m+RFC1213-MIB 172.29.7.7 tcp
+
+</pre>
+When prompt <a style="color:#FF0000">proton></a> returns requests can be sent on a million connections at once
+
+<p>
+Send messages command is character &gt; followed by space then 1 or 2 for how many times and some text
+<pre	style="font-size:12pt;color:#000000">
+
+	<a style="font-size:12pt;color:#FF0000">proton&gt;</a>&gt; 1 yoo
+
+</pre>
+
+Responding and requesting applications display results as shown at the <a href="#start">start</a> of this description
+
+
+<a      name="config"/>
+<h3>5: Configuration and Tuning</h3>
+
+A range of high-volume ports is assigned by a clause immediately following any network address in any interface declaration in wither of platform files $HOME/.rta_net or $HOME/.arta_net, for example
+
+<p>
+export RTA_WIFI=172.29.7.12/26+172.29.7.14/26@192.168.1.0/24+10.0.0.5/8:<a style="color:#FF0000">10240/tcp/16384/501</a>@172.29.7.0/26
+
+<p>
+The first subclause is the starting port number in the range and the third part is the number of ports. The last part is the maximum connections per port which is recommended not to exceed 500 + 1. One extra connection is used for traffic concentration
+
+<p>
+The larger inputs and outputs expected connection, the less the maximum number of connections per port should be
+
+<p>
+An approximate guide is maximum_connections = 120000 / average_output_message
+
+<p>
+Although high volume port assigments are appended to interface and address declarations, high volume ports and traffic are not bound to any address or interface and their declaration has no influence for routing or receiving interface
+
+
+
+
+</div>
