@@ -138,8 +138,8 @@ rx_thread
 	dl	(first, first+how_many:L)
 
 	ds	sockets:first
-	la	sockets:limit
 	sa	sockets:actual
+	la	sockets:limit
 	ana	sockets:first
 	aa	4,,xi
 	sa	sockets:span
@@ -189,6 +189,7 @@ $(0)
 rx_thread				. shared code of multiple threads
 	dl	0, a			. retrieve 2-word range assigned by application
 	ds	sockets:first		.
+	sa	sockets:actual
 	la	sockets:limit
 	.
 	.
