@@ -23,7 +23,7 @@ Its purpose is to connect large numbers of remote users to their data over reque
 TCP is suitable for this purpose because its persistence at delivery does not require additional delivery assurance as connectionless transmission does
 
 <p>
-RTA1 success at constructing TCP for millions of simulteneous connections provides an alternative to threaded protocols. TCP is very widely known and understood and requires minimal state variables per dialogue
+RTA1 success at constructing TCP for millions of simultaneous connections provides an alternative to threaded protocols. TCP is very widely known and understood and requires minimal state variables per dialogue
 
 <p>
 Remote users are advised of a TCP port number designated to serve them. Users may be equipped with accompanying encryption data or software on an electronic medium. 
@@ -197,9 +197,9 @@ rx_thread				. shared code of multiple threads
 Application interface is principally reading on selection among up to one million connections and writing on specific connections
 <pre	style="font-size:12pt;color:#000000">
 
-	c	(hvsocket_rx)	port	0,,xi	buffer[,,xi]	maximum_bytes[,,xi]
+	c	(hvsocket_rx)	sockets:actual	0,,xi	buffer[,,xi]	maximum_bytes[,,xi]
 
-	c	(hvsocket_tx)	port	connection	buffer[,,xi]	actual_bytes	0[++TCP_PSH],,xi
+	c	(hvsocket_tx)	sockets:actual	connection	buffer[,,xi]	actual_bytes	0[++TCP_PSH],,xi
 
 </pre>
 Connection identifier is a wild card on read request { PORT.0 }
