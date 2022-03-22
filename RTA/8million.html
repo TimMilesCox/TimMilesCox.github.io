@@ -139,11 +139,11 @@ rx_thread
 
 	ds	sockets:first
 	la	sockets:limit
+	sa	sockets:actual
 	ana	sockets:first
 	aa	4,,xi
 	sa	sockets:span
 	sa	sockets:span_restart
-	sa	sockets:actual
 	
 	c	(hvsocket_xbind)	sockets:first	sockets:limit	0,,xi
 
