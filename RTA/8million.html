@@ -137,13 +137,12 @@ $(0)
 rx_thread
 	dl	(first, first+how_many:L)
 
-	ds	sockets:first
+	ds	sockets:first			. 1st : limit
 	sa	sockets:actual
-	la	sockets:limit
-	ana	sockets:first
-	aa	4,,xi
-	sa	sockets:span
-	sa	sockets:span_restart
+	anb	a				. limit - 1st
+	ab	4,,xi
+	sb	sockets:span
+	sb	sockets:span_restart
 	
 	c	(hvsocket_xbind)	sockets:first	sockets:limit	0,,xi
 
@@ -152,23 +151,23 @@ rx_thread
 
 rx_next_port
 	lc	response_routine	sockets:actual		. routine to receive and respond
-	jza	forward			. all received 1 port up to 500 connections
+	jza	forward				. all received 1 port up to 500 connections
 	
 	la	sockets:span_restart
-	sa	sockets:span		. restart search range
+	sa	sockets:span			. restart search range
 
 forward	lx	sockets:actual
 	ax	1,,xi			
 	lr	sockets:limit
 	jxl	span?
 
-	lx	sockets:first		. wrap to start of range
+	lx	sockets:first			. wrap to start of range
 
 span?	sx	sockets:actual
 	dec	sockets:span
 	tz	sockets:span
 	j	rx_next_port
-					. empty circuit
+						. empty circuit
 
 	dl	(ACTIVATE++TIME_WAIT, 50d) . cool and check occasionally
 	ii	EVENT_WAIT$
@@ -190,7 +189,7 @@ rx_thread				. shared code of multiple threads
 	dl	0, a			. retrieve 2-word range assigned by application
 	ds	sockets:first		.
 	sa	sockets:actual
-	la	sockets:limit
+	anb	a			. limit - 1st
 	.
 	.
 
