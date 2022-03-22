@@ -212,7 +212,7 @@ Read result { 0.0 } means there is no remaining payload on the port. If more arr
 
 <p>
 
-Applications making active connections over high volume ports call connect() function in the standard socket api. They treat the port number as bound and available and do not attempt to bind to it.
+Applications making active connections over high volume ports call __connect() function in the socket low_level api. They treat the port number as bound and available and do not attempt to bind to it.
 
 <p>
 Listening Applications do not manage connections in TCP high volume environment. An application may close a connection for any reason
