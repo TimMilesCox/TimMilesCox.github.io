@@ -217,7 +217,7 @@ Applications making active connections over high volume ports call __connect() f
 <p>
 Listening Applications do not manage connections in TCP high volume environment. An application may close a connection for any reason
 
-<pre>
+<pre	style="font-size:12pt;color:#000000">
 
         c       (hvsocket_close)        port    connection
 
@@ -372,7 +372,7 @@ Command stay tells RTA1 load image telnet not to time the connection out
 
 </pre>
 
-The traffic-generating RTA1 can now start. The directories and scripts are all start with a for alternative RTA1. A new network trunk is started to connect the second RTA1 to terminal operation
+The traffic-generating RTA1 can now start. The directories and scripts have names starting "a" for alternative RTA1. A new network trunk is started to connect the second RTA1 to terminal operation
 
 <p>
 Start scripts are executed in directory aportal or aportal.x64 or alixnet or alixnet.x64
@@ -442,7 +442,7 @@ Responding and requesting applications display results as shown at the <a href="
 <a      name="config"/>
 <h3>5: Configuration and Tuning</h3>
 
-A range of high-volume ports is assigned by a clause immediately following any network address in any interface declaration in wither of platform files $HOME/.rta_net or $HOME/.arta_net, for example
+A range of high-volume ports is assigned by a clause immediately following any network address in any interface declaration in platform file $HOME/.rta_net or for a second RTA1 $HOME/.arta_net, for example
 
 <p>
 export RTA_WIFI=172.29.7.12/26+172.29.7.14/26@192.168.1.0/24+10.0.0.5/8:<a style="color:#FF0000">10240/tcp/16384/501</a>@172.29.7.0/26
@@ -451,13 +451,13 @@ export RTA_WIFI=172.29.7.12/26+172.29.7.14/26@192.168.1.0/24+10.0.0.5/8:<a style
 The first subclause is the starting port number in the range and the third part is the number of ports. The last part is the maximum connections per port which is recommended not to exceed 500 + 1. One extra connection is used for traffic concentration
 
 <p>
-The larger inputs and outputs expected connection, the less the maximum number of connections per port should be
+The larger inputs and outputs expected per connection, the less the maximum number of connections per port should be
 
 <p>
 An approximate guide is maximum_connections = 120000 / average_output_message
 
 <p>
-Although high volume port assigments are appended to interface and address declarations, high volume ports and traffic are not bound to any address or interface and their declaration has no influence for routing or receiving interface
+Although high volume port assigments are appended to interface and address declarations, high volume ports and traffic are not bound to any address or interface and their declaration does not influence routing on transmission or which interfaces receive traffic for any port
 
 <a	href="index.html" style="color:#FFFFFF;text-decoration:none;width:150pt;height:30pt;">
 <blockquote	style="border-radius:5px;font-size:16pt;font-family:helvetica;background-color:#0000C0;
@@ -465,7 +465,5 @@ Although high volume port assigments are appended to interface and address decla
   RTA1 INTRO PAGE
 </blockquote>
 </a>
-
-
 
 </div>
