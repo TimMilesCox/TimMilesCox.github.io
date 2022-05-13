@@ -244,6 +244,12 @@ Protocol suite extensions manage and resource connections and may apply credenti
 Test traffic for millions of TCP connections is obtained from another RTA1
 
 <p>
+The highest performing RTA1 emulator is on a Linux 64-bit Pentium Gold platform and makes about 25'000 responses per second each on a separate connection and runs up to 4'000'000 simultaneous connections
+
+<p>
+RTA1 emulators on 64-bit macOS have a higher capacity than 4'000'000 connections
+
+<p>
 Unit tests are done with socket programming on PCs but testing in this way for millions of connections would need thousands of networks and computers.
 
 <p>
@@ -253,7 +259,7 @@ Larger scale testing uses a second RTA1 on the same emulator platform as the lis
 Test and demonstration are for one million connections which is the recommended load for one single-core RTA1. Currently all RTA1 emulators are single-core.
 
 <p><a	name="start"/>
-Using optimal emulators (386 platform-specific emulators called tipa2048) RTA1 responds at socket layer to requests on one million TCP connections in 50 seconds, so 20000 responses per second
+The largest capacity RTA1 emulator on 32-bit macOS responds at socket layer to requests on one million TCP connections in 50 seconds, so 20000 responses per second
 <pre	style="font-size:12pt;color:#000000">
 
 	$ telnet 172.29.7.7
@@ -327,7 +333,7 @@ Another trunk which connects RTA1 to terminal operation is started with a proces
 Both RTA1s forward subnets of many addresses to themselves
 
 <p>
-On MacOS the optimal emulator for one million TCP connections has a half-gigaword system memory and is named tipa2048
+The largest RTA1 emulator on 32-bit MacOS runs one million TCP connections has a half-gigaword system memory and is named tipa2048
 
 <p>
 This emulation binds to the shared network trunk loaded from directory <a href="#hvtrafic">hvtrafic</a>
@@ -340,15 +346,18 @@ This emulation binds to the shared network trunk loaded from directory <a href="
 
 </pre>
 
-On Linux there is currently no emulator large enough to run one million connections. The 256-Megaword tipa1024 supports a half-million connections
+The largest RTA1 emulator on 32-bit Linux is the 256-Megaword tipa1024 and supports a half-million connections
 
 <pre	style="font-size:12pt;color:#000000">
 
 	$ cd rta.run
 	$ export	RTA_MBANKS=1024
-	$ ./ra -ZO /3/#70700004
+	$ ./ra -ZO /3/#70700010
 
 </pre>
+
+The device string /3/#70700010 of the shared network trunk shows a higher capacity on Linux, 16 blocks of 262144 words. This is reflected in slightly higher throughput than the 4 * 262144 word 
+
 
 Then the listening or server application can run. Once per platform power-up routes must first be added with script prun
 
@@ -404,7 +413,7 @@ Command ifswap tells RTA1 load image kernel to mirror its use of the network tru
 Command stay tells RTA1 load image telnet not to time the connection out
 
 <p>
-Application proton is commanded to connect one million connections. It does that serially in about 150 seconds
+Application proton is commanded to connect one million connections. It does that in about 50 seconds: 20'000 connections are made per second
 
 
 <pre	style="font-size:12pt;color:#000000">
@@ -419,16 +428,19 @@ Application proton is commanded to connect one million connections. It does that
 
 </pre>
 
-If a prompt does not come back connections can be traced at the listening end with this command from any shell if 3rd party net-snmp is installed. High volume connections are not displayed individually but included in the totals tcpPassiveOpens and tcpCurrEstab
+Connections being established can be traced in realtime with this command from any shell if 3rd party net-snmp is installed. High volume connections are not displayed individually but included in the totals tcpPassiveOpens and tcpCurrEstab
 <pre	style="font-size:12pt;color:#000000">
 
 	$ snmpwalk -v 1 -c public -Ir -Os -t 120 -m+RFC1213-MIB 172.29.7.7 tcp
 
 </pre>
+Application proton at RTA1 host 172.29.7.5 lso displays a digital barometer of outgoing connections confirmed
+
+<p>
 When prompt <a style="color:#FF0000">proton></a> returns requests can be sent on a million connections at once
 
 <p>
-Send messages command is character &gt; followed by space then 1 or 2 for how many times and some text
+Send messages command is character &gt; followed by space then 1 or more for how many times and some text
 <pre	style="font-size:12pt;color:#000000">
 
 	<a style="font-size:12pt;color:#FF0000">proton&gt;</a>&gt; 1 yoo
