@@ -465,7 +465,10 @@ The first subclause is the starting port number in the range and the third part 
 The larger inputs and outputs expected per connection, the less the maximum number of connections per port should be
 
 <p>
-An approximate guide is maximum_connections = 120000 / average_output_message_in_bytes
+An approximate guide is maximum_connections_per_port = 120000 / (average_output_message_in_bytes + 80) / 2
+
+<p>
+This formula allows for many segment transmissions which maintain TCP flow control and carry no payload, and for the requirement in TCP to keep transmitted payload until it is acknowledged 
 
 <p>
 Although high volume port assigments are appended to interface and address declarations, high volume ports and traffic are not bound to any address or interface and their declaration does not influence routing on transmission or which interfaces receive traffic for any port
