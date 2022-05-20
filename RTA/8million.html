@@ -342,7 +342,7 @@ This emulation binds to the shared network trunk loaded from directory <a href="
 
 	$ cd rta.run
 	$ export RTA_MBANKS=2048
-	$ ./ra -ZO /3/#70700004	
+	$ ./ra -ZOR /3/#70700004	
 
 </pre>
 
@@ -352,13 +352,13 @@ The largest RTA1 emulator on 32-bit Linux is the 256-Megaword tipa1024 and suppo
 
 	$ cd rta.run
 	$ export	RTA_MBANKS=1024
-	$ ./ra -ZO /3/#70700010
+	$ ./ra -ZOR /3/#70700010
 
 </pre>
 
-The device string /3/#70700010 of the shared network trunk shows a higher capacity on Linux, 16 blocks of 262144 words. This is reflected in slightly higher throughput than the 4 * 262144 word 
+The device string /3/#70700010 of the shared network trunk is 16 blocks of 262144 words when testing on Linux 
 
-
+<p>
 Then the listening or server application can run. Once per platform power-up routes must first be added with script prun
 
 <p>
@@ -465,7 +465,7 @@ The first subclause is the starting port number in the range and the third part 
 The larger inputs and outputs expected per connection, the less the maximum number of connections per port should be
 
 <p>
-An approximate guide is maximum_connections = 120000 / average_output_message
+An approximate guide is maximum_connections = 120000 / average_output_message_in_bytes
 
 <p>
 Although high volume port assigments are appended to interface and address declarations, high volume ports and traffic are not bound to any address or interface and their declaration does not influence routing on transmission or which interfaces receive traffic for any port
