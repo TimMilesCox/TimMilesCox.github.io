@@ -433,6 +433,21 @@ They are the same windows wider open
 The 6-bit window index corresponds to a relocation pointer in I/O ports 0..63
 (or to certain switchable alternatives in I/O ports 65..71)
 
+<pre	style="font-size:11pt">
+
+        Two instructions do not access register operands at addresses 0..255
+
+        Targets of the <a href="#ex">execute</a> and <a href="#ts">test and set</a> instructions are in memory windows 0..63
+
+        Test And Set instruction is not used to update registers but may not update iframe B0 either
+
+        Execute instruction may execute instructions at effective memory addresses lower than 256
+        so that locations near the start of the instruction frame may be used to table target instructions for Execute
+
+        Some memories like network trunks and filestores may not be suitable for Execute or Test and Set operations
+
+</pre>
+
 <a	name="ispace"/>
 <h3>2.4 Instruction Frame and IFrame Name</h3>
 
@@ -917,10 +932,6 @@ A push is a load into CPU registers in RTA1, and a pop is a store
 		interrupt code constructs these spaces
 
 	Memory communicating between kernel and applications is placed in the address space during kernel routines
-
-        Targets of the <a href="#ex">execute</a> and <a href="#ts">test and set</a> instructions may be anywhere in actual address space
-	unless bus operation on the memory in window is, like network trunks and filestore, not as executable space
-
 
 
 	<a	name="optimal_safe"/>
