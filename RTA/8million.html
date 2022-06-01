@@ -6,8 +6,13 @@
 	<li><a href="#purpose"/>Purpose</a></li>
 	<li><a href="#api"/>API</a></li>
 	<li><a href="#from"/>Performance Measurements to Date</a></li>
+	<ol>
+		<li><a href="#from"/>Highest Performance and Connections Capacity</a></li>
+		<li><a href="#high32"/>Performance and Capacity on 32-Bit Emulator Platforms</a></li>
+	</ol>
 	<li><a href="#test"/>Running Available Tests</a></li>
 	<li><a href="#config"/>Configuration and Tuning</a></li>
+	<li><a href="#space"/>Memory reserved at Startup</a></li>
 </ol>
 
 <a	name="purpose"/>
@@ -239,7 +244,8 @@ Protocol suite extensions manage and resource connections and may apply credenti
 </pre>
 </a>
 
-
+<a name="high64"/>
+<h4>3.1: Highest Performance and Connections Capacity</h4>
 
 Test traffic for millions of TCP connections is obtained from another RTA1
 
@@ -255,10 +261,9 @@ Unit tests are done with socket programming on PCs but testing in this way for m
 <p>
 Larger scale testing uses a second RTA1 on the same emulator platform as the listening RTA1. They are connected with a common interface buffer which RTA1 documentation calls a trunk. Trunks also connect emulated RTA1 to WiFi, Ethernet and the software loopback of the platform
 
-<p>
-Test and demonstration are for one million connections which is the recommended load for one single-core RTA1. Currently all RTA1 emulators are single-core.
+<a name="high32"/>
+<h4>3.2: Performance and Capacity on 32-Bit Emulator Platforms</h4>
 
-<p><a	name="start"/>
 The largest capacity RTA1 emulator on 32-bit macOS responds at socket layer to requests on one million TCP connections in 50 seconds, so 20000 responses per second
 <pre	style="font-size:12pt;color:#000000">
 
@@ -447,8 +452,6 @@ Send messages command is character &gt; followed by space then 1 or more for how
 
 </pre>
 
-Responding and requesting applications display results as shown at the <a href="#start">start</a> of this description
-
 
 <a      name="config"/>
 <h3>5: Configuration and Tuning</h3>
@@ -479,5 +482,22 @@ Although high volume port assigments are appended to interface and address decla
   RTA1 INTRO PAGE
 </blockquote>
 </a>
+
+<a name="space"/>
+<h3>6: Memory reserved at Startup</h3>
+
+If many TCP ports are assigned for high-volume traffic and an emulator with small memory is started with for example
+<pre>
+
+	export	TCP_MBANKS=2
+
+</pre>
+then some initial threads [ telnet fponline snmp_agent web_server i_server ] may not run or new threads may not run
+
+<p>
+Start-up configuration assigns a 4096-word page of storage per 512 high-volume TCP ports and may exhaust free memory if a high-volume TCP configuration in .rta_net has been overlooked
+
+<p>
+Each port acquires a 262144-word block of storage when connections start to be added
 
 </div>
