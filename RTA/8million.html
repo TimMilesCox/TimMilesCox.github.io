@@ -486,13 +486,13 @@ Although high volume port assigments are appended to interface and address decla
 <a name="space"/>
 <h3>6: Memory reserved at Startup</h3>
 
-If many TCP ports are assigned for high-volume traffic and an emulator with small memory is started with for example
+If many TCP ports are assigned for high-volume traffic and an emulator with small memory is started for example
 <pre>
 
 	export	TCP_MBANKS=2
 
 </pre>
-then some initial threads [ telnet fponline snmp_agent web_server i_server ] may not run or new threads may not run
+then some initial server threads [ telnet fponline snmp http i_server ] may not run or new threads may not run
 
 <p>
 Start-up configuration assigns a 4096-word page of storage per 512 high-volume TCP ports and may exhaust free memory if a high-volume TCP configuration in .rta_net has been overlooked
