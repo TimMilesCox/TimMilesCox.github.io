@@ -7,7 +7,7 @@
 	<li><a href="#api"/>API</a></li>
 	<li><a href="#from"/>Performance Measurements to Date</a></li>
 	<ol>
-		<li><a href="#from"/>Highest Performance and Connections Capacity</a></li>
+		<li><a href="#high64"/>Highest Performance and Connections Capacity</a></li>
 		<li><a href="#high32"/>Performance and Capacity on 32-Bit Emulator Platforms</a></li>
 	</ol>
 	<li><a href="#test"/>Running Available Tests</a></li>
@@ -244,22 +244,22 @@ Protocol suite extensions manage and resource connections and may apply credenti
 </pre>
 </a>
 
-<a name="high64"/>
-<h4>3.1: Highest Performance and Connections Capacity</h4>
-
 Test traffic for millions of TCP connections is obtained from another RTA1
-
-<p>
-The highest performing RTA1 emulator is on a Linux 64-bit Pentium Gold platform and makes about 25'000 responses per second each on a separate connection and runs up to 4'000'000 simultaneous connections
-
-<p>
-RTA1 emulators on 64-bit macOS have a higher capacity than 4'000'000 connections
 
 <p>
 Unit tests are done with socket programming on PCs but testing in this way for millions of connections would need thousands of networks and computers.
 
 <p>
 Larger scale testing uses a second RTA1 on the same emulator platform as the listening RTA1. They are connected with a common interface buffer which RTA1 documentation calls a trunk. Trunks also connect emulated RTA1 to WiFi, Ethernet and the software loopback of the platform
+
+<a name="high64"/>
+<h4>3.1: Highest Performance and Connections Capacity</h4>
+
+<p>
+The highest performing RTA1 emulator is on a Linux 64-bit Pentium Gold platform and makes about 25'000 responses per second each on a separate connection and runs up to 4'000'000 simultaneous connections
+
+<p>
+RTA1 emulators on 64-bit macOS have a higher capacity than 4'000'000 connections
 
 <a name="high32"/>
 <h4>3.2: Performance and Capacity on 32-Bit Emulator Platforms</h4>
