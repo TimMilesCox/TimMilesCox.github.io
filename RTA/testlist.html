@@ -5,14 +5,14 @@ cd	client
 time	./alltests	[ 172.29.7.7 ]	# or another RTA1 in the network		fp and trigonometry
 
 telnet	172.28.7.7			# or another RTA1 in the network
-r load /util/algo			# compare output text with answers/algo		calulations C language feasibility probe
+r load /util/algo			# compare output text with rta/quiz/algo	calulations C language feasibility probe
 					# load prompts again load>
-/util/blast				# compare output text with answers/blast	instruction set conformance
-/test/array				# compare output text with answers/array	SIMD floating point
-array*frame				# compare output text with answers/frame	SIMD floating point
+/util/blast				# compare output text with rta/quiz/blast	instruction set conformance
+/test/array				# compare output text with rta/quiz/array	SIMD floating point
+array*frame				# compare output text with rta/quiz/frame	SIMD floating point
 
 /util/tal
-test rex				# compare output text with answers/frame	SIMD integer / boolean / shifts
+test rex				# compare output text with rta/quiz/rex	SIMD integer / boolean / shifts
 
 test launch				# in debug shell simulate up to 8 external interrupts>j7:abcdef
 					#						     >ff:55aa55
