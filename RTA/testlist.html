@@ -1,0 +1,104 @@
+<pre	style="font-size:12pt">
+
+cd	client
+[ ./prun	# since last platform boot ]
+time	./alltests	[ 172.29.7.7 ]	# or another RTA1 in the network		fp and trigonometry
+
+telnet	172.28.7.7			# or another RTA1 in the network
+r load /util/algo			# compare output text with answers/algo		calulations C language feasibility probe
+					# load prompts again load>
+/util/blast				# compare output text with answers/blast	instruction set conformance
+/test/array				# compare output text with answers/array	SIMD floating point
+array*frame				# compare output text with answers/frame	SIMD floating point
+
+/util/tal
+test rex				# compare output text with answers/frame	SIMD integer / boolean / shifts
+
+test launch				# in debug shell simulate up to 8 external interrupts>j7:abcdef
+					#						     >ff:55aa55
+
+.					# detach from tal with command <a style="color:#FF0000">.</a>
+
+/util/readout				# monitor interrupt tabling in thread control block
+					# readout prompt page>thread_id			# in hex starting 0
+					# then key 0160 to see the interrupt table>0160
+
+
+
+					Large Scale TCP Traffic Testing
+					_______________________________
+
+
+					1st shell
+					_______________
+
+					cd rta/hvtrafic
+					source note.txt
+					<a style="color:#FF0000">device is /3/70700010</a>	#  device name displayedgoes on the emulator line <a style="color:#0000FF">{ra|r|ar|ar64}</a>
+
+
+						RTA1 named <a style="color:#0000FF">172.29.7.7</a>
+						_____________________
+
+
+						2nd shell
+						_________
+
+						cd rta/{portal[.x64]|linux.net|linuxnet.x64}
+						./runL
+
+							3rd shell
+							_________	
+
+							cd {rta/rta.run|tgen.x64)
+							<a style="color:#0000FF">./ra</a> -ZOR <a style="color:#FF0000">/3/70700010</a>	# in tgen.x64 <a style="color:#0000FF">./r</a> -ZOR <a style="color:#FF0000">/3/70700010</a>
+
+								4th shell
+								_________
+
+								cd rta/client
+								[ ./prun ]
+								telnet 172.29.7.7
+								isync
+								stay
+								r load /test/proto	# interrogate states with proto command <a style="color:#FF0000">state</a> 
+
+
+
+RTA1 named <a style="color:#0000FF">172.29.7.5</a>
+_____________________
+
+
+5th shell
+_________
+
+cd rta/{aportal[.x64]|alixnet[.x64]}
+./arunL
+
+
+	6th shell
+	_________
+
+	cd rta/arta.run
+	<a style="color:#0000FF">{./ara|./ar64}</a> -ZOR <a style="color:#FF0000">/3/70700010</a>
+
+
+		7th shell
+		______________
+
+		cd rta/aclient
+		[ ./aprun ]
+		telnet 172.29.7.5
+		ifswap
+		stay
+		r load /test/proton
+		+10240/2000/500
+
+		&gt; 1 2yu		# <a style="color:#FF0000">&gt;</a> is a command. Type it and a space after. It means send data
+				# 2yu is a data message on each connection. Any message will do
+				# 1 means do it all once
+
+				# interrogate states with proton command <a style="color:#FF0000">!</a>
+
+				# close connections with proton command <a style="color:#FF0000">&lt;</a>
+</pre>
