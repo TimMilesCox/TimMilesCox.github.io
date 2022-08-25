@@ -8167,7 +8167,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 		<a href="#rex" style="color:#00AF6F">sar sbr dsr sal sbl dsl rar rbr drr ral rbl drl saa sba dsa</a>
 		<a href="#rex" style="color:#00AF6F">aa ab ana anb da dan</a>
 
-	are as ordinary context except in repeat context they address internal stack register <a href="#rex_lane" style="color:#00AF6F">[q] -> or [q + 1]</a> or both
+	are as ordinary context except in repeat context they address internal stack register <a href="#rex_lane" style="color:#00AF6F">[q] -> or [q + 1] -></a> or both
 						  
 	Test and skip instructions in repeat context <a href="#tz" style="color:#00AF6F">tz</a> <a href="#tp" style="color:#00AF6F">tp</a> <a href="#mta" style="color:#00AF6F">mta</a> <a href="#dte" style="color:#00AF6F">dte</a>
 
@@ -8209,13 +8209,35 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	Data Points 1 are therefore concentrated on acquisition and results are distributed on storage
 	Data Points 2 need never be concentrated at all
 
-	Repeat operations traversing the register stack generally increment the accumulator cursor by
+	Repeat operations traversing the internal register stack update the accumulator cursor
+        with the &plusmn;increment programmed in register <a style="color:#FF0000">RDATA</a>, most frequently
 
- 		1 * object size in words
+ 		+1 * object size in words
 
-	for example for floating numbers +4
+		for example <a style="color:#FF0000">increment +4</a> is for a list of 4-word floating numbers in the internal stack
 
-	except for left / right treatment of <a href="#rex_lane">word pair twin lanes</a> and cases where the accumulator cursor is not updated
+		_________________________________________________________________
+		| running count	| <a style="color:#FF0000">increment +4</a>	| restart count	|DATA2 increment| ------------> updates DATA2
+		|_______________|_______________|_______________|_______________|		index register
+			RDATAC		| RDATA		WDATAC		WDATA
+					|				
+					+-----------------------------------------------------> updates [ register q ] 
+												accumulator cursor ->
+
+
+	Accumulator cursor increment zero is correct when the same internal stack register is DATA-1 each repeat, for example
+
+		the value in one internal stack register is stored to many locations
+
+		many values read from dispersed locations are accumulated in one internal stack register
+
+	Accumulator cursor increment +2 is correct when
+
+		pairs of single registers are treated as <a href="#rex_lane">left and right lanes</a> with for example
+
+		instruction [ <a href="#rex" style="color:#00AF6F">sa la or and xor aa ana sar sal rar ral saa</a> ] to the left register of each pair
+		instruction [ <a href="#rex" style="color:#00AF6F">sb lb orB andB xorB ab anb sbr sbl rbr rbl sba</a> ] to the right register of each pair
+
 <a	name="sim_d2"/>
 <div	style="right:50pt;width:400pt;position:absolute;font-size:9pt;color:#00AF6F">
 <pre>
