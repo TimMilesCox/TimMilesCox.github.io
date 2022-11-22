@@ -183,9 +183,8 @@ The addressable storage location is the 24-bit computer word. Instructions are o
 
 	<a	name="start_pagex"/>
 	<a	style="color:#0000FF">
-	Start Page Index</a>	Start Page Index is a 4096-word memory block number
-				identifying the start of assigned memory
-
+	Start Page Index</a>	Start Page Index is the starting page number of some assigned memory
+				for example an instruction frame or an application data memory
 	<a	name="iframe"/>
 	<a	style="color:#0000FF">
 	instruction frame</a>	an instruction frame is one or more pages of memory containing instructions and constants
@@ -950,8 +949,8 @@ A push is a load into CPU registers in RTA1, and a pop is a store
 	A kernel links any subsequent dynamic memory grants to the application memory estate
 	and may write dynamic or shared memory pointers in the application vector list to prevent accidental change
 
-	Pointers to far <a href="#call">call</a> and <a href="#go">go</a> subjects identified at build time are already protected by inclusion
-	in the instruction frame literal table which is finalised at system image generation or at <a href="kernel.html#iframe_load">load</a>
+	Pointers to far <a href="#call">call</a> and <a href="#go">go</a> targets known at build time are protected
+	because they are in the literal table of the calling instruction frame which may not write itself
 
 
 
