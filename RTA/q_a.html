@@ -18,6 +18,13 @@ See also the licensing notice at the foot of this document
 </center>
 
 <ol>
+	<li><a href="#mcore">why SMP?</a></li>
+	<ol>
+		<li><a href="#mcore">a rapid success</a></li>
+		<li><a href="#mcpriority">a priority from the start</a></li>
+		<li><a href="#mctogether">coordinating everything</a></li>
+		<li><a href="#mcapp">application strategy</a></li>
+	</ol>
 	<li><a href="#fp">why so much effort for floating point?</a></li>
 	<ol>
 		<li><a href="#how_sofp">how so?</a></li>
@@ -46,13 +53,75 @@ See also the licensing notice at the foot of this document
 								floating + integer math, Boolean + shift operations...</a>
 </pre>
 
+<a	name="mcore"/>
+<h2>1:	why SMP?</h2>
+
+<h3>1.1: a rapid success</h3>
+
+RTA1 has increased performance visibly by moving to symmetrical multicore
+
+<p>
+RTA1 does not yet exist in semiconductor but has developed as an emulated architecture concentrated on economy of instruction execution
+
+<p>
+So much so that RTA1 emulation can easily run eight million simultaneous TCP connections
+
+<p>
+SMP is done by using any core threads which the emulation platform can offer
+
+<p>
+Typical platforms are i5 or Pentium Gold running Linux and offering four or more core-threads
+
+<p>
+This does not mean RTA1 architecture is like Intel. They are very different, but Intel platforms are very good for running emulations
+
+
+
+<a	name="mcpriority"/>
+<h3>1.2: a priority from the start</h3>
+
+RTA1 architecture was created to be scalable, from a device with just one core but with a number radix large enough to keep coding simple,
+to the sort of device which is sometimes called a hub or a server, maintaining simultaneous network connections with millions of remote users
+
+<p>
+The ability to model millions of online sessions each on a TCP connection is unique to the kernel of RTA1 and depends on the rigorous spareness of software executing on RTA1 architecture
+
+<p>
+Performance to match all those connections uplifts with more cores, and on RTA1 testing has been proving that
+
+<p>
+Typically one RTA1 software thread endpoint can serve up to 30'000 responses per second among a half million connections
+
+<p>
+Eight software threads running on eight cores have the potential of driving 200'000+ responses per second among four million simultataneous connexions
+
+
+<p>
+To run more connections than that, project RTA1 recommends farms or distributed networks of RTA1 devices. But the immense capability of just one RTA1 economises greatly in the number of complexes required
+
+
+
+<a	name="mctogether"/>
+<h3>1.3: coordinating everything</h3>
+
+SMP has stayed at the centre of project RTA1 from the start. Kernels and system images support SMP
+
+<p>
+RTA1 is not much like any other architecture and has unique a thin-layer kernel with POSIX-like ABIs
+
+<a	name="mcapp"/>
+<h3>1.4:  application strategy</h3>
+
+SMP underlies a strategy of cloned endpoint application threads each connecting populations of remote users to their data
+
+
 <a	name="fp"/>
-<h2>1: why so much effort for floating point?</h2>
+<h2>2: why so much effort for floating point?</h2>
 
 Because it's the best way of doing large fixed-point arithmetic
 
 <a	name="how_sofp"/>
-<h3>1.1: how so?</h3>
+<h3>2.1: how so?</h3>
 
 <p>
 Many very small &mu;Cs acquire a coprocessor or an emulation
@@ -73,8 +142,8 @@ divisors longer than the word size
 <b>Extensive testing of integer calculation supported by RTA1 96-bit floating-point has secured exact integer results including multiplication, division and remainder</b>
 
 <p>
-<b>Rounding policy is programmable per thread on RTA1 and should be set at no rounding when used for large integers,
-because so long as values are in integer range there is no truncation to compensate</b>
+<b>Rounding policy is programmable per thread on RTA1 and may be set at any rounding policy when used for large integers.
+So long as values are in integer range there is no truncation to compensate</b>
 
 <p>
 Floating point is 100% deterministic and integer-accurate
@@ -208,7 +277,7 @@ divisor size up to 72 bits
 	</div>
 
 <a	name="not_ieee"/>
-<h3>1.2: why isn't it IEEE754 floating point?</h3>
+<h3>2.2: why isn't it IEEE754 floating point?</h3>
 
 RTA1 96-bit floating format has become necessary
 
@@ -273,7 +342,7 @@ for the largest RTA1 numbers. Except for printable
 ASCII format in XDR string items
 
 <a	name="large_96"/>
-<h3>1.3: isn't 96 bits too large for some things?</h3>
+<h3>2.3: isn't 96 bits too large for some things?</h3>
 
 Yes. RTA1 computes 96-bit floating point but can
 store in a 48-bit compressed floating format, if
@@ -284,7 +353,7 @@ And there is always fixed-point arithmetic. 24-bit, 48-bit and 72-bit
 
 
 <a	name="not_triadic"/>
-<h3>1.4 why isn't it triadic floating operation?</h3>
+<h3>2.4 why isn't it triadic floating operation?</h3>
 
 Here a simple algorithm with five inputs is executed in five instructions, including
 operand acquisition from storage
@@ -353,7 +422,7 @@ There's nowhere further to go in straight-line architectures
 </pre>
 
 <a	name="fp192">
-<h3>1.5: how is 192-bit floating arithmetic done? why?</h3>
+<h3>2.5: how is 192-bit floating arithmetic done? why?</h3>
 
 192-bit floating arithmetic is present in case specialist users need more mantissa
 precision than 72 bits
@@ -472,10 +541,10 @@ part is stored in registers 8:9:10:11
 
 
 <a	name="bytes"/>
-<h2>2: can RTA1 access bytes efficiently?</h2>
+<h2>3: can RTA1 access bytes efficiently?</h2>
 
 <a	name="bit_stream"/>
-<h3>2.1: bit-stream channels</h3>
+<h3>3.1: bit-stream channels</h3>
 
 RTA1 bit-stream-channels are the most efficient handler of any architecture for
 unaligned byte strings
@@ -493,7 +562,7 @@ Please see also <a href="#pixels_large">2.3: UTF-32, pixels, large and small Byt
 and <a href="checkli.html">RTA1 view of data</a>
 
 <a	name="hw_tw"/>
-<h3>2.2: integer Instructions: word / halfword / thirdword select</h3>
+<h3>3.2: integer Instructions: word / halfword / thirdword select</h3>
 
 Please see also <a href="checkli.html">RTA1 view of data</a>
 
@@ -525,7 +594,7 @@ implements byte-writes. You save two thirds of your instructions
 And for many applications, the perfect byte-size is... 24 bits 
 
 <a	name="pixels_large"/>
-<h3>2.3: UTF-32, pixels, large and small bytes</h3>
+<h3>3.3: UTF-32, pixels, large and small bytes</h3>
 <p>
 RTA1 distributes UTF-32 and optionally UTF-16 data at one character per 24-bit
 data word
@@ -540,10 +609,10 @@ of one instruction per character
 
 
 <a	name="stackspace"/>
-<h2>3: does the internal stack run out of space?</h2>
+<h2>4: does the internal stack run out of space?</h2>
 
 <a	name="structured_real"/>
-<h3>3.1: structured realtime in the internal stack</h3>
+<h3>4.1: structured realtime in the internal stack</h3>
 
 Please see also the explanation <a href="howsthat.html">internal stack, how's that?</a>
 
@@ -601,7 +670,7 @@ Some kinds of processing are not realtime, and must go about things in
 a different way
 
 <a	name="recursion"/>
-<h3>3.2 recursive programming and zero-net internal stack</h3>
+<h3>4.2 recursive programming and zero-net internal stack</h3>
 
 <p>
 Recursion is a programming technique popular especially in education circles. Some applications need it
@@ -823,7 +892,7 @@ the accompanying document <a href="language.html#trapping">Towards Compiler Lang
 </i>
 
 <a	name="proswip"/>
-<h2>4. does RTA1 switch context quickly?</h2>
+<h2>5. does RTA1 switch context quickly?</h2>
 
 Process or thread switch takes slightly less or more than 105 instructions
 
