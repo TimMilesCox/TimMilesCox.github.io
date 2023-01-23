@@ -23,7 +23,7 @@ See also the licensing notice at the foot of this document
 	<ol>
 		<li><a href="#acquire">Downloads</a></li>
 		<li><a href="#needed_u">Required Utilities and Path Setup</a></li>
-		<li><a href="#emus_by">Emulators by Platform</a></li>
+		<li><a href="#emus_by">SMP Emulators by Platform</a></li>
 	</ol>
 	<li><a href="#topol">Network Topology</a></li>
 	<li><a href="#route_from">Routing from RTA1</a></li>
@@ -65,6 +65,7 @@ See also the licensing notice at the foot of this document
 		<li><a href="#readout">D.1: General Application of readout Utility</a></li>
 		<li><a href="#hot_d">D.2: Walking a Faulted Application with readout Utility</a></li>
 		</ul>
+	<li><a href="#emu_trad">Appendix E: Available Previous Emulators</a></li>
 	<li><a href="#deconta">Appendix Y: Clearing Download Restrictions</a></li>
         <li><a href="#licence">Appendix Z: GNU General Public Licence Version 3</a></li>
 </ul>
@@ -161,7 +162,8 @@ All components and utilities of RTA1 emulator and masmx are present for
 Two directories are needed in environment and in $PATH
 
 <ul	style="line-height:24pt;list-style-type:none">
-	<li><a style="color:#0000FF">$RTA_BINARY</a> is in your environment and $PATH and is <a style="color:#0000FF">rta/binary.rta/{ osx.ppc | osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
+	<li><a style="color:#0000FF">$RTA_BINARY</a> is in your environment and $PATH and is <a style="color:#0000FF">rta/binary.smp/{ osx.ppc | osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
+        <li><a style="color:#0000FF">$RTA_BIN_64</a> may be in your environment and $PATH and is <a style="color:#0000FF">rta/binary.smp/{ osx.x64 | suse.x64 }</a></li>
 	<li><a style="color:#0000FF">$MASMX</a> is in your environment and $PATH and is <a style="color:#0000FF">masmx.7r3/hosts/{ osx.ppc | osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
 </ul>
 
@@ -181,23 +183,23 @@ What goes in .bash_profile or .bashrc is like this
 	<a style="color:#FF0000">OSX x86-64</a>									<a style="color:#FF0000">Linux x86-64</a>
 	__________									____________
 
-	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x64					export	RTA_BINARY=$HOME/rta/binary.rta/suse.x64
+	export	RTA_BINARY=$HOME/rta/binary.smp/osx.x64					export	RTA_BINARY=$HOME/rta/binary.smp/suse.x64
 	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x64				export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x64
 	export	PATH=$PATH:$MASMX:$RTA_BINARY						export	PATH=$PATH:$MASMX:$RTA_BINARY
-	export	RTA_MBANKS=1	# you rarely need more than 2 banks			export	RTA_MBANKS=1	# RTA1 executable space
-				# RTA1 executable space								# from 1 * 262144 words
-				# up to 65536 * 262144 words (16 Gigawords)					# to 1024 * 262144 words
+	export	RTA_MBANKS=8	# default executable space 8 banks			export	RTA_MBANKS=8	# default executable space 8 banks
+				# [ 1..65536 ] * 262144 words							# [ 1 2 4 8 32 64 256 1024 2048 4096 8192 ]
+				# up to 16 gigawords								# * 262144 words
 
 
-	<a style="color:#FF0000">OSX x86</a>										<a style="color:#FF0000">Linux</a>
-	_______										_____
+	<a style="color:#FF0000">OSX x86</a>										<a style="color:#FF0000">Linux x86</a>
+	_______										_________
 
-	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x86					export	RTA_BINARY=$HOME/rta/binary.rta/suse.x86
+	export	RTA_BINARY=$HOME/rta/binary.smp/osx.x86					export	RTA_BINARY=$HOME/rta/binary.smp/suse.x86
 	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x86				export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x86
 	export	PATH=$PATH:$MASMX:$RTA_BINARY						export	PATH=$PATH:$MASMX:$RTA_BINARY
-	export	RTA_MBANKS=1	# you rarely need more than 2 banks			export	RTA_MBANKS=1	# you rarely need more than 2 banks
-				# but you can have 1024 banks							# but you can have 1024 banks
-				# = 256 megawords executable space						# = 256 megawords executable space
+	export	RTA_MBANKS=8	# default executable space 8 banks			export	RTA_MBANKS=8	# default executable space 8 banks
+				# [ 1 2 4 8 32 64 256 1024 2048 ]						# [ 1 2 4 8 32 64 256 1024 ]
+				# * 262144 words								# * 262144 words
 
 
 	
@@ -205,12 +207,12 @@ What goes in .bash_profile or .bashrc is like this
 	<a style="color:#FF0000">OSX PowerPC</a>
 	___________
 
-	export  RTA_BINARY=$HOME/rta/binary.rta/osx.ppc	
+	export  RTA_BINARY=$HOME/rta/binary.smp/osx.ppc	
 	export  MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.ppc
 	export  PATH=$PATH:$MASMX:$RTA_BINARY
-	export  RTA_MBANKS=1	# you rarely need more than 2 banks
-				# but you can have 1024 banks
-				# = 256 megawords executable space
+	export  RTA_MBANKS=8	# default executable space 8 banks
+				# [ 1..1024 ] * 262144 words
+	
 
 
 
@@ -226,29 +228,57 @@ What goes in .bash_profile or .bashrc is like this
 </pre>
 
 <a	name="emus_by"/>
-<h4>2.3: Emulators by Platform</h4>
+<h4>2.3: SMP Emulators by Platform</h4>
+
+RTA1 Stepping 31.12.2022 is a reconstruction of supplied emulators for higher performance and Symmetric Multicore
 
 <p>
-$RTA_MBANKS decides which RTA1 emulator to load by executable space in blocks of 262144 words
+New SMP emulators using available core threads of the emulator platform are supplied in variants of [ <a style="color:#FF0000">1 2 4 8</a> ] cores
 
 <p>
-Supplied emulators have RTA_MBANKS=[ 1 2 4 8 32 64 256 1024 8192 65536 ]
+Previous emulators with identical performance to SMP * 1-core are in the download and identified in <a href="#emu_trad">Appendex E: Available Previous Emulators</a>
+
+<p>
+Supplied emulators are mostly for Intel 64-bit and 32-bit platforms running Linux and macOS
+
+<p>
+The only RTA1 emulator supplied for macOS PowerPC is a completely new SMP * 1-core emulator. Project RTA1 will release SMP emulator variants [ <a style="color:#FF0000">2 4 8</a> ] for PowerPC subject to resourcing machine-code upgrades
+
+<p>
+Four RTA1 emulators for 64-bit Intel macOS RTA1 are supplied. Environment variable $RTA_SMP [ <a style="color:#FF0000">1 2 4 8</a> ] selects [ <a style="color:#0000FF">rta1_1 rta1_2 rta1_4 rta1_8</a> ] for execution
+
+<p>
+These and macOS 32-bit PowerPC [ <a style="color:#0000FF">rta1_1</a> ] acquire storage per $RTA_MBANKS (262144-word blocks of RTA1 executable space) at startup
+
+<p>
+There is a difference between macOS releases whether sudo command in runscript ./r needs -E option to transfer environment variables to the emulator. In macOS for PowerPC this option may be unknown and not needed
+
+<p>
+RTA emulators for Linux 64-bit Intel and for Linux and macOS 32-bit Intel are supplied in multiple cores * storage size variants and selected at runtime. Emulator is selected for execution using variables $RTA_SMP and $RTA_MBANKS
 
 <p>
 Depending on platform available emulators are
 <pre	style="font-size:11pt">
 
-	$RTA_BINARY/tipa[1..1024]	# 32-bit Intel OSX and Linux	run as script rta/rta.run/ra	[-[O][R][Z][s]]
-	$RTA_BINARY/tipt[1..1024]	# 32-bit Intel OSX and Linux	run as script rta/rta.run/r	[-[O][R][Z][s]]
-	$RTA_BIN_64/tipc[1.65536]	# 64-bit Intel OSX and Linux	run as script rta/tgen.x64/r	[-[O][R][Z][s]]
+	$RTA_BINARY/rta1_[ <a style="color:#FF0000">1 2 4 8</a> ].[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048</a> ]
+	32-bit Intel macOS and Linux	run as script rta/tgen.smp/ra	[-[O][R][Z][s]] rta1_<a style="color:#FF0000">1|2|4|8</a>.2048 are macOS only
+
+	$RTA_BIN_64/rta1_[ <a style="color:#FF0000">1 2 4 8</a> ].[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048 4096 8192</a> ]
+	64-bit Intel Linux		run as script rta/tgen.smp/xra	[-[O][R][Z][s]]
+
+	$RTA_BIN_64/rta1_[ <a style="color:#FF0000">1 2 4 8</a> ]
+	64-bit Intel macOS		run as script rta/tgen.smp/r	[-[O][R][Z][s]]
+
+	$RTA_BINARY/rta1_1
+	32-bit PowerPC OSX		run as script rta/tgen.smp/rap	[-[O][R][Z][s]]
 
 </pre>
 
-Emulators tipa[1..1024] are twice as fast and half as demanding as the other emulators
+<p>
+64-bit Intel macOS emulators can be run with RTA_MBANKS=65536 (RTA1 executable space 16 Gigawords) but swap requirements may make demands on platform volume
 
 <p>
-Emulators tipc8192 and tipc65536 are only in rta/binary.rta/osx.x64
-
+64-bit Intel macOS emulators and 32-bit PowerPC OSX emulator have variants [ <a style="color:#FF0000">rta1_1A rta1_2A rta1_4A rta1_8A</a> ] which include the touchpoint trace feature (a memory-write equivalent of breakpoint). touchpoint feature is included in all 32-bit Intel emulators and Linux 64-bit Intel emulators. [ <a style="color:#FF0000">rta1_1A rta1_2A rta1_4A rta1_8A</a> ] contain less Intel-specific source code than [ <a style="color:#FF0000">rta1_1 rta1_2 rta1_4 rta1_8</a> ] and are the code base of emulations for platforms not similar to Intel
 
 <a	name="topol"/>
 <h3>3: Network Topology</h3>
@@ -608,10 +638,11 @@ $ sudo oconsole
   |						     # linuxnet or (OSX) osserv		|
   |_____________________________________________________________________________________|
   |											|
-  |  2nd shell: RTA1 emulator:	$ cd rta/{ rta.run | tgen.x64 }				|
-  |		     rta.run 	$ ./ra [-[O][R][Z][s]]	# script to run emulator tipa[]	|
-  |		or   rta.run	$ ./r [-[O][R][Z][s]]	# script to run emulator tipt[]	|
-  |		or  tgen.x64 	$ ./r [-[O][R][Z][s]]	# script to run emulator tipc[]	|
+  |  2nd shell: RTA1 emulator:	$ cd rta/tgen.smp					|
+  |  32-bit Linux / macOS :	$ ./ra  [-[O][R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">memory</a>	|
+  |  64-bit Linux Intel	  :	$ ./xra [-[O][R][Z][s]] # emulator rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">memory</a>	|
+  |  64-bit macOS Intel	  :	$ ./r   [-[O][R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1|2|4|8</a>		|
+  |  32-bit OSX PowerPC	  :	$ ./rap [-[O][R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1</a>		|
   |_____________________________________________________________________________________|
   |											|
   |  3rd shell:routing setup	$ cd rta/client						|
@@ -1978,6 +2009,80 @@ Index register x = 3. Execute instruction at offset offset 0001A2<sub>16</sub> e
 </pre>
 
 The call operand constant at 0005e0<sub>16</sub> is indirect pointer 803058<sub>16</sub> to a gate at location 003058<sub>16</sub> : 000c40 000001
+
+<a	name="emu_trad">
+<h3>Appendix E: Available Previous Emulators</h3>
+
+RTA1 emulators Stepping 31.12.2022 are reconstructed for symmetric multicore
+
+<p>
+Earlier RTA1 emulators for Linux and macOS 32-bit and 64-bit platforms are still distributed and perform as fast as SMP 1 * core new emulators
+
+<p>
+RTA1 emulator for OSX PowerPC is only distributed newly constructed as SMP 1 * core
+
+<p>
+Directories are needed in environment and in $PATH for running earlier emulators
+
+<ul	style="line-height:24pt;list-style-type:none">
+	<li><a style="color:#0000FF">$RTA_BINARY</a> is in your environment and $PATH and is <a style="color:#0000FF">rta/binary.rta/{ osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
+
+	<li><a style="color:#0000FF">$RTA_BIN_64</a> may in your environment and $PATH and is <a style="color:#0000FF">rta/binary.rta/{ osx.x64 |  suse.x64 }</a></li>
+
+	<li><a style="color:#0000FF">$MASMX</a> is in your environment and $PATH and is <a style="color:#0000FF">masmx.7r3/hosts/{ osx.ppc | osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
+</ul>
+
+masmx is necessary to run RTA1 at all. To generate RTA1 target applications this directory of scripts is additionally needed in $PATH
+<ul	style="line-height:24pt;list-style-type:none">
+
+	<li><a style="color:#0000FF">$RTA_BINARY/../../target.rta/image.app</a>
+
+</ul>
+Some 64-bit Linux distros need extra runtine library download to execute 32-bit binaries
+
+<p>
+What goes in .bash_profile or .bashrc is like this
+
+<pre	style="font-size:10pt">
+
+	<a style="color:#FF0000">OSX x86-64</a>									<a style="color:#FF0000">Linux x86-64</a>
+	__________									____________
+
+	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x64					export	RTA_BINARY=$HOME/rta/binary.rta/suse.x64
+	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x64				export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x64
+	export	PATH=$PATH:$MASMX:$RTA_BINARY						export	PATH=$PATH:$MASMX:$RTA_BINARY
+	export	RTA_MBANKS=8	# default executable space 8 banks			export	RTA_MBANKS=8	# default executable space 8 banks
+				# [ 1..65536 ] * 262144 words							# [ 1 2 4 8 32 64 256 1024 2048 4096 8192 ]
+				# up to 16 Gigawords								# * 262144 words
+
+
+	<a style="color:#FF0000">OSX x86</a>										<a style="color:#FF0000">Linux</a>
+	_______										_____
+
+	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x86					export	RTA_BINARY=$HOME/rta/binary.rta/suse.x86
+	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x86				export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x86
+	export	PATH=$PATH:$MASMX:$RTA_BINARY						export	PATH=$PATH:$MASMX:$RTA_BINARY
+	export	RTA_MBANKS=8	# default executable space 8 banks			export	RTA_MBANKS=8	# default executable space 8 banks
+				# [ 1 2 4 8 32 64 256 1024 2048 ]						# [ 1 2 4 8 32 64 256 1024 ]
+				# * 262144 words								# * 262144 words
+
+</pre>
+
+Emulator for load / execute is selected according to environmental variable $RTA_MBANKS
+
+<p>
+Depending on platform available emulators are
+<pre	style="font-size:11pt">
+
+	$RTA_BINARY/tipa[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048</a> ]						tipa<a style="color:#0000FF">2048</a> is macOS only
+	# 32-bit Intel OSX and Linux	run as script rta/rta.run/ra	[-[O][R][Z][s]]
+
+	$RTA_BIN_64/tipc[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048 4096 8192 32768 65536</a> ]			tipc[ <a style="color:#0000FF">32768 65536</a> ] are macOS only
+	# 64-bit Intel OSX and Linux	run as script rta/tgen.x64/r	[-[O][R][Z][s]]
+
+</pre>
+
+<p>
 
 
 <a	name="deconta"/>

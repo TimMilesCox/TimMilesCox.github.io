@@ -61,13 +61,13 @@ See also the licensing notice at the foot of this document
 RTA1 has increased performance visibly by moving to symmetrical multicore
 
 <p>
-RTA1 does not yet exist in semiconductor but has developed as an emulated architecture concentrated on economy of instruction execution
+RTA1 does a great deal of work issuing very few instructions of its very lean instruction set
 
 <p>
 So much so that RTA1 emulation can easily run eight million simultaneous TCP connections
 
 <p>
-SMP is done by using any core threads which the emulation platform can offer
+SMP is emulated by using any core threads which the emulation platform can offer
 
 <p>
 Typical platforms are i5 or Pentium Gold running Linux and offering four or more core-threads
@@ -80,24 +80,24 @@ This does not mean RTA1 architecture is like Intel. They are very different, but
 <a	name="mcpriority"/>
 <h3>1.2: a priority from the start</h3>
 
-RTA1 architecture was created to be scalable, from a device with just one core but with a number radix large enough to keep coding simple,
-to the sort of device which is sometimes called a hub or a server, maintaining simultaneous network connections with millions of remote users
+RTA1 architecture was created to be scalable, from a simple micro-device with a useful number radix,
+to hubs and servers maintaining simultaneous network connections with millions of remote users
 
 <p>
 The ability to model millions of online sessions each on a TCP connection is unique to the kernel of RTA1 and depends on the rigorous spareness of software executing on RTA1 architecture
 
 <p>
-Performance to match all those connections uplifts with more cores, and on RTA1 testing has been proving that
+Performance to match all those connections uplifts with more cores, current testing shows
 
 <p>
-Typically one RTA1 software thread endpoint can serve up to 30'000 responses per second among a half million connections
+Typically one RTA1 software thread endpoint can serve up to 35'700 responses per second among a half million TCP connections
 
 <p>
 Eight software threads running on eight cores have the potential of driving 200'000+ responses per second among four million simultataneous connexions
 
 
 <p>
-To run more connections than that, project RTA1 recommends farms or distributed networks of RTA1 devices. But the immense capability of just one RTA1 economises greatly in the number of complexes required
+To run more connections than that, project RTA1 recommends farms or distributed networks of RTA1 devices. But the immense capability of just one RTA1 holds down the number of systems required
 
 
 
@@ -107,12 +107,18 @@ To run more connections than that, project RTA1 recommends farms or distributed 
 SMP has stayed at the centre of project RTA1 from the start. Kernels and system images support SMP
 
 <p>
-RTA1 is not much like any other architecture and has unique a thin-layer kernel with POSIX-like ABIs
+RTA1 is not much like any other architecture and has a unique thin-layer kernel with POSIX-like ABIs
 
 <a	name="mcapp"/>
 <h3>1.4:  application strategy</h3>
 
-SMP underlies a strategy of cloned endpoint application threads each connecting populations of remote users to their data
+SMP underlies a scaled strategy of <a href="8million.html#purpose">application cloned endpoint threads</a> each connecting populations of remote users to their data
+
+<p>
+The new part of this strategy is large scale work already being delivered from minimal resources
+
+<p>
+Consequently scaling even further up with farms and networks of RTA1s requires comparatively few systems, because each low-cost RTA1 can do so much
 
 
 <a	name="fp"/>
