@@ -32,7 +32,7 @@ See also the licensing notice at the foot of this document
 	<ol>
 		<li><a href="#run">Network Trunk and Emulator Processes</a></li>
 		<li><a href="#trunk">Network Trunk Process by Platform</a></li>
-		<li><a href="#emu">RTA1 Emulator by Platform</a></li>
+		<li><a href="#emu">RTA1 Emulators and Run Flags</a></li>
 		<li><a href="#ORZ">Emulator Additional Run Flags</a></li>
 		<li><a href="#_dev_">Emulator Additional Device Arguments</a></li>
 		<li><a href="#client">Routing initialised at Client Console</a></li>
@@ -75,7 +75,7 @@ See also the licensing notice at the foot of this document
 RTA1 emulated machine is available for two POSIX platforms
 
 	<blockquote>
-	all OSX platforms from PowerPC to Catalina and later<br><br>
+	all OSX PowerPC and macOS Intel platforms<br><br>
 	any Intel PC on which you have installed <a href="#suse">openSUSE Linux</a> or another Linux
         </blockquote>
 
@@ -133,7 +133,23 @@ If your platform is OSX Catalina+ see how to clear downloads to run: <a href="#d
 <a	name="needed_u"/>
 <h4>2.2: Required Utilities and Path Setup</h4>
 <p>
-RTA1 uses many just-in-time assembles and does not run without separate product masmx7r3A
+
+RTA1 emulators are in rta/binary.smp
+
+<p>
+RTA1 utilities are in rta/binary.rta and are frequently required
+
+<p>
+Subdirectories in emulators and utilities paths are [ suse.x64 suse.x32 osx.x64 osx.x32 osx.ppc ]
+
+<p>
+Platform depending rta1 operation requires paths in $PATH for RTA1 emulators and utilities
+
+<p>
+Environmental names [ RTA_BINARY RTA_BIN_64 RTA_BIN_SMP ] are referenced in some shell scripts and optionally in $PATH
+
+<p>
+RTA1 uses many just-in-time assemblies and does not run without separate product masmx7r3A
 
 <p>
 RTA1 requires masmx7r3 Build 12 or later
@@ -142,13 +158,13 @@ RTA1 requires masmx7r3 Build 12 or later
 masmx7r3A Build 12 and Build 12-64 currently download from http://timmilescox.github.io/masmx/
 
 <p>
-OSX Catalina+ needs rta/binary.rta/osx.x64 and masmx.7r3/hosts/osx.x64 in $PATH
+masmx/masmx.7r3/masmx.7r3/hosts contains binaries in [ suse.x64 suse.x86 osx.x64 osx.x86 osx.ppc ]
 
 <p>
-Binaries for other platforms are osx.x86 osx.ppc suse.x86 and suse.x64
+Whichever runs on the platform is required in $PATH and sometimes its path has the variable name $MASMX
 
 <p>
-All components and utilities of RTA1 emulator and masmx are present for
+Components and utilities of RTA1 emulator and masmx are present for
 
 <ul	style="line-height:18pt;list-style-type:none">
 
@@ -159,12 +175,12 @@ All components and utilities of RTA1 emulator and masmx are present for
 	<li>64-Bit Intel Linux</li>
 
 </ul>
-Two directories are needed in environment and in $PATH
+Directories in environment and in $PATH may be
 
 <ul	style="line-height:24pt;list-style-type:none">
-	<li><a style="color:#0000FF">$RTA_BINARY</a> is in your environment and $PATH and is <a style="color:#0000FF">rta/binary.smp/{ osx.ppc | osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
-        <li><a style="color:#0000FF">$RTA_BIN_64</a> may be in your environment and $PATH and is <a style="color:#0000FF">rta/binary.smp/{ osx.x64 | suse.x64 }</a></li>
-	<li><a style="color:#0000FF">$MASMX</a> is in your environment and $PATH and is <a style="color:#0000FF">masmx.7r3/hosts/{ osx.ppc | osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
+	<li><a style="color:#0000FF">$RTA_BIN_SMP</a> may be in your environment and $PATH resolving <a style="color:#0000FF">rta/binary.smp/{ osx.ppc | osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
+        <li><a style="color:#0000FF">$RTA_BIN_64</a> or <a style="color:#0000FF">$RTA_BINARY</a> may be in your environment and $PATH resolving <a style="color:#0000FF">rta/binary.rta/{  suse.x64 | suse.x32 | osx.x64 | osx.x32 | osx.ppc }</a></li>
+	<li><a style="color:#0000FF">$MASMX</a> may be  in your environment and $PATH resolving <a style="color:#0000FF">masmx.7r3/hosts/{ osx.ppc | osx.x86 | osx.x64 | suse.x32 | suse.x64 }</a></li>
 </ul>
 
 masmx is necessary to run RTA1 at all. To generate RTA1 target applications this directory of scripts is additionally needed in $PATH
@@ -183,9 +199,10 @@ What goes in .bash_profile or .bashrc is like this
 	<a style="color:#FF0000">OSX x86-64</a>									<a style="color:#FF0000">Linux x86-64</a>
 	__________									____________
 
-	export	RTA_BINARY=$HOME/rta/binary.smp/osx.x64					export	RTA_BINARY=$HOME/rta/binary.smp/suse.x64
+	export	RTA_BIN_SMP=$HOME/rta/binary.smp/osx.x64				export	RTA_BIN_SMP=$HOME/rta/binary.smp/suse.x64
+	export	RTA_BIN_64=$HOME/rta/binary.rta/osx.64					export	RTA_BIN_64=$HOME/rta/binary.rta/suse.x64
 	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x64				export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x64
-	export	PATH=$PATH:$MASMX:$RTA_BINARY						export	PATH=$PATH:$MASMX:$RTA_BINARY
+	export	PATH=$PATH:$MASMX:$RTA_BIN_SMP:$RTA_BIN_64				export	PATH=$PATH:$MASMX:$RTA_BIN_SMP:$RTA_BIN_64
 	export	RTA_MBANKS=8	# default executable space 8 banks			export	RTA_MBANKS=8	# default executable space 8 banks
 				# [ 1..65536 ] * 262144 words							# [ 1 2 4 8 32 64 256 1024 2048 4096 8192 ]
 				# up to 16 gigawords								# * 262144 words
@@ -194,9 +211,10 @@ What goes in .bash_profile or .bashrc is like this
 	<a style="color:#FF0000">OSX x86</a>										<a style="color:#FF0000">Linux x86</a>
 	_______										_________
 
-	export	RTA_BINARY=$HOME/rta/binary.smp/osx.x86					export	RTA_BINARY=$HOME/rta/binary.smp/suse.x86
+	export	RTA_BIN_SMP=$HOME/rta/binary.smp/osx.x86				export	RTA_BIN_SMP=$HOME/rta/binary.smp/suse.x86
+	export	RTA_BINARY=$HOME/rta/binary.rta/osx.x86					export	RTA_BINARY=$HOME/rta/binary.rta/
 	export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.x86				export	MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/suse.x86
-	export	PATH=$PATH:$MASMX:$RTA_BINARY						export	PATH=$PATH:$MASMX:$RTA_BINARY
+	export	PATH=$PATH:$MASMX:$RTA_BIN_SMP:$RTA_BINARY				export	PATH=$PATH:$MASMX:$RTA_BIN_SMP:$RTA_BINARY
 	export	RTA_MBANKS=8	# default executable space 8 banks			export	RTA_MBANKS=8	# default executable space 8 banks
 				# [ 1 2 4 8 32 64 256 1024 2048 ]						# [ 1 2 4 8 32 64 256 1024 ]
 				# * 262144 words								# * 262144 words
@@ -207,9 +225,10 @@ What goes in .bash_profile or .bashrc is like this
 	<a style="color:#FF0000">OSX PowerPC</a>
 	___________
 
-	export  RTA_BINARY=$HOME/rta/binary.smp/osx.ppc	
+	export  RTA_BIN_SMP=$HOME/rta/binary.smp/osx.ppc
+	export	RTA_BINARY=$HOME/rta/binary.rta/osx.ppc
 	export  MASMX=$HOME/masmx.7r3/masmx.7r3/hosts/osx.ppc
-	export  PATH=$PATH:$MASMX:$RTA_BINARY
+	export  PATH=$PATH:$MASMX:$RTA_BIN_SMP:$RTA_BINARY
 	export  RTA_MBANKS=8	# default executable space 8 banks
 				# [ 1..1024 ] * 262144 words
 	
@@ -230,10 +249,10 @@ What goes in .bash_profile or .bashrc is like this
 <a	name="emus_by"/>
 <h4>2.3: SMP Emulators by Platform</h4>
 
-RTA1 Stepping 31.12.2022 is a reconstruction of supplied emulators for higher performance and Symmetric Multicore
+RTA1 emulators Stepping 31.12.2022 are newly constructed for higher performance and Symmetric Multicore
 
 <p>
-New SMP emulators using available core threads of the emulator platform are supplied in variants of [ <a style="color:#FF0000">1 2 4 8</a> ] cores
+New SMP emulators use available core threads of the emulator platform and are supplied in variants of [ <a style="color:#FF0000">1 2 4 8</a> ] cores
 
 <p>
 Previous emulators with identical performance to SMP * 1-core are in the download and identified in <a href="#emu_trad">Appendex E: Available Previous Emulators</a>
@@ -245,7 +264,7 @@ Supplied emulators are mostly for Intel 64-bit and 32-bit platforms running Linu
 The only RTA1 emulator supplied for macOS PowerPC is a completely new SMP * 1-core emulator. Project RTA1 will release SMP emulator variants [ <a style="color:#FF0000">2 4 8</a> ] for PowerPC subject to resourcing machine-code upgrades
 
 <p>
-Four RTA1 emulators for 64-bit Intel macOS RTA1 are supplied. Environment variable $RTA_SMP [ <a style="color:#FF0000">1 2 4 8</a> ] selects [ <a style="color:#0000FF">rta1_1 rta1_2 rta1_4 rta1_8</a> ] for execution
+Four RTA1 emulators for 64-bit Intel macOS RTA1 are supplied. Environment variable $RTA_SMP = [ <a style="color:#FF0000">1 2 4 8</a> ] selects [ <a style="color:#0000FF">rta1_1 rta1_2 rta1_4 rta1_8</a> ] for execution
 
 <p>
 These and macOS 32-bit PowerPC [ <a style="color:#0000FF">rta1_1</a> ] acquire storage per $RTA_MBANKS (262144-word blocks of RTA1 executable space) at startup
@@ -261,7 +280,7 @@ Depending on platform available emulators are
 <pre	style="font-size:11pt">
 
 	$RTA_BINARY/rta1_[ <a style="color:#FF0000">1 2 4 8</a> ].[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048</a> ]
-	32-bit Intel macOS and Linux	run as script rta/tgen.smp/ra	[-[O][R][Z][s]] rta1_<a style="color:#FF0000">1|2|4|8</a>.2048 are macOS only
+	32-bit Intel macOS and Linux	run as script rta/tgen.smp/ra	[-[O][R][Z][s]] rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">2048</a> are macOS only
 
 	$RTA_BIN_64/rta1_[ <a style="color:#FF0000">1 2 4 8</a> ].[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048 4096 8192</a> ]
 	64-bit Intel Linux		run as script rta/tgen.smp/xra	[-[O][R][Z][s]]
@@ -616,7 +635,7 @@ $ ./runL                <a style="color:#FF0000">-ozx</a>
 <div    style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
 
 
-$ cd rta/rta.run        <a style="color:#FF0000">rta/tgen.x64</a>
+$ cd rta/tgen.smp        <a style="color:#FF0000">rta/tgen.smp</a>
 $ ./ra <a style="color:#FF0000">-O[R]</a>		<a style="color:#FF0000">./r -O[R]</a>
 </div>
 <div    style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
@@ -682,12 +701,6 @@ runL flags can be reversed on the fly by typing them in during operation, for ex
 	-vu		# stop watching the traffic
 
 </pre>
-For emulator arguments see <a href="#debug">Debug Console</a>, <a href="#ORZ">Extra Run Flags</a> and <a href="#_dev_">additional device arguments</a>
-
-<p>
-The most efficient emulator is rta.run/ra for OSX Intel x86 and Linux Intel x86
-
-
 
 <a	name="trunk"/>
 <h4>6.2: Network Trunk Process by Platform</h4>
@@ -714,40 +727,38 @@ The network trunk process is a Berkeley Packet Filter application connecting RTA
 </pre>
 
 <a	name="emu"/>
-<h4>6.3: RTA1 Emulator by Platform</h4>
-
-RTA1 emulator -s option means start in <a href="#debug">debug</a> single step, for example to set a breakpoint
-
+<h4>6.3: RTA1 Emulators and Run Flags</h4>
 <pre	style="font-size:11pt;color:0000FF">
 
-	OSX x86 <a style="color:FF0000">and Linux x86</a>				<a style="color:FF0000">OSX x86-64</a> and Linux x86-64
-	________________				____________________
+	OSX x86 <a style="color:FF0000">and Linux x86</a>		<a style="color:FF0000">Linux x86-64</a>				macOS x86-64
+	________________		____________				____________________
 
-	cd rta/rta.run					cd rta/tgen.x64
-	./ra [-[O][R][Z][s]]				./r [-[O][R][Z][s]]
-	# ./r for older emulators
+	cd rta/tgen.smp			cd rta/tgen.smp				cd rta/tgen.smp
+	./ra [-[O][R][Z][s]]		./xra ./r [-[O][R][Z][s]]		./r [-[O][R][Z][s]]
 
 
 	<a style="color:FF0000">OSX PowerPC</a>
 	___________
 
-	cd rta/rta.run
-	./r [-[O][R][Z][s]]
-	# G4 Macs are single core and -O option is not advised
-	# that starves network trunk and other processes of scheduling
+	cd rta/tgen.smp
+	./rap [-[O][R][Z][s]]
+	# G4 Macs are single core and -O option is not advised pending emulator machine code upgrade
+
 
 </pre>
 
 On the first RTA1 emulator launch in platform uptime, a third shell must run <a href="#client">client/prun</a> to route communication with RTA1
 
 <p>
-See also <a href="#ORZ">./ra -ORZs</a> extra run flags and <a href="#_dev_"> extra /device/ arguments</a>
+See also <a href="#ORZ">./ra -ORZs</a> emulator run flags and <a href="#_dev_"> additional /device/ arguments</a>
 
 <a name="ORZ"/>
-<h4>6.4: Emulator Additional Run FLags</h4>
+<h4>6.4: Emulator Run FLags</h4>
 
 Additional run flags for the emulator command line may be passed from the emulator script call ./r[a] -ORZ
 <pre	style="font-size:11pt;color:0000FF">
+
+	-s	start in <a href="#debug">debug</a> single step, for example to set a breakpoint
 
 	-O	is recommended and allows RTA1 emulator to organise its own powersave
 		by having the decision when to yield to platform scheduling
@@ -878,7 +889,8 @@ Emulator option flags can be reversed in single step with \ command
 		>g
 
 </pre>
-It is possible to add extra options directly to the emulator command line inside the script rta.run/{ra|r} or tgen.x64/r
+Flags can also be added to the emulator command line inside the script <a style="color:#0000FF">tgen.smp/{ra|r|xra|rap}</a>.
+The emulator name is <a style="color:#0000FF">rta1_</a><a style="color:FF0000">1|2|4|8</a>[<a style="color:#0000FF">.memory_size</a>]
 
 <a	name="_dev_"/>
 
@@ -890,7 +902,7 @@ There is by default a network trunk and a file system in the supplied configurat
 Up to 61 more devices can be added on the emulator command line inside the start script
 
 <p>
-Device arguments can be added to the script call script rta.run/{ra|r} or tgen.x64/r. The number of possible arguments depends on the shell
+Device arguments can be added to the script call <a style="color:#0000FF">tgen.smp/{ra|r|xra|rap}</a>. The number of possible arguments depends on the shell
 
 
 <pre	style="font-size:11pt;color:#0000FF">
@@ -923,26 +935,37 @@ Array devices are assigned in banks of 262144 words. The largest possible on a 6
 Devices [ 0 1 2 ] are executable memory, default file system and default network trunk. These are always present
 
 <p>
-It is possible to state extra devices directly on the command line inside script rta.run/{ra|r} or tgen.x64/r
+It is possible to state extra devices directly on the command line inside script the script <a style="color:#0000FF">tgen.smp/{ra|r|xra|rap}</a>
 
 <p>
 The emulator command line inside the script is of this form
 <pre	style="font-size:11pt;color:#0000FF">
 
-	sudo $RTA_BINARY/tipa$RTA_MBANKS -li $RTA_IMAGE $RTA_FSIMAGE $1 $2 $3 $4 $5 $6 $7 $8 $9
+	sudo $RTA_BINARY/rta1_$RTA_SMP[.$RTA_MBANKS] -li $RTA_IMAGE $RTA_FSIMAGE $1 $2 $3 $4 $5 $6 $7 $8 $9
 
 </pre>
+or of this form
+<pre	style="font-size:11pt;color:#0000FF">
 
+	sudo $RTA_ENGINE -li $RTA_IMAGE $RTA_FSIMAGE $1 $2 $3 $4 $5 $6 $7 $8 $9
+
+</pre>
 Shells restrict the number of arguments that can pass from the script call to the command line typically to the approximate number shown
 
 <p>
 There are 61 optional devices numbered 3..63
 
 <p>
-The emulator is tipa<a style="background-color:#00FF00">$RTA_MBANKS</a> or tipt<a style="background-color:#00FF00">$RTA_MBANKS</a> or tipc<a style="background-color:#00FF00">$RTA_MBANKS</a>
+The emulator is
+<pre	style="font-size:11pt;color:000000">
 
-<p>
-$RTA_IMAGE is the RTA1 system load image
+	rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">$RTA_MBANKS</a>
+
+	or (macOS x86_64 and PowerPC) rta1_<a style="color:#FF0000">1|2|4|8</a>
+
+</pre>
+
+$RTA_IMAGE is the load image in RTA1 instruction code
 
 <p>
 
@@ -976,7 +999,7 @@ Here -s opts to start in the debug console
 <pre	style="font-size:11pt;color:0000FF">
  
 	$ ./ra -s
-	emulator ../binary.rta/osx.x86/tipa1
+	rta engine ../binary.smp/osx.x86/rta1_2.8
 	target system image ../target.rta/initial.app/sysimage.rom
 	file system image ../fsimages/rand7
 	RTA1 32-bit emulation stepping 01.01.2022
@@ -1087,11 +1110,12 @@ Cursor return prompts eight more words of register / memory / device display, en
 
 	d1::800			# display device array 1 block 0 location 2048
 
-	h			# display help 
-
 	g			# leave single step, run [to breakpoint]
 	g[page:]offset		# leave single step, run to new breakpoint
 	g0:0			# cancel breakpoint and leave single step, run
+
+				# Linux all emulators macOS IA32 all emulators. macOS x86_64 / OSX PowerPC emulators rta1_<a style="color:#FF0000">1|2|4|8</a><a style="color:#000000">A</a>
+	p[absolute_page:]offset[/words][,device]	# place TOUCHPOINT (breakpoint on write) on memory range
 
 				# add or subtract /device/ number in decimal 3..63 
 	/device/+banks		# system memory banks in decimal
@@ -2105,6 +2129,12 @@ cp -r copies a  directory structure. Option -X removes attribute extensions
 
 </pre>
 If you have more than one download with the same name in Downloads, the newest one will have some modified name like rta-1
+
+<p>
+Depending load medium and method, scripts copied to linux platforms may need the execute permission restored with chmod command
+
+<p>
+If this is the case the shell will say the commands are unknown until all scripts have execute permission restored
 
 
 <hr/>

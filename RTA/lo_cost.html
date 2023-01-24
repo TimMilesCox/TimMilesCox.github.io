@@ -35,13 +35,26 @@ RTA1 is a project aimed at low-power semiconductor, a freeware programmable proc
 Emulators run on personal computers for evaluation and RTA1 target software development
 
 <p>
+RTA1 emulators are now SMP using core threads available on the platform. Nearly all are in Intel machine code.<br>
+Thanks to Intel's icc compiler the remaining emulators derived from the C code-base are also rapid and cool-running
+
+<p>
+These new efficient emulations are closer to the RTA1 project's performance objectives for future semiconductor RTA1s
+
+<p>
+And certainly more suitable for a project about low power
+
+<p>
+The new emulators are twice as fast and the platforms work half as much
+
+<p>
 Newer emulators execute RTA1 instructions in a tight loop of platform machine-code
 
 <p>
 The result is double the performance of earlier RTA1 emulators and half the demand on platforms
 
 <p>
-These faster and cooler emulators are initially delivered for Intel Linux 32-Bit and 32-Bit-capable MacOS Intel platforms
+These faster and cooler emulators are initially delivered for Intel and macOS 64-bit and 32-Bit platforms
 
 <p>
 RTA1 project isn't about emulators, but efficiency is suitable for a project about performance from low power 
@@ -53,7 +66,7 @@ The density and efficiency of RTA1 target instruction code is extraordinary. Few
 TCP / UDP / IP are implemented in 4000 instructions
 
 <p>
-Instructions are simple yet  RTA1 has the largest floating-point number capability in the world
+Instructions are simple yet RTA1 has the largest floating-point number capability in the world
 
 <p>
 Floating point in  RTA1 emulator does not mean the floating capability of the emulator platform
@@ -70,31 +83,26 @@ The free download includes emulated machine, network interfacing, target softwar
 <p>
 The aim of RTA1 is large capability for very little energy. Like when you leave stuff running off a watch battery for a year or more
 
-<p>
-What are these new emulators for? Well the old ones are fast enough for emulation, but they're cycle-guzzlers written in gcc
-
-<p>
-These new emulations are written in machine code and are closer to the RTA1 project's performance objectives for future semiconductor RTA1s
-
-<p>
-And certainly more suitable for a project about low power
-
-<p>
-The new emulators are twice as fast and the platforms work half as much
 
 <a	name="where"/>
 <h2>2: Where are the New Emulators and how do you have Them?</h2>
 
-These new emulators are 32-bit Intel for Linux and Mac
+New fast emulators for 64-bit Intel Linux are run with script tgen.smp/xra
+
+<p>
+New fast emulators for 64-bit macOS Intel are run with script tgen.smp/r
+
+<p>
+New fast emulators for 32-bit Intel for Linux and macOS are run with script tgen.smp/ra
 
 <p>
 One shell has script runL executing in directory { rta/{ linux.net |  linuxnet.x64 | portal[.x64] }. That trunks network traffic between RTA1 and the world
 
 <p>
-Another shell for the emulated machine should be in directory rta/rta.run
+Another shell for the emulated machine should be in directory rta/tgen.smp
 
 <p>
-Script ./ra in rta.run starts an emulator in platform machine code
+Script tgen.smp/{ra|xra|r} starts an emulator in platform machine code
 
 <p>
 You need a third shell in rta/client to start routing to RTA1 with script ./prun
@@ -159,15 +167,13 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
 										# or to flip-cancel -zx in script runL
 										# -vu displays network traffic
 
-	<a style="color:#0000FF">machine-code written emulators</a>
-	tipa[ 1 2 4 8 32 64 256 1024 ]		start in rta/rta.run	./ra	[-[R][O][Z][s]]
+	<a style="color:#0000FF">32-bit machine-code written emulators</a>
+	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 ] start in rta/tgen.smp ./ra	[-[R][O][Z][s]]
 										# -R = resynchronise network trunk
 										# -O = (OSX) FIFO scheduling
 										# -Z = enter single-step on fault interrupt
 										# -s = start emulator in single step
 
-	<a style="color:#0000FF">emulators written in gcc</a>
-	tipt[ 1 2 4 8 32 64 256 1024 ]		start in rta/rta.run	./r	[-[R][O][Z][s]]
 
 	<a name="linux_x64" style="color:#FF0000"/>Linux 64-bit
 	____________</a>
@@ -175,8 +181,8 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
 	<a style="color:#0000FF">network service</a>
 	linuxnet				start in rta/linuxnet.x64  ./runL	[-[zx][vu]] 
 
-	<a style="color:#0000FF">64-bit emulators written in gcc</a>
-	tipc[ 1 2 4 8 32 64 256 1024 ]		start in rta/tgen.x64	./r	[-[R][O][Z][s]]
+	<a style="color:#0000FF">64-bit machine-code written emulators</a>
+	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 ]		start in rta/tgen.smp	./r	[-[R][O][Z][s]]
 
 
 
@@ -186,11 +192,9 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
         <a style="color:#0000FF">network service</a>
         osserv                                  start in rta/portal     ./runL	[-[zx][vu]]
 
-	<a style="color:#0000FF">machine-code written emulators</a>
-	tipa[ 1 2 4 8 32 64 256 1024 ]		start in rta/rta.run	./ra	[-[R][O][Z][s]]
+	<a style="color:#0000FF">32-bit machine-code written emulators</a>
+	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 2048 ]		start in rta/rta.run	./ra	[-[R][O][Z][s]]
 
-	<a style="color:#0000FF">emulators written in gcc</a>
-	tipt[ 1 2 4 8 32 64 256 1024 ]		start in rta/rta.run	./r	[-[R][O][Z][s]]
 
 
 
@@ -204,15 +208,15 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
 
 	osserv					start in rta/portal	./runL	[-[zx][vu]]
 
-	<a style="color:#0000FF">older emulators written in gcc</a>
-	tipc[ 1 2 4 8 32 64 256 1024 8192 65536 ] start as rta/tgen.x64/r	[-[R][O][Z][s]]
+	<a style="color:#0000FF">new fast emulators constructed with Intel compiler icc</a>
+	rta1_{ 1 2 4 8 1A 2A 4A 8A }		start as rta/tgen.smp/r	[-[R][O][Z][s]]
 	
 
 
-	You can mix 64-bit network service with 32-bit emulators and vice versa
+	64-bit network service runs with 32-bit emulators and vice versa
 	but recent OS X needs 64-bit binaries for anything. $PATH should include
 
-		rta/binary.rta/osx.x64
+		rta/binary.smp/osx.x64
 		
 		masmx.7r3/hosts/osx.x64
 
@@ -226,34 +230,30 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
 	<a style="color:#0000FF">machine-code written emulators</a>
 	
 
-	64-bit ARM and Intel machine-code written emulators
-	are expected to be the next project of RTA1 publisher
-	and are expected to draw large advantages from recent 64-bit features
-	like new platform instructions for streamlining endian issues
+	64-bit Intel machine-code written emulators (Linux)
+	and Intel icc-compiled fast emulators (macOS) are already released
 
-	<a style="color:#0000FF">older emulators written in gcc</a>
-	tipc[ 1 2 4 8 32 64 256 1024 8192 65536 ] start in rta/tgen.x64	./r	[-[R][O][Z][s]]
+	64-bit ARM emulators are expected to be RTA1 projects
 
 
 
-
-	<a name="osx_ppc" style="color:#FF0000"/>OSX PowerPC 32-Bit
-	__________________</a>
+	<a name="osx_ppc" style="color:#FF0000"/>OSX PowerPC 32-Bit New Emulator
+	_____________________________</a>
 
 
         <a style="color:#0000FF">network service</a>
         osserv					start in rta/portal     ./runL	[-[zx][vu]]
 
-
-	<a style="color:#0000FF">machine-code written emulators</a>
-
-	has none
-	this is the platform which would benefit most from a machine-code emulator
-	although it's not certain who still has this platform
-	RTA1 publisher hopes to assign resources to a PowerPC machine-code emulator
+	One RTA1 emulator is delivered for PowerPC platforms.
+	It is constructed on current SMP lines and distributed as single core only pending machine-code overhaul
 
 	<a style="color:#0000FF">older emulators written in gcc</a>
-	tipt[ 1 2 4 8 32 64 256 1024 ]		start in rta/rta.run	./r	[-[R][O][Z][s]]
+	rta1_1		start in rta/tgen.smp	./rap	[-[R][O][Z][s]]	
+
+
+
+	<a href="connect.html#emu_trad" style="color:#FF0000">previous emulators with similar performance to new SMP 1 * core</a> remain available in current download
+
 
 </pre>
 	

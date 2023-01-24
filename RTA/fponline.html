@@ -210,10 +210,9 @@ fponline client runs in a shell. It is run from directory rta/client because it 
 
 	_____________________________________________________________
 
-				# 64-bit emulator binaries are rta/tgen.x64/r -O[R]
-	cd	rta/rta.run	# server platform
-	./ra	-O[R]		# RTA1 instruction processor and memory
-				# OSX PowerPC binary is rta/rta.run/r [-R]
+	cd	rta/tgen.smp	# server platform
+	./ra	-O[R]		# 64-bit emulators are run with (Linux) tgen.smp/xra (macOS) tgen.smp/r
+				# OSX PowerPC binary is rta/tgen.smp/rap [-R]
 				# -R resyncs the network trunk if emulator is restarted
 				# -O should only be opted on multicore platforms
 	______________________________________________________________

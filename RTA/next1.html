@@ -8,10 +8,10 @@ RTA1 project is about a simple low-powered semicondictor device for embedded wor
 RTA1 instruction architecture is a path to ultra-efficient code as an alternative to high-revving power consumption
 
 <p>
-Is there some reason to do new and better PC emulations?
+Is there some reason to do new and better PC emulations? Yes, and they're already here
 
 <p>
-Well one reason is, PC platforms are capable of lending emulated RTA1 more efficiency than ever
+One reason is, PC platforms are capable of lending emulated RTA1 more efficiency than ever
 
 <p>
 RTA1 isn't a project about massive performance or about ever-better emulators, but there are things it can do with the advanced features of PCs
@@ -38,28 +38,39 @@ But why emulate anything? The 64-bit PC can do any arrays you like
 Maybe you'd like to do terawords of RTA1 192-bit floating numbers
 
 <p>
-You already can, with 64-bit RTA1 emulators written in GCC. You just tell the command line: maximum executable space plus 60 more similar arrays please
+You already can, with 64-bit RTA1 emulators. You just tell the command line: maximum executable space plus 60 more similar arrays please
+<a href="#almost" style="color:#FF0000">*</a>
 
 <p>
-So it's done anyway?
+This has recently become more efficient
 
 <p>
-RTA1 emulators written in <a href="lo_cost.html">machine code for 32-bit platforms</a> are a success worth carrying forward. They take less power and of course are more rapid. There doesn't seem to be a C compiler that can produce emulators as efficient and cool as that
+RTA1 emulators are now SMP using core threads available on the platform. Nearly all are in Intel machine code.<br>
+Thanks to Intel's icc compiler the remaining emulators derived from the C code-base are also rapid and cool-running
 
 <p>
-Newer and better 64-bit PCs are another success worth sharing
+These new efficient emulations are closer to the RTA1 project's performance objectives for future semiconductor RTA1s
 
 <p>
-RTA1 project ist scoping emulators in machine code specific to 64-bit platforms in order to benefit from advanced processor features
+And certainly more suitable for a project about low power
+
+<p>
+The new emulators are twice as fast and the platforms work half as much
+
+<p>
+Newer emulators execute RTA1 instructions in a tight loop of platform machine-code
+
+<p>
+The result is double the performance of earlier RTA1 emulators and half the demand on platforms
+
+<p>
+These faster and cooler emulators are initially delivered for Intel and macOS 64-bit and 32-Bit platforms
+
+<p>
+Newer and better 64-bit PCs are a success worth sharing
 
 <p>
 Functionality stays identical on RTA1 free emulators for platforms from PowerPC and Snow Leopard through to current OpenSUSE
-
-<p>
-The popularity and increasing performance of 64-bit platforms indicates a move to 64-bit machine-code emulators for RTA1, although the search continues for C compilers which produce comparably efficient machine code
-
-<p>
-The entire RTA1 emulation also exists in C, but the 32-bit 386-specific emulators in machine-code are faster and cooler running
 
 <p>
 It is not certain that integrators would install the maximum three terabytes of real memory on a semiconductor RTA1, but is possible to mount the entire RTA1 executable and array spaces on a virtual memory space. That's what's emulations running on PCs are doing already
@@ -69,5 +80,11 @@ Those 60+ array spaces are also interchangeable for <a href="kernel.html#file_sy
 
 <p>
 RTA1 target instruction code hardly takes any memory at all
+<br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br><br>
+<hr/>
+
+<p><a	name="almost"/>
+<a style="color:#FF0000">*</a> Almost. No platforms offer three terabytes of virtual space, but this will not impede many applications
+
 
 </div>
