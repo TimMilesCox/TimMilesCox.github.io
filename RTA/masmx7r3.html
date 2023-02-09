@@ -145,6 +145,9 @@ This document relates RTA1 register model and instructions by functional group t
 Architectural and instruction definitions are cross-referenced by link to the
 <a href="rta.html"> RTA1 Processor Programmable Architecture Specification</a>
 
+<p>
+See also <a href="scripts.html">Building Applications</a>
+
 <pre	style="font-size:12pt">
 
 <div	style="position:relative;left:50pt;width:638pt;height:250pt;border-radius:15pt;background-color:#0000FF;color:#FFFFFF">
@@ -236,8 +239,8 @@ masmx default syntax elements are used for RTA1
 	$quote			'"'	. "quoted" is a string in current bytes and data code
 					. +"quoted" forces the token to be a label reference. See . <a href="#labr">+"label_reference"<a>
 
-					. ' apostrophe may bound a right justified token [&plusmn;]'abc'
-					. up to 192 bits in current bytes and data code. See <a href="#qnu">+'values'</a> 
+					. ' apostrophe may bound a right justified value expressed [&plusmn;]'abc'
+					.   up to 192 bits in size per current $byte size and data code. See <a href="#qnu">+'values'</a> 
 
 
 </pre>
@@ -267,12 +270,18 @@ A label starts in column 1 and ends in whitespace. A label may contain letters, 
 starts with a letter or _?!@
 
 <p>
-When a label is referenced, the substring  divider : may be
+When a label is referenced, the substring divider : may be
 <ul	type="none">
 
 	<li>a character in the label</li>
 
-	<li>a join in a <a href="#structure">structure</a></li>
+	<li>a join in a <a href="#structure">structure</a> reference</li>
+	<hr>
+	<li>other than label reference : also joins</li>
+	<ul>
+		<li>graphic and nongraphic components of <a href="#strings">strings</a></li>
+		<li>substring references <href="#proc">Macro Language Procedures and Functions</a>
+
 
 	<li>a divider between <a href="#strings">text "sub":"strings"</a> and "intervening":_HORIZONTAL_TAB:"<- non_graphics ->":_LINE_FEED</li>
 
@@ -337,7 +346,7 @@ Without case-sensitive option -k all labels and references are translated to upp
 
 <p>
 $ in column one is a program section control called a location counter with syntax
-<b>$(number[:attributes])</b> See <a href="#locators">Appendix B: Application Memory Map</a>
+<b>$(number[:attributes])</b> See <a href="scripts.html#locators">Application Memory Map</a>
 
 <p>
 A label starting with $ is declared in quotes and may be referenced without quotes
@@ -1206,6 +1215,9 @@ These library calls compute 192-bit floating values:
 
 <a	name="literals"/>
 <h3>4.2: Literals</h3>
+
+See also <a href="scripts.html#literal_tables">Literal Tables</a> and
+<a href="scripts.html#locators">Application Memory Map</a>
 
 <p>
 A literal is a constant declared as an operand and

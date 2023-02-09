@@ -1050,7 +1050,11 @@ The incrementer is restarted by writing Port 76
 	74	XI_PENDING$	external interrupts pending readable indications
 	75	XI_ACK$		external interrupts acknowledge writeable lines	
 	76	INC$START	high-frequency timer incrementer restart write
-	77	CORE_SOCKET$	core position on schematic	
+
+	77	CORE_SOCKET$	core position index on schematic	
+	73	CORE_PIN$	1 << CORE_SOCKET$
+	125	CORES_MASK$	1 << CORE_SOCKET$ index of all instruction processors present
+
 	78	MCAST_PENDING$	cores -> core alert multicast pending interrupt indications
 	79	MCAST_TO$	core -> core[s] alert multicast write (preemption, dayclock update, process exit->threads arrest)
 	80..87	I$DATA		external devices data / status inputs
@@ -8001,7 +8005,7 @@ See <a href="#iset">Lookup Panel</a> to find an instruction by name
 	<i>Appendix A: SIMD and Instruction Repeat
 	
 	Repeat Execute feature in all RTA1 emulators
-	Stepping 01.01.2022 [USA 01.01.2022]</i></div>
+	Stepping 14.02.2023 [USA 02.14.2023]</i></div>
 	<div	style="font-size:12.75pt;color:0000FF">
 	<a href="#A1" style="text-decoration:none;color:0000FF">A1	Description</a>
 		<a href="#A1" style="text-decoration:none;color:0000FF">A1.1	Outline</a>
