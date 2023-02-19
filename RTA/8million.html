@@ -440,7 +440,7 @@ Largest memory size for an emulator on Linux 64-bit Intel is 8192 banks or two g
 <pre	style="font-size:12pt;color:#000000">
 
 	$ cd tgen.smp
-	$ ./xra -ZO[R]	/3/#70700010
+	$ ./xra -Z[R]	/3/#70700010
 
 </pre>
 
@@ -449,7 +449,7 @@ Largest memory size for an emulator on macOS 64-bit Intel is 65536 banks or 16 g
 <pre	style="font-size:12pt;color:#000000">
 
 	$ cd tgen.smp
-	$ ./r -ZO[R]	/3/#70700004
+	$ ./r -Z[R]	/3/#70700004
 
 </pre>
 
@@ -467,7 +467,7 @@ The largest RTA1 emulator on 32-bit Linux is the 256-Megaword tipa1024 and suppo
 	$ export RTA_MBANKS=8|32|64|256|1024
 
 	$ cd tgen			
-	$ ./ra -ZOR /3/#70700010
+	$ ./ra -ZR /3/#70700010
 
 </pre>
 
@@ -479,7 +479,7 @@ The largest RTA1 emulator on 32-bit MacOS is the half-gigaword tipa2048 and supp
 	$ export RTA_MBANKS=8|32|64|256|1024|2048
 
 	$ cd tgen.smp
-	$ ./ra -ZOR /3/#70700004	
+	$ ./ra -ZR /3/#70700004	
 
 </pre>
 
@@ -566,7 +566,7 @@ The largest RTA1 emulation on Linux Intel is run with script rta/arta/xra and ca
 
 <pre	style="font-size:12pt;color:#000000">
 
-	./xra -ZO[R] /3/#70700010
+	./xra -Z[R] /3/#70700010
 
 </pre>
 
@@ -577,7 +577,7 @@ The largest RTA1 emulation on macOS Intel is run with script rta/arta/ar8 and ca
 
 <pre	style="font-size:12pt;color:#000000">
 
-	./ar8 -ZO[R] /3/#70700004
+	./ar8 -Z[R] /3/#70700004
 
 </pre>
 
@@ -593,7 +593,7 @@ Largest 32-bit emulator for Linux Intel has 1024 storage banks of 262144 words
 
 	$ cd arta.run
 	$ export RTA_MBANKS=8|32|64|256|1024
-	$ ./mra -ZO[R] /3/#70700010
+	$ ./mra -Z[R] /3/#70700010
 
 </pre>
 
@@ -603,7 +603,7 @@ Largest 32-bit emulator for macOS Intel has 2048 storage banks of 262144 words
 
 	$ cd arta.run
 	$ export RTA_MBANKS=8|32|64|256|1024|2048
-	$ ./mra	-ZO[R] /3/#70700004
+	$ ./mra	-Z[R] /3/#70700004
 
 </pre>
 

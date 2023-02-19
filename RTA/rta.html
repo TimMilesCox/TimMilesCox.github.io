@@ -1046,7 +1046,10 @@ The incrementer is restarted by writing Port 76
 	64			actual instruction frame highest page		see <a href="#go">go</a> <a href="#call">call</a> <a href="#fret">fret</a> <a href="#ii">ii</a> <a href="#ir">ir</a> <a href="#sabr">sabr</a>
 	65			thread control block pointer
 	66:71			kernel data window pointers
-	72			<a name="thresho"/>application lower threshold page pointer	see <a href="#go">go</a> <a href="#call">call</a> <a href="#fret">fret</a> <a href="#ii">ii</a> <a href="#ir">ir</a> <a href="#sabr">sabr</a>
+	72	application$L	<a name="thresho"/>application lower threshold page pointer	see <a href="#go">go</a> <a href="#call">call</a> <a href="#fret">fret</a> <a href="#ii">ii</a> <a href="#ir">ir</a> <a href="#sabr">sabr</a>
+				system images contain ISRs below page index APPLICATION_L
+				kernel applications and all applications and libraries start at page index APPLICATION_L
+
 	74	XI_PENDING$	external interrupts pending readable indications
 	75	XI_ACK$		external interrupts acknowledge writeable lines	
 	76	INC$START	high-frequency timer incrementer restart write

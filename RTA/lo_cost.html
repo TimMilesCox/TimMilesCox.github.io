@@ -168,9 +168,10 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
 										# -vu displays network traffic
 
 	<a style="color:#0000FF">32-bit machine-code written emulators</a>
-	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 ] start in rta/tgen.smp ./ra	[-[R][O][Z][s]]
+	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 ] start in rta/tgen.smp ./ra	[-[R][Z][s]]
 										# -R = resynchronise network trunk
-										# -O = (OSX) FIFO scheduling
+										# -O = FIFO scheduling. Use only with
+										#      an abundance of platform core threads
 										# -Z = enter single-step on fault interrupt
 										# -s = start emulator in single step
 
@@ -182,7 +183,7 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
 	linuxnet				start in rta/linuxnet.x64  ./runL	[-[zx][vu]] 
 
 	<a style="color:#0000FF">64-bit machine-code written emulators</a>
-	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 ]		start in rta/tgen.smp	./r	[-[R][O][Z][s]]
+	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 ]		start in rta/tgen.smp	./r	[-[R][Z][s]]
 
 
 
@@ -193,7 +194,7 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
         osserv                                  start in rta/portal     ./runL	[-[zx][vu]]
 
 	<a style="color:#0000FF">32-bit machine-code written emulators</a>
-	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 2048 ]		start in rta/rta.run	./ra	[-[R][O][Z][s]]
+	rta1_{ 1 2 4 8}.[ 1 2 4 8 32 64 256 1024 2048 ]		start in rta/rta.run	./ra	[-[R][Z][s]]
 
 
 
@@ -209,7 +210,7 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
 	osserv					start in rta/portal	./runL	[-[zx][vu]]
 
 	<a style="color:#0000FF">new fast emulators constructed with Intel compiler icc</a>
-	rta1_{ 1 2 4 8 1A 2A 4A 8A }		start as rta/tgen.smp/r	[-[R][O][Z][s]]
+	rta1_{ 1 2 4 8 1A 2A 4A 8A }		start as rta/tgen.smp/r	[-[R][Z][s]]
 	
 
 
@@ -248,7 +249,7 @@ Note 64-bit Linux platforms may need a 32-bit runtime download
 	It is constructed on current SMP lines and distributed as single core only pending machine-code overhaul
 
 	<a style="color:#0000FF">older emulators written in gcc</a>
-	rta1_1		start in rta/tgen.smp	./rap	[-[R][O][Z][s]]	
+	rta1_1		start in rta/tgen.smp	./rap	[-[R][Z][s]]	
 
 
 
