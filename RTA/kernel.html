@@ -2178,28 +2178,27 @@ contains
 <a	name="fs_nfs"/>
 <h3>Hc: NFSv3 Remote Files</h3>
 
-RTA1 is an NFSv3 client of NFS servers
+RTA1 is an NFSv3 client of NFS servers. Client API is described here. See also <a href="connect.html#nfsv3_server">NFSv3 Server Configuration</a>
 
 <p>
 Remote files are accessed with NFS version 3 over TCP
 
 <p>
-The handle-based client API presents remote files to RTA1 applications either as octet arrays or as 24-bit word arrays according to application requirement
+The handle-based client API presents remote files to RTA1 applications either as octet arrays (open option O_OCTET) or as 24-bit word arrays
+<pre	style="font-size:12pt">
+
+	c	(open)	path,,xi	[ O_OCTET,,xi ]
+
+</pre>
+<p>
+Server nfsd is TCP port 2049. RTA1 client requires server mountd to be TCP port 1023
 
 <p>
-Server nfsd is TCP port 2049 and server mountd is required to be TCP port 1023
+The remote open object is the leaf file by name. The remote mount object is the containing directory
 
 <p>
-The remote mount object is in all cases the entire directory part of the path
+Path strings contain encoded information to bind the file to the remote directory
 
-<p>
-The containing directory handle is obtained in one server interaction and the NFS file handle in a second interaction
-
-<p>
-Remote file open path strings contain encoded information to bind the file handle to remote data
-
-<p>
-Macro language like this encodes that information
 
 <pre    style="font-size:12pt">
 
@@ -2212,132 +2211,134 @@ SUSE_MOUNTD     $equ    $neta(192.168.0.14:1023)
 
 MACMINI_NFSD...
 
-<a style="color:#0000FF">suse</a>		mount_path      SUSE_NFSD::<a style="color:#0000FF">mount_suse</a>:"EXAMPLE_FILENAME"
+</pre>
+
+Definitions and path strings can be collected separately in a shared storage container called <a href="#dialplan">dialplan</a>
+
+<p>
+Some more example of remote path definitions: mount points and files are both defined with macro <a style="color:#0000FF">mount_path</a>
+
+<pre	style="font-size:12pt">
+
+<a style="color:#0000FF">suse</a>		mount_path      SUSE_NFSD::<a style="color:#0000FF">mount_suse</a>:"FILE_NAME"
 <a style="color:#0000FF">mount_suse</a>      mount_path      SUSE_MOUNTD::<a style="color:#0000FF">general_permissions</a>:"/home/laclimpide/online_files/"
 
                 # protocol NFSv3
                 # server must have mountd bound to TCP port 1023
 
-macmini			mount_path...
-mount_macmini		mount_path..
+macmini		mount_path	MACMINI_NFSD::<a style="color:#0000FF">mount_mcmini</a>:"file_name"
+<a style="color:#0000FF">mount_macmini</a>	mount_path	MACMINI_MOUNTD::<a style="color:#0000FF">general_permissions</a>:"/directory_path..."
 
-airbook			mount_path...
-mount_airbook		mount_path...
+macmini_wifi	mount_path	MACMINI_WIFI_NFSD::MACMINI_NFSD::<a style="color:#0000FF">mount_mcmini</a>:"file_name"
+<a style="color:#0000FF">mount_mcmini_wifi</a> mount_path	MACMINI_WIFI_MOUNTD::<a style="color:#0000FF">general_permissions</a>:"/directory_path..."
 
-platform		mount_path...
+airbook		mount_path	AIRBOOK_NFSD::<a style="color:#0000FF">mount_airbook</a>:"file_name"
+<a style="color:#0000FF">mount_airbook</a>	mount_path	AIRBOOK_MOUNTD::<a style="color:#0000FF">general_permissions</a>:"/directory_path..."
 
-<a style="color:#0000FF">general_permissions</a>	authunix	UID, GID
+platform	mount_path	PLATFORM_NFSD::<a style="color:#0000FF">mount_platform</a>:"file_name"
+<a style="color:#0000FF">mount_platform</a>	mount_path	PLATFORM_MOUNTD::<a style="color:#0000FF">general_permissions</a>:"/directory_path..."
 
-</pre>
-
-<p>
-The permissions tuple is normally only required for writing remote files. It is left out by typing <a style="color:#0000FF">:::</a> where the example shows <a style="color:#0000FF">::general_permissions:</a>
-
-<p>
-Command <a style="color:#0000FF">dialp</a> encodes a global dialplan of <a style="color:#0000FF">mount_path</a> macros so that applications can bind to remote data dynamically
-
-<pre	style="font-size:12pt">
-
-		$include	[../]remotefs/dialplan.def
-
-$(0:34*4096)
-
-                . the names given to each NFS server are in this list
-
-                mount_list      suse suse_ro macmini macwifi airbook
+<a style="color:#0000FF">general_permissions</a>	authunix	<a style="color:#0000FF">UID, GID</a>
 
 </pre>
-<a	name="dialp"/>
-
-Macro <a style="color:#0000FF">mount_list</a> at absolute address 022000<sub>16</sub> constructs a lookup table of speed-dial names
-
 
 <p>
-A working example is in rta/target.rta/dialplan/dialplan.msm
+The permissions tuple is normally only required for writing remote files. It is left out by typing <a style="color:#0000FF">:::</a> where the examples shows <a style="color:#0000FF">::general_permissions:</a>
 
-<pre	style="font-size:12pt">
+<a      name="dialplan"/>
+<h3>dialplan</h3>
 
-	cd rta/target.rta/dialplan/
-	dialp dialplan
-	cd ../..
-	./mrand7
-
-</pre>
-mrand7 includes the constructed table in File System Device 1
+dialplan collects remote mount paths in system-global shared storage instead of constructing them in the application
 
 <p>
-The dial plan must load at some time after system start. Calling kernel routine <a style="color:#0000FF">dialplan_online</a> at application start ensures that
-<pre	style="font-size:12pt">
-
-	call	(dialplan_online)
-
-</pre>
-Kernel routine speed_dial primes a six_word preamble in the path name
-
-<p>
-The server name matches a host name tabled by command <a href="#dialp">dialp</a>
+If the location and name of the remote file are known when the applicaiton is contructed, the file may be opened with a data constant pathname referencing the mount path in dialplan
 <pre	style="font-size:12pt">
 
 
-	$(3:03000)
-	host	"suse":0:0
-	path	"__REMOTE_FS_SERVER":"filename"
+	$(3)
+	myfilepath	mount_path	HOSTNAME_NFSD::<a style="color:#FF0000">mount_hostname</a>:"my_file"
 
 	$(0)
+			call	(dialplan_online)		# check alignement of dialplan build / application build
 
-		c	(speed_dial)	host,,long	path,,xi
-		c	(open)	path,,xi	FLAGS,,xi
+			c	(open)	path,,xi	[ O_OCTET ... ,,xi ]
+
+			jna	not_quite
+			sa	store_socket			# function result is in a
+
 
 </pre>
-If the 6-character abbreviated server name is read dynamically, the second storage word should be zeroed before reading if any servers have been given shorter names than four characters. If the filename is read dynamically, it must be read to pathname + 6 words as shown above. There are exactly 18 path character positions before the file name
+Call <a style="color:#0000FF">dialplan_online</a> checks that dialplan image has been loaded from filestore
+
+<p>
+dialplan is loaded when first in system runtime requested
+
+<p>
+Linkage alignment between dialplan build and application build is checked at the same time
+
+<p>
+The global plan of NFSv3 servers is defined in rta/target.rta/dialplan/dialplan.msm and constructed with BUILD.ME
+
+<p>
+rta/target.rta/dialplan/dialplan.msm is freely to be changed for actual network servers and serves as a startpoint example
+
+<p>
+In case of mishap dialplan.msm can be restored from identical file dialplan_example.msm
+
+<p>
+dialplan.ram is included offline in file system device 1 with script rta/mrand7. RTA1 is restarted to load the newly constructed file system
+
+<p>
+If remote host and filenames are dynamic then instead of <a style="color:#0000FF">dialplan_online</a>, <a style="color:#0000FF">speed_dial</a> is called to update the path string and assure linkage alignment
+
+<p>
+Applications reference dialplan with function speed_dial which writes the first six words of the path string with information for file_open function
+
 <pre	style="font-size:12pt">
 
-	z	host+1								. in case a server name < 4 bytes long is read
-	sscanf	input	$3("%:@%s":0),,xi	path+6,,xi	host,,xi	. file@host for example
-	c	(speed_dial)	host,,long	path,,xi
-	c	(open)	path,,xi	FLAGS,,xi	
+	c	(speed_dial)	host_name,,long	path,,xi
+	jna	no_hit
+	c	(open)	path,,xi	[ options,,xi ]
 
 </pre>
-At least four bytes of constant server names must be specified so that the name occupies six character positions. Two padding characters are shown with <a style="color:#0000FF">"suse":0:0</a> to emphasise that padding must be zero
+The first two words of the host name for search are used
 
 <p>
-masmx default padding value is space. That is changed to zero either with assembly flag -z or -c but not both
+If very short host names for search are read dynamically, it may be useful to zero the second buffer word before reading
 
+<p>
+If any names are hard-coded and assembled, assembly flag -c or -z is needed to ensure zero-padding to data word, but not -cz which cancels zero-padding
+
+<p>
+Application places the file name in words [ 6..] of the path string <i>before</i> calling speed_dial
+
+
+<p>
+It is also possible to use speed_dial routine with a private dialplan consisting remote paths declared in the application
+
+<p>
+The private lookup plane is a third argument to speed_dial routine
 <pre	style="font-size:12pt">
 
-
-	$set_option	"z"				$set_option	"c"
-
-	$(3:03000)					$(0x003000)
-
-	host    "suse"					host	"suse"
+	c	(speed_dial)	host_name,,long	path,,xi	private_list,,xi
+	jna	no_hit
+	c	(open)	path,,xi	[ options  ]
 
 </pre>
-
-
-
-The global dialplan is only in the address space of kernel routines <a style="color:#0000FF">dialplan_online</a> and <a style="color:#0000FF">speed_dial</a>
-
-<p>
-It is possible to have a private dialplan in application code. It is uncritical what storage addresses the encoded data occupies
-
-<p>
-A mount list in application space is assembled with macro <a style="color:#0000FF">pmount_list</a> and its address is the optional third argument to (speed_dial)
+The private lookup plan is assembled in application space instead of system-global shared space
 
 <pre	style="font-size:12pt">
+
+		$include	[../]t77/ip.def
+		$include	[../]fs/mntaddrs.def
+		$include	[../]rpc/rpc.def
+		$include	[../]remotefs/dialplan.def
 
 $(3)
-	
-	$include	[../]remotefs/dialplan.def
 
-<a style="color:#FF0000">dialups</a>	<a style="color:#0000FF">pmount_list</a>	suse macmini airbook
-
-$(0)
-
-	c	(speed_dial)	hostname,,long	 path,,xi   <a style="color:#FF0000">dialups</a>,,xi
+private_list	mount_list      suse suse_ro macmini macwifi airbook
 
 </pre>
-A mount list in application space references a bindings table in application space, not anything in the loadable global dial plan
 
 <a      name="fs_xs"/>
 <h3>Hd: RAM / ROM Core File Systems in Executable Space</h3>

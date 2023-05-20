@@ -966,7 +966,7 @@ Literals in the iframe must be in words 256..4095 of the iframe. Lower operand a
 The construct <a style="color:#0000FF">$do  $<256),$(0:256)</a> at iframe end forces location counter to 256 if it has not reached 256, so that the automatic literal table is in memory address space
 
 <p>
-If instructions + literals > 4096, literals need to be placed in front of instructions, not after
+If instructions + literals > 4096 words, literals need to be placed in front of instructions, not after
 
 <p>
 Macro <a style="color:#0000FF">$lits4</a> places the default literal table in a new section $(4) starting at address 256 
