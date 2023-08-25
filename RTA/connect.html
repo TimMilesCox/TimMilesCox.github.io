@@ -280,16 +280,16 @@ Depending on platform available emulators are
 <pre	style="font-size:11pt">
 
 	$RTA_BINARY/rta1_[ <a style="color:#FF0000">1 2 4 8</a> ].[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048</a> ]
-	32-bit Intel macOS and Linux	run as script rta/tgen.smp/ra	[-[O][R][Z][s]] rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">2048</a> are macOS only
+	32-bit Intel macOS and Linux	run as script rta/tgen.smp/ra	[-[R][Z][s]] rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">2048</a> are macOS only
 
 	$RTA_BIN_64/rta1_[ <a style="color:#FF0000">1 2 4 8</a> ].[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048 4096 8192</a> ]
-	64-bit Intel Linux		run as script rta/tgen.smp/xra	[-[O][R][Z][s]]
+	64-bit Intel Linux		run as script rta/tgen.smp/xra	[-[R][Z][s]]
 
 	$RTA_BIN_64/rta1_[ <a style="color:#FF0000">1 2 4 8</a> ]
-	64-bit Intel macOS		run as script rta/tgen.smp/r	[-[O][R][Z][s]]
+	64-bit Intel macOS		run as script rta/tgen.smp/r	[-[R][Z][s]]
 
 	$RTA_BINARY/rta1_1
-	32-bit PowerPC OSX		run as script rta/tgen.smp/rap	[-[O][R][Z][s]]
+	32-bit PowerPC OSX		run as script rta/tgen.smp/rap	[-[R][Z][s]]
 
 </pre>
 
@@ -636,7 +636,7 @@ $ ./runL                <a style="color:#FF0000">-ozx</a>
 
 
 $ cd rta/tgen.smp        <a style="color:#FF0000">rta/tgen.smp</a>
-$ ./ra <a style="color:#FF0000">-O[R]</a>		<a style="color:#FF0000">./r -O[R]</a>
+$ ./ra <a style="color:#FF0000"> [-R]</a>		<a style="color:#FF0000">./r -[-R]</a>
 </div>
 <div    style="right:0pt;width:250pt;font-size:10pt;border-radius:5pt;color:#00FF00;background-color:#000000C0">
 
@@ -658,10 +658,10 @@ $ sudo oconsole
   |_____________________________________________________________________________________|
   |											|
   |  2nd shell: RTA1 emulator:	$ cd rta/tgen.smp					|
-  |  32-bit Linux / macOS :	$ ./ra  [-[O][R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">memory</a>	|
-  |  64-bit Linux Intel	  :	$ ./xra [-[O][R][Z][s]] # emulator rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">memory</a>	|
-  |  64-bit macOS Intel	  :	$ ./r   [-[O][R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1|2|4|8</a>		|
-  |  32-bit OSX PowerPC	  :	$ ./rap [-[O][R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1</a>		|
+  |  32-bit Linux / macOS :	$ ./ra  [-[R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">memory</a>	|
+  |  64-bit Linux Intel	  :	$ ./xra [-[R][Z][s]] # emulator rta1_<a style="color:#FF0000">1|2|4|8</a>.<a style="color:#0000FF">memory</a>	|
+  |  64-bit macOS Intel	  :	$ ./r   [-[R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1|2|4|8</a>		|
+  |  32-bit OSX PowerPC	  :	$ ./rap [-[R][Z][s]]	# emulator rta1_<a style="color:#FF0000">1</a>		|
   |_____________________________________________________________________________________|
   |											|
   |  3rd shell:routing setup	$ cd rta/client						|
@@ -734,16 +734,14 @@ The network trunk process is a Berkeley Packet Filter application connecting RTA
 	________________		____________				____________________
 
 	cd rta/tgen.smp			cd rta/tgen.smp				cd rta/tgen.smp
-	./ra [-[O][R][Z][s]]		./xra ./r [-[O][R][Z][s]]		./r [-[O][R][Z][s]]
+	./ra [-[R][Z][s]]		./xra ./r [-[R][Z][s]]		./r [-[R][Z][s]]
 
 
 	<a style="color:FF0000">OSX PowerPC</a>
 	___________
 
 	cd rta/tgen.smp
-	./rap [-[O][R][Z][s]]
-	# G4 Macs are single core and -O option is not advised pending emulator machine code upgrade
-
+	./rap [-[R][Z][s]]
 
 </pre>
 
@@ -753,21 +751,28 @@ On the first RTA1 emulator launch in platform uptime, a third shell must run <a 
 See also <a href="#ORZ">./ra -ORZs</a> emulator run flags and <a href="#_dev_"> additional /device/ arguments</a>
 
 <a name="ORZ"/>
-<h4>6.4: Emulator Run FLags</h4>
+<h4>6.4: Emulator Additional Run Flags</h4>
 
-Additional run flags for the emulator command line may be passed from the emulator script call ./r[a] -ORZ
+Additional run flags for the emulator command line may be passed from the emulator script call ./r[a] -[O]RZ
 <pre	style="font-size:11pt;color:0000FF">
 
 	-s	start in <a href="#debug">debug</a> single step, for example to set a breakpoint
 
-	-O	is recommended and allows RTA1 emulator to organise its own powersave
-		by having the decision when to yield to platform scheduling
+	-O	allows RTA1 emulator to organise its own powersave
+		by itself deciding when to yield to platform scheduling
+
+		-O should only be opted with an abundance of available platform core threads
+		and is otherwise no advantage and may degrade emulator and platform performance
 
 	-R	in-band resynchronise request to runL to reinititalise the network trunk
-		saves an operational stop and start of runL
+		saves an operational stop and start of {linux.net|linuxnet.x64|portal[.x64]}/runL
+
+		use -R if restarting RTA1 after exit command <a style="color:#000000"> ..</a>
+
+					rta/tgen.smp $ <a style="color:#000000">{ra|xra|r|rap} -R[Zs]</a> 
 
 	-Z	enter debug single step when thread faults
-		before thread is  sidelined with status 100000<sub>16</sub>
+		before thread is sidelined with status 100000<sub>16</sub>
 
 		on ISR fault without application cause: -Z flag switches single step before load image restart
 
@@ -876,9 +881,17 @@ Additional run flags for the emulator command line may be passed from the emulat
 		see section <a href="connect.html#debug">7: Debug Console</a> for everything that can be displayed
 		command g lets the system continue to sideline the faulting thread
 
-		application tal is for testing instruction behaviour and library
-		memory pages reserved for ISRs may only be called by interrupt
+		application tal is for testing instruction behaviour and library code
 
+		memory pages reserved for ISRs may only be called
+
+			by interrupt including <a href="rta.html#ii">service call internal interrupt instruction ii</a>. Applications
+			may make <a href="rta.html#ii">ii</a> service calls although some ISrs are not available to all applications
+
+			or from ISRs using <a href="rta.html#go">go</a> and <a href="rta.html#call">call</a> instructions to reach common blocks of interrupt code
+			ISRs also make <a href="rta.html#ii">ii</a> service calls to gated ISRs not directly available to applications
+
+		applications are not permitted to <a href="rta.html#go">go</a> to or <a href="rta.html#call">call</a> a lower page than <a href="rta.html#thresho">APPLICATION_THRESHOLD</a>
 
 </pre>
 Emulator option flags can be reversed in single step with \ command
@@ -2099,10 +2112,10 @@ Depending on platform available emulators are
 <pre	style="font-size:11pt">
 
 	$RTA_BINARY/tipa[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048</a> ]						tipa<a style="color:#0000FF">2048</a> is macOS only
-	# 32-bit Intel OSX and Linux	run as script rta/rta.run/ra	[-[O][R][Z][s]]
+	# 32-bit Intel OSX and Linux	run as script rta/rta.run/ra	[-[R][Z][s]]
 
 	$RTA_BIN_64/tipc[ <a style="color:#0000FF">1 2 4 8 32 64 256 1024 2048 4096 8192 32768 65536</a> ]			tipc[ <a style="color:#0000FF">32768 65536</a> ] are macOS only
-	# 64-bit Intel OSX and Linux	run as script rta/tgen.x64/r	[-[O][R][Z][s]]
+	# 64-bit Intel OSX and Linux	run as script rta/tgen.x64/r	[-[R][Z][s]]
 
 </pre>
 
