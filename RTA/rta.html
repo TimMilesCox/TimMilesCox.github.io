@@ -1320,9 +1320,6 @@ PSR flags 15..0 are directly application programmable with instructions <b>on</b
 Flag 23 <b>I</b> is on during an interrupt: <a href="#register">accumulator, index, mask and counter registers</a> are in the range 128..255. Application registers are 0..127.
 
 <p>
-All 256 registers  are absolutely addressable like storage operands, but <a href="#register">applications cannot write interrupt registers</a>.
-
-<p>
 Flags 18..16 <b>iii</b> are the interrupt mask. Both applications and ISRs can swap and restore the
 interrupt mask with the <b>Switch Interrupt Mask</b> instruction <b>sim</b>
 
