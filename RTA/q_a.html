@@ -556,7 +556,7 @@ OFFSET2		8	. offset in structures2 of floating value
 </div>
 </pre>
 
-<div	style="color:#00000060">
+<div	style="color:#00000040">
 
 192-bit floating arithmetic may be done outwith SIMD in a series of 96-bit steps
 <p>
@@ -624,8 +624,7 @@ required during both multiply passes and the subsequent add of two 192-bit produ
 
 <p>
 If a divisor is larger than 96 bits, a long multiply by the 192-bit reciprocal of
-the divisor is advised. A divisor is longer than 96 bits if the decimal exponent
-equivalent is less than zero or more than 31:
+the divisor may be carried out
 
 <pre>
 
